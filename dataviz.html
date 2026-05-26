@@ -131,29 +131,21 @@ body {
 .chart-wrap   { height: 168px; position: relative; }
 .panel__caption { font-size: 11.5px; color: var(--slate-light); margin-top: 10px; line-height: 1.55; font-style: italic; }
 
-/* ── Power BI placeholder ── */
+/* ── Power BI link-outs ── */
 .pbi-section { margin-bottom: var(--space-xl); }
 .pbi-label-row { display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-md); }
-.pbi-label-row h2 { font-family: var(--font-serif); font-size: 18px; font-weight: 600; color: var(--navy); }
-.pbi-placeholder {
-  width: 100%; aspect-ratio: 16 / 9;
-  background: var(--navy-mid);
-  border: 2px dashed var(--gold);
-  border-radius: 2px;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 12px; position: relative; overflow: hidden;
+.pbi-caption { font-size: 12px; color: var(--slate-light); margin-top: 12px; font-style: italic; }
+.pbi-linkout {
+  display: flex; align-items: center; gap: 16px;
+  background: var(--navy); border: 1px solid var(--navy-light);
+  border-left: 3px solid var(--gold);
+  padding: 20px 24px; border-radius: 2px;
+  text-decoration: none; transition: background 0.2s, border-color 0.2s;
 }
-.pbi-placeholder::before {
-  content: '';
-  position: absolute; inset: 0;
-  background-image: repeating-linear-gradient(0deg, transparent, transparent 29px, rgba(255,255,255,0.03) 29px, rgba(255,255,255,0.03) 30px),
-                    repeating-linear-gradient(90deg, transparent, transparent 29px, rgba(255,255,255,0.03) 29px, rgba(255,255,255,0.03) 30px);
-}
-.pbi-icon { width: 52px; height: 52px; opacity: 0.5; }
-.pbi-placeholder__text { font-family: var(--font-serif); font-size: 17px; color: rgba(255,255,255,0.55); font-weight: 600; position: relative; }
-.pbi-placeholder__sub  { font-size: 12px; color: rgba(255,255,255,0.3); letter-spacing: 0.06em; text-transform: uppercase; position: relative; }
-.pbi-caption { font-size: 12px; color: var(--slate-light); margin-top: 10px; font-style: italic; }
+.pbi-linkout:hover { background: var(--navy-mid); border-left-color: var(--gold-light); }
+.pbi-linkout__icon { flex-shrink: 0; }
+.pbi-linkout__title { font-family: var(--font-serif); font-size: 16px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+.pbi-linkout__sub   { font-size: 12px; color: var(--gold); letter-spacing: 0.04em; font-family: var(--font-sans); }
 
 /* ── Manager rules ── */
 .rules-heading { font-family: var(--font-serif); font-size: 18px; font-weight: 600; color: var(--navy); margin-bottom: var(--space-md); padding-bottom: var(--space-sm); border-bottom: 1px solid var(--rule); }
@@ -344,22 +336,45 @@ footer {
     </div>
   </div>
 
-  <!-- Power BI placeholder -->
+  <!-- Power BI link-outs -->
   <div class="pbi-section">
     <div class="pbi-label-row">
-      <h2 style="font-family:var(--font-serif);font-size:18px;font-weight:600;color:var(--navy);">Applied example — Power BI dashboard</h2>
+      <h2 style="font-family:var(--font-serif);font-size:18px;font-weight:600;color:var(--navy);">Applied examples — open in Power BI</h2>
       <span class="pill">In-session demo</span>
     </div>
-    <div style="position:relative; width:100%; aspect-ratio:16/9; overflow:hidden;">
-      <iframe
-        title="Financial Reporting (MGB)"
-        style="position:absolute; inset:0; width:100%; height:100%; border:none;"
-        src="https://app.powerbi.com/view?r=eyJrIjoiNzJhNTMyZGQtMTI0YS00MGJjLTlkZmItOGMxZWZlMDdlMTBkIiwidCI6ImRiZjgyMjI4LTA1OTEtNDFlYS05ZDAyLWE1ZDkxODE1NmI4NSIsImMiOjEwfQ%3D%3D"
-        frameborder="0"
-        allowFullScreen="true">
-      </iframe>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <a href="https://app.powerbi.com/reportEmbed?reportId=49df24e4-e0cb-4aab-8656-db00a2213630&autoAuth=true&ctid=dbf82228-0591-41ea-9d02-a5d918156b85" target="_blank" rel="noopener" class="pbi-linkout">
+        <div class="pbi-linkout__icon">
+          <svg viewBox="0 0 32 32" fill="none" width="28" height="28">
+            <rect x="2" y="18" width="6" height="12" rx="1" fill="#b8902a" opacity="0.6"/>
+            <rect x="11" y="11" width="6" height="19" rx="1" fill="#b8902a" opacity="0.8"/>
+            <rect x="20" y="5"  width="6" height="25" rx="1" fill="#b8902a"/>
+          </svg>
+        </div>
+        <div class="pbi-linkout__text">
+          <div class="pbi-linkout__title">Visual Vocabulary</div>
+          <div class="pbi-linkout__sub">Opens in Power BI ↗</div>
+        </div>
+      </a>
+      <a href="https://app.powerbi.com/view?r=eyJrIjoiNzJhNTMyZGQtMTI0YS00MGJjLTlkZmItOGMxZWZlMDdlMTBkIiwidCI6ImRiZjgyMjI4LTA1OTEtNDFlYS05ZDAyLWE1ZDkxODE1NmI4NSIsImMiOjEwfQ%3D%3D" target="_blank" rel="noopener" class="pbi-linkout">
+        <div class="pbi-linkout__icon">
+          <svg viewBox="0 0 32 32" fill="none" width="28" height="28">
+            <rect x="2" y="10" width="28" height="18" rx="2" stroke="#b8902a" stroke-width="1.5"/>
+            <line x1="2" y1="16" x2="30" y2="16" stroke="#b8902a" stroke-width="1" opacity="0.5"/>
+            <line x1="11" y1="10" x2="11" y2="28" stroke="#b8902a" stroke-width="1" opacity="0.5"/>
+            <rect x="5" y="13" width="3" height="1.5" rx="0.5" fill="#b8902a" opacity="0.7"/>
+            <rect x="5" y="19" width="3" height="1.5" rx="0.5" fill="#b8902a" opacity="0.7"/>
+            <rect x="5" y="22" width="3" height="1.5" rx="0.5" fill="#b8902a" opacity="0.5"/>
+            <rect x="14" y="19" width="8" height="5" rx="0.5" fill="#b8902a" opacity="0.25"/>
+          </svg>
+        </div>
+        <div class="pbi-linkout__text">
+          <div class="pbi-linkout__title">Financial Dashboard Example</div>
+          <div class="pbi-linkout__sub">Opens in Power BI ↗</div>
+        </div>
+      </a>
     </div>
-    <p class="pbi-caption">Apply the six principles above to evaluate this dashboard: Does the title state a finding? Is colour used to direct attention? What would you remove?</p>
+    <p class="pbi-caption">Apply the six principles above as you explore each report: Does the title state a finding? Is colour used to direct attention? What would you remove?</p>
   </div>
 
   <!-- Manager rules -->
