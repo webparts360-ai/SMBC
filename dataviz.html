@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Visualisation — Quick Reference · SMBC L&D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,700&family=Noto+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:        #0b1f3a;
+  --navy-deep:   #071429;
+  --navy-mid:    #163359;
+  --navy-light:  #1f4278;
+  --gold:        #b8902a;
+  --gold-light:  #d4a843;
+  --gold-pale:   #f0d98a;
+  --cream:       #f5f2ec;
+  --warm-white:  #faf8f4;
+  --white:       #ffffff;
+  --slate:       #5a6a7e;
+  --slate-light: #8899aa;
+  --rule:        #ddd5c0;
+  --rule-light:  #ede8de;
+  --font-serif:  'Noto Serif', Georgia, serif;
+  --font-sans:   'Noto Sans', system-ui, sans-serif;
+  --space-xs: 4px; --space-sm: 8px; --space-md: 16px;
+  --space-lg: 28px; --space-xl: 48px; --space-xxl: 80px;
+  --max-width: 1100px; --page-pad: 48px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--cream);
+  color: var(--slate);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+/* ── Topbar ── */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  height: 56px;
+  background: var(--navy-deep);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 var(--page-pad);
+  border-bottom: 1px solid rgba(184,144,42,0.3);
+}
+.topbar__brand { display: flex; align-items: center; gap: 12px; }
+.topbar__mark { width: 28px; height: 28px; }
+.topbar__text { display: flex; flex-direction: column; }
+.topbar__name { font-family: var(--font-serif); font-weight: 600; font-size: 14px; color: var(--white); line-height: 1.2; }
+.topbar__sub  { font-size: 11px; color: rgba(255,255,255,0.45); letter-spacing: 0.04em; }
+.topbar__nav  { display: flex; gap: var(--space-lg); }
+.topbar__nav a { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; }
+.topbar__nav a:hover, .topbar__nav a.active { color: var(--gold-light); }
+
+/* ── Hero ── */
+.hero {
+  background: var(--navy);
+  padding: var(--space-xl) var(--page-pad) var(--space-xl);
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.02) 39px, rgba(255,255,255,0.02) 40px),
+                    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.02) 39px, rgba(255,255,255,0.02) 40px);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute; top: 0; right: 0; bottom: 0;
+  width: 3px; background: var(--gold);
+}
+.hero__inner { max-width: var(--max-width); margin: 0 auto; position: relative; }
+.hero__eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: var(--space-md); }
+.hero__eyebrow-line { width: 32px; height: 2px; background: var(--gold); }
+.hero__title {
+  font-family: var(--font-serif); font-size: 32px; font-weight: 700;
+  color: var(--white); line-height: 1.25; margin-bottom: var(--space-md);
+}
+.hero__title em { color: var(--gold-pale); font-style: italic; }
+.hero__desc { font-size: 15px; color: rgba(255,255,255,0.6); max-width: 620px; margin-bottom: var(--space-lg); }
+.hero__meta { display: flex; gap: var(--space-xl); }
+.hero__meta-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); font-weight: 600; display: block; margin-bottom: 3px; }
+.hero__meta-value { font-family: var(--font-serif); font-size: 14px; color: rgba(255,255,255,0.75); }
+
+/* ── Utility ── */
+.label {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--gold); font-family: var(--font-sans);
+}
+.pill {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  background: var(--gold); color: var(--navy-deep);
+  padding: 3px 10px; border-radius: 20px; font-family: var(--font-sans);
+}
+
+/* ── Content wrapper ── */
+.content { max-width: var(--max-width); margin: 0 auto; padding: var(--space-xl) var(--page-pad); }
+
+/* ── Section divider ── */
+.section-header {
+  display: flex; align-items: center; gap: var(--space-md);
+  background: var(--navy); padding: 14px var(--page-pad);
+  margin: 0 calc(-1 * var(--page-pad));
+}
+.section-header__title { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7); font-family: var(--font-sans); }
+
+/* ── Principles grid ── */
+.principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: var(--space-xl); }
+.principle { background: var(--white); border: 1px solid var(--rule); border-top: 3px solid var(--gold); padding: var(--space-md) var(--space-lg); border-radius: 2px; }
+.principle__num { font-family: var(--font-serif); font-size: 24px; font-weight: 700; color: var(--rule); margin-bottom: var(--space-sm); }
+.principle__label { font-family: var(--font-serif); font-size: 15px; font-weight: 600; color: var(--navy); margin-bottom: var(--space-sm); }
+.principle__desc { font-size: 13px; color: var(--slate); line-height: 1.6; }
+
+/* ── Contrast pairs ── */
+.contrast-heading { font-family: var(--font-serif); font-size: 18px; font-weight: 600; color: var(--navy); margin-bottom: var(--space-md); padding-bottom: var(--space-sm); border-bottom: 1px solid var(--rule); }
+.contrast-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: var(--space-xl); }
+.panel { background: var(--white); border: 1px solid var(--rule); border-radius: 2px; overflow: hidden; }
+.panel__header { padding: 10px 16px; font-size: 12px; font-weight: 600; font-family: var(--font-sans); display: flex; align-items: center; gap: 8px; letter-spacing: 0.04em; text-transform: uppercase; }
+.panel__header--bad  { background: #fdf1f1; color: #8b2a2a; border-bottom: 1px solid #f5c6c6; }
+.panel__header--good { background: #f2f7ec; color: #2e5e10; border-bottom: 1px solid #c6ddb0; }
+.panel__header svg   { flex-shrink: 0; }
+.panel__body  { padding: 16px; }
+.chart-wrap   { height: 168px; position: relative; }
+.panel__caption { font-size: 11.5px; color: var(--slate-light); margin-top: 10px; line-height: 1.55; font-style: italic; }
+
+/* ── Power BI placeholder ── */
+.pbi-section { margin-bottom: var(--space-xl); }
+.pbi-label-row { display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-md); }
+.pbi-label-row h2 { font-family: var(--font-serif); font-size: 18px; font-weight: 600; color: var(--navy); }
+.pbi-placeholder {
+  width: 100%; aspect-ratio: 16 / 9;
+  background: var(--navy-mid);
+  border: 2px dashed var(--gold);
+  border-radius: 2px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 12px; position: relative; overflow: hidden;
+}
+.pbi-placeholder::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 29px, rgba(255,255,255,0.03) 29px, rgba(255,255,255,0.03) 30px),
+                    repeating-linear-gradient(90deg, transparent, transparent 29px, rgba(255,255,255,0.03) 29px, rgba(255,255,255,0.03) 30px);
+}
+.pbi-icon { width: 52px; height: 52px; opacity: 0.5; }
+.pbi-placeholder__text { font-family: var(--font-serif); font-size: 17px; color: rgba(255,255,255,0.55); font-weight: 600; position: relative; }
+.pbi-placeholder__sub  { font-size: 12px; color: rgba(255,255,255,0.3); letter-spacing: 0.06em; text-transform: uppercase; position: relative; }
+.pbi-caption { font-size: 12px; color: var(--slate-light); margin-top: 10px; font-style: italic; }
+
+/* ── Manager rules ── */
+.rules-heading { font-family: var(--font-serif); font-size: 18px; font-weight: 600; color: var(--navy); margin-bottom: var(--space-md); padding-bottom: var(--space-sm); border-bottom: 1px solid var(--rule); }
+.rules-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: var(--space-xl); }
+.rule-card { background: var(--white); border: 1px solid var(--rule); border-left: 3px solid var(--gold); padding: 14px 18px; border-radius: 0 2px 2px 0; }
+.rule-card__title { font-family: var(--font-serif); font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 5px; }
+.rule-card__body  { font-size: 13px; color: var(--slate); line-height: 1.6; }
+
+/* ── Formula box ── */
+.formula-box {
+  background: var(--navy); border-left: 4px solid var(--gold);
+  padding: var(--space-md) var(--space-lg);
+  margin-bottom: var(--space-xl); border-radius: 0 2px 2px 0;
+}
+.formula-box__label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+.formula-box__text  { font-family: var(--font-serif); font-size: 17px; color: var(--white); line-height: 1.5; font-weight: 600; }
+.formula-box__example { font-size: 13px; color: rgba(255,255,255,0.45); margin-top: 8px; font-style: italic; }
+
+/* ── Footer ── */
+footer {
+  background: var(--navy-deep);
+  padding: 20px var(--page-pad);
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid rgba(184,144,42,0.25);
+}
+.footer__brand { font-size: 12px; color: rgba(255,255,255,0.4); font-family: var(--font-sans); }
+.footer__note  { font-size: 11px; color: rgba(255,255,255,0.25); letter-spacing: 0.05em; text-transform: uppercase; }
+
+@media (max-width: 860px) {
+  :root { --page-pad: 20px; }
+  .principles { grid-template-columns: 1fr 1fr; }
+  .contrast-grid, .rules-grid { grid-template-columns: 1fr; }
+  .hero__title { font-size: 24px; }
+  .hero__meta { flex-wrap: wrap; gap: var(--space-md); }
+}
+@media (max-width: 560px) {
+  .principles { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__brand">
+    <svg class="topbar__mark" viewBox="0 0 28 28" fill="none">
+      <rect width="28" height="28" rx="3" fill="#1f4278"/>
+      <text x="14" y="20" text-anchor="middle" font-family="Georgia,serif" font-size="14" font-weight="700" fill="#b8902a">S</text>
+    </svg>
+    <div class="topbar__text">
+      <span class="topbar__name">SMBC Group</span>
+      <span class="topbar__sub">Learning &amp; Development · APAC</span>
+    </div>
+  </div>
+  <nav class="topbar__nav">
+    <a href="#" class="active">Day 2</a>
+    <a href="#">Module 4</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero__inner">
+    <div class="hero__eyebrow">
+      <div class="hero__eyebrow-line"></div>
+      <span class="label">Quick Reference · Module 4</span>
+    </div>
+    <h1 class="hero__title">Data Visualisation<br><em>Best Practice Handout</em></h1>
+    <p class="hero__desc">Six principles from <em>Storytelling with Data</em> applied to the dashboards and reports you review and commission every day.</p>
+    <div class="hero__meta">
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Programme</span>
+        <span class="hero__meta-value">Data-Driven Decision Making</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Reference</span>
+        <span class="hero__meta-value">Knaflic, C.N. — Storytelling with Data (2015)</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Audience</span>
+        <span class="hero__meta-value">VP &amp; Executive Director · SMBC APAC</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="content">
+
+  <!-- Six principles -->
+  <div class="section-header" style="margin-bottom: var(--space-xl);">
+    <span class="pill">Six lessons</span>
+    <span class="section-header__title">The core framework — in sequence</span>
+  </div>
+
+  <div class="principles">
+    <div class="principle">
+      <div class="principle__num">01</div>
+      <div class="principle__label">Understand context first</div>
+      <div class="principle__desc">Who is the audience? What decision must they make? Data is evidence for a story — it is not the starting point.</div>
+    </div>
+    <div class="principle">
+      <div class="principle__num">02</div>
+      <div class="principle__label">Choose the right visual</div>
+      <div class="principle__desc">Lines for trends, bars for comparisons, tables when exact values matter. Avoid pie charts and 3D — they obscure magnitude.</div>
+    </div>
+    <div class="principle">
+      <div class="principle__num">03</div>
+      <div class="principle__label">Eliminate clutter</div>
+      <div class="principle__desc">Every element added costs cognitive load. Remove gridlines, borders, and labels that do not directly serve the story.</div>
+    </div>
+    <div class="principle">
+      <div class="principle__num">04</div>
+      <div class="principle__label">Direct attention</div>
+      <div class="principle__desc">Use colour, size, and position intentionally. The audience's eye should land on the insight first — not wander across the page.</div>
+    </div>
+    <div class="principle">
+      <div class="principle__num">05</div>
+      <div class="principle__label">Form follows function</div>
+      <div class="principle__desc">Design around what you need the audience to do with the data — not around what looks impressive in the report.</div>
+    </div>
+    <div class="principle">
+      <div class="principle__num">06</div>
+      <div class="principle__label">Tell one story</div>
+      <div class="principle__desc">A chart title states the finding, not the topic. "NPL ratio rising in Q3" beats "NPL ratio by quarter" every time.</div>
+    </div>
+  </div>
+
+  <!-- Formula box -->
+  <div class="formula-box">
+    <div class="formula-box__label">The core question — ask before every chart</div>
+    <div class="formula-box__text">Who needs to know what, and what should they do with it?</div>
+    <div class="formula-box__example">If you cannot answer this in one sentence, the chart should not exist in the report.</div>
+  </div>
+
+  <!-- Before / after: chart type -->
+  <h2 class="contrast-heading">Before &amp; after — chart type and clutter</h2>
+  <div class="contrast-grid">
+    <div class="panel">
+      <div class="panel__header panel__header--bad">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.5" stroke="#8b2a2a"/><line x1="4" y1="4" x2="10" y2="10" stroke="#8b2a2a" stroke-width="1.5"/><line x1="10" y1="4" x2="4" y2="10" stroke="#8b2a2a" stroke-width="1.5"/></svg>
+        Before — common mistakes
+      </div>
+      <div class="panel__body">
+        <div class="chart-wrap">
+          <canvas id="badChart" role="img" aria-label="Cluttered 3D-style pie chart with six competing colours and no clear message. Loan portfolio breakdown.">Loan portfolio: Corporate 42%, Retail 21%, SME 14%, Trade Finance 10%, Property 8%, Other 5%.</canvas>
+        </div>
+        <p class="panel__caption">Six competing colours · legend separated from data · 3D distorts proportions · title names the topic, not the finding · audience must calculate mentally</p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel__header panel__header--good">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.5" stroke="#2e5e10"/><polyline points="4,7 6.5,9.5 10,5" stroke="#2e5e10" stroke-width="1.5" fill="none"/></svg>
+        After — storytelling with data
+      </div>
+      <div class="panel__body">
+        <div class="chart-wrap">
+          <canvas id="goodChart" role="img" aria-label="Clean horizontal bar chart. Corporate loans highlighted in gold as the dominant segment at 42%. All others shown in muted grey.">Corporate loans 42% highlighted; Retail 21%, SME 14%, Trade Finance 10%, Property 8%, Other 5% in grey.</canvas>
+        </div>
+        <p class="panel__caption">Single accent on the key finding · grey for context · title states the insight · no legend needed · bars start at zero</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Before / after: trend -->
+  <h2 class="contrast-heading">Before &amp; after — trend communication</h2>
+  <div class="contrast-grid">
+    <div class="panel">
+      <div class="panel__header panel__header--bad">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.5" stroke="#8b2a2a"/><line x1="4" y1="4" x2="10" y2="10" stroke="#8b2a2a" stroke-width="1.5"/><line x1="10" y1="4" x2="4" y2="10" stroke="#8b2a2a" stroke-width="1.5"/></svg>
+        Before — spaghetti chart
+      </div>
+      <div class="panel__body">
+        <div class="chart-wrap">
+          <canvas id="badLine" role="img" aria-label="Six overlapping coloured lines with equal visual weight. No single line stands out. Product line performance Jan to Sep.">Six product lines plotted with equal weight — no visual hierarchy, impossible to isolate any trend.</canvas>
+        </div>
+        <p class="panel__caption">All lines equal weight · competing colours · audience cannot identify which line warrants attention or action</p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel__header panel__header--good">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.5" stroke="#2e5e10"/><polyline points="4,7 6.5,9.5 10,5" stroke="#2e5e10" stroke-width="1.5" fill="none"/></svg>
+        After — focus on what matters
+      </div>
+      <div class="panel__body">
+        <div class="chart-wrap">
+          <canvas id="goodLine" role="img" aria-label="Same six lines. Five are light grey. Trade finance line is highlighted in gold, showing a steep upward trend from Jan to Sep.">Trade finance highlighted in gold, rising steeply. Five other lines greyed out as context.</canvas>
+        </div>
+        <p class="panel__caption">Key line highlighted in gold · others retained as context in grey · direct label replaces legend · story is immediate</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Power BI placeholder -->
+  <div class="pbi-section">
+    <div class="pbi-label-row">
+      <h2 style="font-family:var(--font-serif);font-size:18px;font-weight:600;color:var(--navy);">Applied example — Power BI dashboard</h2>
+      <span class="pill">In-session demo</span>
+    </div>
+    <div class="pbi-placeholder">
+<iframe title="Financial Reporting (MGB)" width="1140" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=34bee6b2-b6e9-43ed-8ff7-0d9e682ed7f6&autoAuth=true&ctid=dbf82228-0591-41ea-9d02-a5d918156b85" frameborder="0" allowFullScreen="true"></iframe>
+    </div>
+    <p class="pbi-caption">Apply the six principles above to evaluate this dashboard: Does the title state a finding? Is colour used to direct attention? What would you remove?</p>
+  </div>
+
+  <!-- Manager rules -->
+  <div class="section-header" style="margin-bottom: var(--space-xl);">
+    <span class="pill">Apply now</span>
+    <span class="section-header__title">Quick rules for managers reviewing dashboards</span>
+  </div>
+
+  <div class="rules-grid">
+    <div class="rule-card">
+      <div class="rule-card__title">Ask: what decision does this drive?</div>
+      <div class="rule-card__body">If no one can answer in one sentence, the chart should not be in the report. Data without a decision is decoration.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-card__title">The squint test</div>
+      <div class="rule-card__body">Squint at the chart. What you still see is what your audience will remember. If it is not the key finding, something is wrong.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-card__title">Colour encodes meaning, not decoration</div>
+      <div class="rule-card__body">If everything is highlighted, nothing is. Reserve the accent colour for the single insight that requires action.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-card__title">Bar charts must start at zero</div>
+      <div class="rule-card__body">A truncated y-axis exaggerates differences. Always check where the axis begins before accepting a chart as evidence.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-card__title">Titles state the finding</div>
+      <div class="rule-card__body">Rename every chart from a topic to a finding. "Monthly revenue" → "Revenue fell 12% in October." The title is the story.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-card__title">Remove before you add</div>
+      <div class="rule-card__body">Before requesting a new visual element, ask what existing element could be removed to make the same point more clearly.</div>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<footer>
+  <span class="footer__brand">SMBC Group · Learning &amp; Development · APAC</span>
+  <span class="footer__note">Confidential</span>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const navy  = '#0b1f3a';
+const gold  = '#b8902a';
+const muted = '#c8c0b0';
+const textC = '#8899aa';
+const gridC = 'rgba(0,0,0,0.06)';
+const base  = { responsive: true, maintainAspectRatio: false };
+
+// Bad: pie
+new Chart(document.getElementById('badChart'), {
+  type: 'pie',
+  data: {
+    labels: ['Corporate','Retail','SME','Trade Finance','Property','Other'],
+    datasets: [{
+      data: [42,21,14,10,8,5],
+      backgroundColor: ['#e84040','#3a7bd5','#27ae60','#f39c12','#8e44ad','#16a085'],
+      borderWidth: 3, borderColor: '#fff', hoverOffset: 6
+    }]
+  },
+  options: {
+    ...base,
+    plugins: {
+      legend: { display: true, position: 'right', labels: { font:{size:11}, color: textC, boxWidth:12, padding:8 } },
+      title:  { display: true, text: 'Loan portfolio breakdown by segment', color: textC, font:{size:12,weight:'400'}, padding:{bottom:6} }
+    }
+  }
+});
+
+// Good: horizontal bar
+new Chart(document.getElementById('goodChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Corporate','Retail','SME','Trade finance','Property','Other'],
+    datasets: [{
+      data: [42,21,14,10,8,5],
+      backgroundColor: [gold, muted, muted, muted, muted, muted],
+      borderRadius: 2, borderSkipped: false
+    }]
+  },
+  options: {
+    ...base, indexAxis: 'y',
+    plugins: {
+      legend: { display: false },
+      title:  { display: true, text: 'Corporate loans dominate — 42% of portfolio', color: navy, font:{size:12,weight:'600'}, padding:{bottom:8}, align:'start' }
+    },
+    scales: {
+      x: { grid:{color:gridC}, ticks:{color:textC,font:{size:11},callback:v=>v+'%'}, border:{display:false}, max:50 },
+      y: { grid:{display:false}, ticks:{color:textC,font:{size:11}}, border:{display:false} }
+    }
+  }
+});
+
+// Shared trend data
+const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep'];
+const series = {
+  'Corporate':     [52,54,55,53,56,55,57,56,58],
+  'Retail':        [28,29,28,30,29,31,30,32,31],
+  'SME':           [18,17,19,18,20,19,21,20,22],
+  'Trade finance': [10,11,12,14,15,16,19,22,26],
+  'Property':      [14,13,15,14,13,14,13,12,13],
+  'Other':         [6,7,6,7,6,7,6,7,6]
+};
+const rainbow = ['#e84040','#3a7bd5','#27ae60','#f39c12','#8e44ad','#16a085'];
+
+// Bad: spaghetti
+new Chart(document.getElementById('badLine'), {
+  type: 'line',
+  data: {
+    labels: months,
+    datasets: Object.entries(series).map(([label,data],i) => ({
+      label, data, borderColor: rainbow[i], backgroundColor: 'transparent',
+      borderWidth: 2, pointRadius: 2, tension: 0.35
+    }))
+  },
+  options: {
+    ...base,
+    plugins: {
+      legend: { display: true, position: 'bottom', labels:{font:{size:10},color:textC,boxWidth:10,padding:6} },
+      title:  { display: true, text: 'Product line performance (indexed)', color:textC, font:{size:12,weight:'400'}, padding:{bottom:4} }
+    },
+    scales: {
+      x: { grid:{color:gridC}, ticks:{color:textC,font:{size:11}}, border:{display:false} },
+      y: { grid:{color:gridC}, ticks:{color:textC,font:{size:11}}, border:{display:false} }
+    }
+  }
+});
+
+// Good: focused
+new Chart(document.getElementById('goodLine'), {
+  type: 'line',
+  data: {
+    labels: months,
+    datasets: Object.entries(series).map(([label,data],i) => {
+      const key = label === 'Trade finance';
+      return {
+        label, data,
+        borderColor: key ? gold : 'rgba(0,0,0,0.1)',
+        backgroundColor: 'transparent',
+        borderWidth: key ? 2.5 : 1,
+        pointRadius: key ? 3 : 0,
+        pointBackgroundColor: gold,
+        tension: 0.35,
+        order: key ? 0 : 1
+      };
+    })
+  },
+  options: {
+    ...base,
+    plugins: {
+      legend: { display: false },
+      title:  { display: true, text: 'Trade finance surging — up 160% since January', color: navy, font:{size:12,weight:'600'}, padding:{bottom:4}, align:'start' }
+    },
+    scales: {
+      x: { grid:{color:gridC}, ticks:{color:textC,font:{size:11}}, border:{display:false} },
+      y: { grid:{color:gridC}, ticks:{color:textC,font:{size:11}}, border:{display:false} }
+    }
+  }
+});
+</script>
+</body>
+</html>
