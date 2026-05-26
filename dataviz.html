@@ -350,10 +350,13 @@ footer {
       <h2 style="font-family:var(--font-serif);font-size:18px;font-weight:600;color:var(--navy);">Applied example — Power BI dashboard</h2>
       <span class="pill">In-session demo</span>
     </div>
-    <div class="pbi-placeholder">
-      <iframe title="Financial Reporting (MGB)" width="1004" height="565" 
+    <div style="position:relative; width:100%; aspect-ratio:16/9; overflow:hidden;">
+      <iframe
+        title="Financial Reporting (MGB)"
+        style="position:absolute; inset:0; width:100%; height:100%; border:none;"
         src="https://app.powerbi.com/view?r=eyJrIjoiNzJhNTMyZGQtMTI0YS00MGJjLTlkZmItOGMxZWZlMDdlMTBkIiwidCI6ImRiZjgyMjI4LTA1OTEtNDFlYS05ZDAyLWE1ZDkxODE1NmI4NSIsImMiOjEwfQ%3D%3D"
-        frameborder="0" allowFullScreen="true">
+        frameborder="0"
+        allowFullScreen="true">
       </iframe>
     </div>
     <p class="pbi-caption">Apply the six principles above to evaluate this dashboard: Does the title state a finding? Is colour used to direct attention? What would you remove?</p>
