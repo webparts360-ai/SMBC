@@ -1,379 +1,333 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Banker's Cheat Sheet Reference</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="smbc.css">
 </head>
 <body>
-  <a class="skip-link" href="#main-content">Skip to content</a>
-<header class="topbar">
-  <div class="topbar__brand">
-    <img src="https://www.smbc.co.jp/asia/SMBC/media/SMBC/SMBC-logo.png"
-         alt="SMBC" height="28" style="display:block;height:28px;width:auto;">
-  </div>
-  <nav class="topbar__nav">
-    <a href="#" onclick="showTab('day1'); return false;" id="nav-day1" class="active">Day 1</a>
-    <a href="#" onclick="showTab('day2'); return false;" id="nav-day2">Day 2</a>
-    <a href="#" onclick="showTab('overview'); return false;" id="nav-overview">Overview</a>
-  </nav>
-</header>
-
+  <header class="topbar">
+    <div class="topbar__brand">
+      <img src="https://www.smbc.co.jp/asia/SMBC/media/SMBC/SMBC-logo.png"
+           alt="SMBC" height="28" style="display:block;height:28px;width:auto;">
+    </div>
+  </header>
 
   <section class="hero">
-    <div class="hero__rule" aria-hidden="true"></div>
+    <div class="hero__rule"></div>
     <div class="hero__inner">
       <div class="hero__eyebrow">
-        <div class="hero__eyebrow-line" aria-hidden="true"></div>
-        <span class="label">Reference page</span>
+        <div class="hero__eyebrow-line"></div>
+        <span class="label">Banker's Cheat Sheet</span>
       </div>
-      <h1 class="hero__title">Banker's Cheat Sheet<br><em>financial metrics in plain language</em></h1>
-      <p class="hero__desc">A responsive reference page that translates common ratios into banker-friendly meaning: what the number is really saying about price, profit, cash pressure, funding risk, and repayment capacity.</p>
-      <div class="hero__meta" role="list" aria-label="Page summary">
-        <div class="hero__meta-item" role="listitem">
-          <span class="hero__meta-label">Audience</span>
-          <span class="hero__meta-value">Bankers, credit teams, facilitators</span>
-        </div>
-        <div class="hero__meta-item" role="listitem">
+      <h1 class="hero__title">Financial Metrics<br><em>in DataPOV language</em></h1>
+      <p class="hero__desc">Each metric is translated into a banker-friendly statement using this structure: what the data shows, what action we must take, and what is at stake if we ignore it.</p>
+      <div class="hero__meta">
+        <div class="hero__meta-item">
           <span class="hero__meta-label">Format</span>
-          <span class="hero__meta-value">Quick reference with practical framing</span>
+          <span class="hero__meta-value">DataPOV reference statements</span>
         </div>
-        <div class="hero__meta-item" role="listitem">
-          <span class="hero__meta-label">Navigation</span>
-          <span class="hero__meta-value">Includes browser back link</span>
+        <div class="hero__meta-item">
+          <span class="hero__meta-label">Audience</span>
+          <span class="hero__meta-value">Bankers and credit teams</span>
+        </div>
+        <div class="hero__meta-item">
+          <span class="hero__meta-label">Use</span>
+          <span class="hero__meta-value">Training, facilitation, discussion</span>
         </div>
       </div>
     </div>
   </section>
 
-  <div class="tab-bar" role="tablist" aria-label="Cheat sheet sections">
-    <div class="tab-bar__inner">
-      <button class="tab-bar__btn active" role="tab" aria-selected="true" aria-controls="panel-ratios" id="tab-ratios" data-panel="ratios">Core metrics</button>
-      <button class="tab-bar__btn" role="tab" aria-selected="false" aria-controls="panel-usage" id="tab-usage" data-panel="usage">Banker framing</button>
-      <button class="tab-bar__btn" role="tab" aria-selected="false" aria-controls="panel-glossary" id="tab-glossary" data-panel="glossary">Interpretation guide</button>
-    </div>
+  <div class="tab-bar">
+    <button class="tab-bar__btn active" onclick="showPanel('ratios')">Core Metrics</button>
+    <button class="tab-bar__btn" onclick="showPanel('usage')">How to Use</button>
+    <button class="tab-bar__btn" onclick="showPanel('guide')">Interpretation Guide</button>
   </div>
 
-  <div id="panel-ratios" class="panel active" role="tabpanel" aria-labelledby="tab-ratios">
+  <div id="panel-ratios" class="panel active">
     <div class="section-header">
-      <div class="section-header__inner">
-        <span class="pill">Core</span>
-        <span class="section-header__title">Impact-oriented meanings for common financial numbers</span>
-      </div>
+      <span class="pill">Reference</span>
+      <span class="section-header__title">Metrics rewritten into action-and-stakes language</span>
     </div>
 
-    <div class="page-layout" id="main-content">
-      <main class="content-stack" id="valuation">
-        <article class="card card--highlighted">
+    <div class="page-layout">
+      <main>
+        <div class="card card--highlighted fade-up">
           <div class="card__header">
             <div class="card__num">01</div>
-            <div>
+            <div class="card__meta">
               <div class="card__tag">Valuation</div>
-              <h2 class="card__title">P/E Ratio</h2>
-              <p class="card__meaning">How many years of current earnings you are paying for when you buy the share today.</p>
-              <div class="ratio-meta">
-                <div class="mini-box">
-                  <span class="mini-box__label">Banker translation</span>
-                  <span class="mini-box__value">Price = pre-paid future profits</span>
-                </div>
-                <div class="mini-box">
-                  <span class="mini-box__label">Watch-out</span>
-                  <span class="mini-box__value">Only meaningful if earnings are sustainable</span>
-                </div>
-              </div>
-              <div class="formula-box">
-                <div class="formula-box__label">Example</div>
-                <div class="formula-box__text">Share price 60 / EPS 6 = P/E of 10x</div>
-                <div class="formula-box__example">Meaning: at today's earnings level, it takes about 10 years to recover the purchase price.</div>
+              <div class="card__title">P/E Ratio</div>
+              <div class="card__topics">
+                <div class="card__topic">The market is pricing this company at 10 years of current earnings, which means we must test whether earnings are sustainable, otherwise we may overpay for profits that do not materialise.</div>
               </div>
             </div>
           </div>
-        </article>
+        </div>
 
-        <article class="card">
+        <div class="card fade-up">
           <div class="card__header">
             <div class="card__num">02</div>
-            <div>
+            <div class="card__meta">
               <div class="card__tag">Profitability</div>
-              <h2 class="card__title">Net Margin</h2>
-              <p class="card__meaning">Out of every 1 ringgit of sales, how many sen end up as true bottom-line profit.</p>
-              <div class="formula-box">
-                <div class="formula-box__label">Example</div>
-                <div class="formula-box__text">Net profit 8m / Revenue 100m = 8%</div>
-                <div class="formula-box__example">Meaning: every RM100 sold leaves RM8 after all costs, interest, and tax.</div>
+              <div class="card__title">Net Margin</div>
+              <div class="card__topics">
+                <div class="card__topic">Only RM8 out of every RM100 of sales becomes net profit, which means we must examine cost control and earnings resilience, otherwise small shocks may erase profitability.</div>
               </div>
             </div>
           </div>
-        </article>
+        </div>
 
-        <article class="card">
+        <div class="card fade-up">
           <div class="card__header">
             <div class="card__num">03</div>
-            <div>
-              <div class="card__tag">Efficiency</div>
-              <h2 class="card__title">Gross Margin</h2>
-              <p class="card__meaning">How much pricing cushion remains after paying the direct cost of goods or services delivered.</p>
-              <div class="formula-box">
-                <div class="formula-box__label">Example</div>
-                <div class="formula-box__text">Revenue 100m - COGS 70m = 30m gross profit; 30m / 100m = 30%</div>
-                <div class="formula-box__example">Meaning: the business keeps RM30 out of every RM100 before overheads and financing costs.</div>
+            <div class="card__meta">
+              <div class="card__tag">Profitability</div>
+              <div class="card__title">Gross Margin</div>
+              <div class="card__topics">
+                <div class="card__topic">The business keeps RM30 out of every RM100 before overhead and financing costs, which means we must judge whether pricing power is strong enough, otherwise rising costs may quickly compress profit.</div>
               </div>
             </div>
           </div>
-        </article>
+        </div>
 
-        <article class="card">
+        <div class="card fade-up">
           <div class="card__header">
             <div class="card__num">04</div>
-            <div>
+            <div class="card__meta">
               <div class="card__tag">Return</div>
-              <h2 class="card__title">ROA</h2>
-              <p class="card__meaning">How hard the total asset base is working to generate profit.</p>
-              <div class="formula-box">
-                <div class="formula-box__label">Example</div>
-                <div class="formula-box__text">Net income 5m / Total assets 100m = 5%</div>
-                <div class="formula-box__example">Meaning: every RM100 invested in assets produces RM5 of annual profit.</div>
+              <div class="card__title">ROA</div>
+              <div class="card__topics">
+                <div class="card__topic">Every RM100 invested in assets generates RM5 of profit, which means we must assess whether the asset base is productive enough, otherwise capital may remain tied up in underperforming assets.</div>
               </div>
             </div>
           </div>
-        </article>
+        </div>
 
-        <article class="card">
+        <div class="card fade-up">
           <div class="card__header">
             <div class="card__num">05</div>
-            <div>
+            <div class="card__meta">
               <div class="card__tag">Return</div>
-              <h2 class="card__title">ROE</h2>
-              <p class="card__meaning">How much the owners earn each year on the capital they actually have at risk.</p>
-              <div class="formula-box">
-                <div class="formula-box__label">Example</div>
-                <div class="formula-box__text">Net income 5m / Equity 25m = 20%</div>
-                <div class="formula-box__example">Meaning: shareholders earn RM20 a year for every RM100 of equity left inside the business.</div>
+              <div class="card__title">ROE</div>
+              <div class="card__topics">
+                <div class="card__topic">Shareholders are earning RM20 a year for every RM100 of equity, which means we must check whether returns come from genuine performance or excessive leverage, otherwise the apparent strength may hide elevated risk.</div>
               </div>
             </div>
           </div>
-        </article>
+        </div>
 
-        <article class="card">
+        <div class="card fade-up">
           <div class="card__header">
             <div class="card__num">06</div>
-            <div>
+            <div class="card__meta">
               <div class="card__tag">Liquidity</div>
-              <h2 class="card__title">Current Ratio</h2>
-              <p class="card__meaning">Whether near-term assets appear sufficient to cover obligations due within 12 months.</p>
-              <div class="formula-box">
-                <div class="formula-box__label">Example</div>
-                <div class="formula-box__text">Current assets 24m / Current liabilities 16m = 1.5x</div>
-                <div class="formula-box__example">Meaning: the business has RM1.50 of near-term resources for every RM1 due soon.</div>
+              <div class="card__title">Current Ratio</div>
+              <div class="card__topics">
+                <div class="card__topic">The company has RM1.50 of near-term assets for every RM1 due within a year, which means we must test how liquid those assets really are, otherwise a paper buffer may still turn into a cash squeeze.</div>
               </div>
             </div>
           </div>
-        </article>
+        </div>
 
-        <article class="card">
+        <div class="card fade-up">
           <div class="card__header">
             <div class="card__num">07</div>
-            <div>
+            <div class="card__meta">
               <div class="card__tag">Liquidity</div>
-              <h2 class="card__title">Quick Ratio</h2>
-              <p class="card__meaning">The same liquidity test, but excluding inventory that may not turn into cash quickly.</p>
-              <div class="formula-box">
-                <div class="formula-box__label">Example</div>
-                <div class="formula-box__text">(Cash 4m + Receivables 8m) / Current liabilities 16m = 0.75x</div>
-                <div class="formula-box__example">Meaning: without selling stock, only 75% of short-term obligations are covered.</div>
+              <div class="card__title">Quick Ratio</div>
+              <div class="card__topics">
+                <div class="card__topic">Without relying on inventory, only 75% of short-term obligations are covered, which means we must assess immediate liquidity and refinancing options, otherwise the borrower may struggle to meet near-term payments.</div>
               </div>
             </div>
           </div>
-        </article>
+        </div>
 
-        <article class="card">
+        <div class="card fade-up">
           <div class="card__header">
             <div class="card__num">08</div>
-            <div>
+            <div class="card__meta">
               <div class="card__tag">Leverage</div>
-              <h2 class="card__title">Debt-to-Equity</h2>
-              <p class="card__meaning">How much borrowed money supports the business relative to the owners' money.</p>
-              <div class="formula-box">
-                <div class="formula-box__label">Example</div>
-                <div class="formula-box__text">Total debt 60m / Equity 30m = 2.0x</div>
-                <div class="formula-box__example">Meaning: lenders have put in RM2 for every RM1 left by the owners.</div>
+              <div class="card__title">Debt-to-Equity</div>
+              <div class="card__topics">
+                <div class="card__topic">The business is using RM2 of debt for every RM1 of equity, which means we must evaluate leverage tolerance and sponsor support, otherwise lenders may be carrying too much of the downside risk.</div>
               </div>
             </div>
           </div>
-        </article>
+        </div>
 
-        <article class="card">
+        <div class="card fade-up">
           <div class="card__header">
             <div class="card__num">09</div>
-            <div>
+            <div class="card__meta">
               <div class="card__tag">Coverage</div>
-              <h2 class="card__title">Interest Coverage</h2>
-              <p class="card__meaning">How many times operating profit can pay the annual interest bill before lenders get nervous.</p>
-              <div class="formula-box">
-                <div class="formula-box__label">Example</div>
-                <div class="formula-box__text">EBIT 12m / Interest expense 3m = 4.0x</div>
-                <div class="formula-box__example">Meaning: operating profit can cover the interest bill four times over.</div>
+              <div class="card__title">Interest Coverage</div>
+              <div class="card__topics">
+                <div class="card__topic">Operating profit covers the interest bill four times, which means we must stress-test earnings under weaker conditions, otherwise a moderate profit drop could threaten debt servicing capacity.</div>
               </div>
             </div>
           </div>
-        </article>
+        </div>
 
-        <article class="card">
+        <div class="card fade-up">
           <div class="card__header">
             <div class="card__num">10</div>
-            <div>
-              <div class="card__tag">Working capital</div>
-              <h2 class="card__title">Cash Conversion Cycle</h2>
-              <p class="card__meaning">How many days cash is tied up between paying suppliers and collecting from customers.</p>
-              <div class="formula-box">
-                <div class="formula-box__label">Example</div>
-                <div class="formula-box__text">Inventory 50 days + Receivables 40 days - Payables 30 days = 60 days</div>
-                <div class="formula-box__example">Meaning: the business must fund about 60 days of operations before cash comes back in.</div>
+            <div class="card__meta">
+              <div class="card__tag">Working Capital</div>
+              <div class="card__title">Cash Conversion Cycle</div>
+              <div class="card__topics">
+                <div class="card__topic">Cash is tied up for about 60 days between paying suppliers and collecting from customers, which means we must plan funding for that operating gap, otherwise growth may create liquidity strain instead of strength.</div>
               </div>
             </div>
           </div>
-        </article>
+        </div>
       </main>
 
       <aside class="sidebar">
         <div class="sidebar-card sidebar-card--gold">
-          <div class="sidebar-card__label">Reading lens</div>
-          <div class="sidebar-card__title">Three banker questions</div>
-          <div class="sidebar-row"><span class="sidebar-row__label">Profit</span><span class="sidebar-row__val">How much is left?</span></div>
-          <div class="sidebar-row"><span class="sidebar-row__label">Cash</span><span class="sidebar-row__val">When does it arrive?</span></div>
-          <div class="sidebar-row"><span class="sidebar-row__label">Risk</span><span class="sidebar-row__val">Whose money absorbs loss first?</span></div>
+          <div class="sidebar-card__head">
+            <div class="sidebar-card__label">DataPOV Formula</div>
+            <div class="sidebar-card__title">Standard syntax</div>
+          </div>
+          <div class="sidebar-card__body">
+            <div class="formula-box">
+              <div class="formula-box__label">Template</div>
+              <div class="formula-box__text">[What the data shows] means we must [specific action], otherwise [what is at stake].</div>
+            </div>
+          </div>
         </div>
 
         <div class="sidebar-card">
-          <div class="sidebar-card__label">Use in meetings</div>
-          <div class="sidebar-card__title">Plain-language prompts</div>
-          <div class="sidebar-row"><span class="sidebar-row__label">P/E</span><span class="sidebar-row__val">Years of earnings bought today</span></div>
-          <div class="sidebar-row"><span class="sidebar-row__label">Current ratio</span><span class="sidebar-row__val">Near-term cover</span></div>
-          <div class="sidebar-row"><span class="sidebar-row__label">D/E</span><span class="sidebar-row__val">Lender money vs owner money</span></div>
-        </div>
-
-        <div class="info-box">
-          <div class="info-box__label">Back navigation</div>
-          <p>Use the button below to return to the previous page in the browser history.</p>
-          <p style="margin-top: 14px;"><a class="btn btn--gold" href="javascript:history.back()">Go back</a></p>
+          <div class="sidebar-card__head">
+            <div class="sidebar-card__label">Navigation</div>
+            <div class="sidebar-card__title">Return to previous page</div>
+          </div>
+          <div class="sidebar-card__body">
+            <a href="javascript:history.back()" class="btn btn--gold">Go Back</a>
+          </div>
         </div>
       </aside>
     </div>
   </div>
 
-  <div id="panel-usage" class="panel" role="tabpanel" aria-labelledby="tab-usage">
+  <div id="panel-usage" class="panel">
     <div class="section-header">
-      <div class="section-header__inner">
-        <span class="pill">Use</span>
-        <span class="section-header__title">How to explain ratios so bankers act on them</span>
-      </div>
+      <span class="pill">How</span>
+      <span class="section-header__title">How to speak in DataPOV language</span>
     </div>
-    <div class="page-layout" id="how-to-use">
-      <main class="content-stack">
-        <div class="objectives">
-          <div class="objective"><div class="objective__marker">1</div><p class="objective__text">Start with the business decision, not the formula. Example: “Can this borrower service debt comfortably?”</p></div>
-          <div class="objective"><div class="objective__marker">2</div><p class="objective__text">Translate each ratio into a time, cash, or risk statement bankers can visualize immediately.</p></div>
-          <div class="objective"><div class="objective__marker">3</div><p class="objective__text">Pair the ratio with a threshold or comparison, such as trend, peer, covenant, or prior year.</p></div>
-          <div class="objective"><div class="objective__marker">4</div><p class="objective__text">Always ask what can distort it: one-off profit, stale inventory, inflated receivables, or revaluation gains.</p></div>
+
+    <div class="page-layout">
+      <main>
+        <div class="objectives fade-up">
+          <div class="objective">
+            <div class="objective__marker">1</div>
+            <p class="objective__text">State the number in plain English first, not as a formula.</p>
+          </div>
+          <div class="objective">
+            <div class="objective__marker">2</div>
+            <p class="objective__text">Follow immediately with the action bankers must take.</p>
+          </div>
+          <div class="objective">
+            <div class="objective__marker">3</div>
+            <p class="objective__text">End with the risk if no action is taken.</p>
+          </div>
         </div>
 
-        <div class="card card--highlighted">
-          <div class="card__header">
-            <div class="card__num">A</div>
-            <div>
-              <div class="card__tag">Conversation format</div>
-              <h2 class="card__title">A pragmatic script</h2>
-              <div class="formula-box">
-                <div class="formula-box__label">Template</div>
-                <div class="formula-box__text">“The number is X. In plain terms, that means Y. For a banker, the real question is Z.”</div>
-                <div class="formula-box__example">Example: “Interest coverage is 4x. In plain terms, current operating profit can pay interest four times. For a banker, the question is whether this still holds if profit drops 25%.”</div>
-              </div>
-            </div>
-          </div>
+        <div class="info-box fade-up">
+          <div class="info-box__label">Example</div>
+          <p>“Operating profit covers interest only 2 times, which means we must stress-test earnings resilience, otherwise a modest decline could impair debt servicing.”</p>
         </div>
       </main>
 
       <aside class="sidebar">
         <div class="sidebar-card sidebar-card--gold">
-          <div class="sidebar-card__label">Best practice</div>
-          <div class="sidebar-card__title">Make it visual</div>
-          <div class="sidebar-row"><span class="sidebar-row__label">Time ratios</span><span class="sidebar-row__val">Explain in years or days</span></div>
-          <div class="sidebar-row"><span class="sidebar-row__label">Margin ratios</span><span class="sidebar-row__val">Explain in sen per RM1</span></div>
-          <div class="sidebar-row"><span class="sidebar-row__label">Leverage ratios</span><span class="sidebar-row__val">Explain whose money is funding the business</span></div>
+          <div class="sidebar-card__head">
+            <div class="sidebar-card__label">Facilitator Note</div>
+            <div class="sidebar-card__title">Why this works</div>
+          </div>
+          <div class="sidebar-card__body">
+            <div class="sidebar-row">
+              <span class="sidebar-row__label">Evidence</span>
+              <span class="sidebar-row__val">What the number says</span>
+            </div>
+            <div class="sidebar-row">
+              <span class="sidebar-row__label">Decision</span>
+              <span class="sidebar-row__val">What must happen next</span>
+            </div>
+            <div class="sidebar-row">
+              <span class="sidebar-row__label">Consequence</span>
+              <span class="sidebar-row__val">Why it matters now</span>
+            </div>
+          </div>
         </div>
       </aside>
     </div>
   </div>
 
-  <div id="panel-glossary" class="panel" role="tabpanel" aria-labelledby="tab-glossary">
+  <div id="panel-guide" class="panel">
     <div class="section-header">
-      <div class="section-header__inner">
-        <span class="pill">Guide</span>
-        <span class="section-header__title">Interpret numbers with judgment, not in isolation</span>
-      </div>
+      <span class="pill">Guide</span>
+      <span class="section-header__title">Use judgment, not just the number</span>
     </div>
+
     <div class="page-layout">
-      <main class="content-stack">
-        <div class="card">
+      <main>
+        <div class="card fade-up">
           <div class="card__header">
             <div class="card__num">!</div>
-            <div>
-              <div class="card__tag">Interpretation</div>
-              <h2 class="card__title">Common traps</h2>
-              <p class="card__meaning">A “good” number can still hide weak credit quality if the underlying earnings, assets, or working capital are not real or not repeatable.</p>
-              <div class="ratio-meta">
-                <div class="mini-box"><span class="mini-box__label">High ROE</span><span class="mini-box__value">Could be boosted by excessive leverage</span></div>
-                <div class="mini-box"><span class="mini-box__label">Strong current ratio</span><span class="mini-box__value">Could be padded by slow inventory</span></div>
-                <div class="mini-box"><span class="mini-box__label">Low P/E</span><span class="mini-box__value">Could signal falling earnings ahead</span></div>
-                <div class="mini-box"><span class="mini-box__label">Good margin</span><span class="mini-box__value">Could be inflated by one-off gains</span></div>
+            <div class="card__meta">
+              <div class="card__tag">Interpretation Reminder</div>
+              <div class="card__title">A strong ratio can still mislead</div>
+              <div class="card__topics">
+                <div class="card__topic">A good-looking ratio may be driven by temporary earnings, overstated assets, slow-moving inventory, weak receivables quality, or leverage that is not immediately obvious.</div>
               </div>
             </div>
           </div>
         </div>
       </main>
+
       <aside class="sidebar">
         <div class="sidebar-card">
-          <div class="sidebar-card__label">Checklist</div>
-          <div class="sidebar-card__title">Before you trust the ratio</div>
-          <div class="sidebar-row"><span class="sidebar-row__label">Trend</span><span class="sidebar-row__val">Better or worse?</span></div>
-          <div class="sidebar-row"><span class="sidebar-row__label">Peer</span><span class="sidebar-row__val">High or low for the sector?</span></div>
-          <div class="sidebar-row"><span class="sidebar-row__label">Quality</span><span class="sidebar-row__val">Cash-backed or accounting-only?</span></div>
-          <div class="sidebar-row"><span class="sidebar-row__label">Driver</span><span class="sidebar-row__val">Volume, price, leverage, or timing?</span></div>
+          <div class="sidebar-card__head">
+            <div class="sidebar-card__label">Checklist</div>
+            <div class="sidebar-card__title">Before you trust the metric</div>
+          </div>
+          <div class="sidebar-card__body">
+            <div class="sidebar-row">
+              <span class="sidebar-row__label">Trend</span>
+              <span class="sidebar-row__val">Improving or weakening?</span>
+            </div>
+            <div class="sidebar-row">
+              <span class="sidebar-row__label">Peer</span>
+              <span class="sidebar-row__val">Normal for the industry?</span>
+            </div>
+            <div class="sidebar-row">
+              <span class="sidebar-row__label">Quality</span>
+              <span class="sidebar-row__val">Cash-backed or accounting-only?</span>
+            </div>
+          </div>
         </div>
       </aside>
     </div>
   </div>
 
-  <footer class="footer">
-    <div class="footer__inner">
-      <span>Banker's Cheat Sheet · SMBC-inspired reference styling</span>
-      <span>Designed for responsive workshop and reference use</span>
-    </div>
+  <footer>
+    <span class="footer__brand">SMBC Group · Learning & Development · APAC</span>
+    <span class="footer__note">Reference draft</span>
   </footer>
 
   <script>
-    const tabs = document.querySelectorAll('.tab-bar__btn');
-    const panels = document.querySelectorAll('.panel');
+    function showPanel(id) {
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('panel-' + id).classList.add('active');
 
-    function activateTab(panelName) {
-      tabs.forEach(tab => {
-        const selected = tab.dataset.panel === panelName;
-        tab.classList.toggle('active', selected);
-        tab.setAttribute('aria-selected', selected ? 'true' : 'false');
-      });
-
-      panels.forEach(panel => {
-        panel.classList.toggle('active', panel.id === 'panel-' + panelName);
-      });
+      document.querySelectorAll('.tab-bar__btn').forEach(btn => btn.classList.remove('active'));
+      const buttons = Array.from(document.querySelectorAll('.tab-bar__btn'));
+      const match = buttons.find(btn => btn.getAttribute('onclick') === "showPanel('" + id + "')");
+      if (match) match.classList.add('active');
     }
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => activateTab(tab.dataset.panel));
-    });
   </script>
 </body>
 </html>
