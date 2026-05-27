@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Two Banks, One Crisis — Module 6 · SMBC L&D</title>
+  <link rel="stylesheet" href="smbc.css">
+  <style>
+    /* ── Report viewer ── */
+    .report-viewer {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: var(--space-lg);
+    }
+    .report-toolbar {
+      background: var(--navy-deep);
+      padding: 10px var(--space-md);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+    }
+    .report-toolbar__tabs {
+      display: flex;
+      gap: 4px;
+    }
+    .rtab {
+      padding: 6px 16px;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.5);
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.02em;
+    }
+    .rtab:hover { color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.2); }
+    .rtab.active { color: var(--gold-light); border-color: var(--gold); background: rgba(184,144,42,0.12); }
+    .report-toolbar__badge {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+    .report-doc { display: none; padding: var(--space-lg) var(--space-xl); }
+    .report-doc.active { display: block; }
+
+    /* ── Analyst report styles ── */
+    .analyst-report {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 13px;
+      line-height: 1.65;
+      color: #1a1a1a;
+      max-width: 680px;
+    }
+    .ar-header {
+      border-bottom: 2px solid #1a1a1a;
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+    }
+    .ar-stamp {
+      font-family: var(--font-sans);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #666;
+      margin-bottom: 6px;
+    }
+    .ar-title {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 4px;
+      color: #1a1a1a;
+    }
+    .ar-meta {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      color: #555;
+    }
+    .ar-section { margin-bottom: 20px; }
+    .ar-section-head {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #444;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 4px;
+      margin-bottom: 10px;
+    }
+    .ar-p { margin-bottom: 10px; text-align: justify; }
+    .ar-formula {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      background: #f4f4f4;
+      border: 1px solid #ddd;
+      padding: 8px 12px;
+      margin: 8px 0;
+      color: #333;
+    }
+    .ar-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin: 10px 0; font-family: var(--font-sans); }
+    .ar-table th {
+      background: #1a1a1a;
+      color: #fff;
+      padding: 5px 8px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .ar-table td { padding: 5px 8px; border: 1px solid #ccc; vertical-align: top; }
+    .ar-table tr:nth-child(even) td { background: #f9f9f9; }
+    .ar-sig { color: #8b0000; font-weight: 700; }
+    .ar-note { color: #00008b; }
+    .ar-analyst-note {
+      border-left: 3px solid #8b0000;
+      background: #fff5f5;
+      padding: 8px 12px;
+      margin: 12px 0;
+      font-size: 12px;
+      color: #4a0000;
+    }
+    .ar-analyst-note strong {
+      display: block;
+      font-family: var(--font-sans);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #8b0000;
+      margin-bottom: 4px;
+    }
+    .ar-footer {
+      border-top: 1px solid #ccc;
+      padding-top: 8px;
+      margin-top: 20px;
+      font-family: var(--font-sans);
+      font-size: 10px;
+      color: #888;
+    }
+
+    /* ── Executive translation styles ── */
+    .exec-report {
+      font-family: var(--font-sans);
+      max-width: 680px;
+    }
+    .er-header {
+      border-bottom: 4px solid var(--navy);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+    .er-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate-light);
+      margin-bottom: 6px;
+    }
+    .er-title {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+    .er-sub { font-size: 13px; color: var(--slate); }
+    .er-alert {
+      background: #fff4f4;
+      border: 1.5px solid #e8b4b4;
+      border-left: 4px solid #c0392b;
+      border-radius: 4px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+    }
+    .er-alert__head {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #8b0000;
+      margin-bottom: 6px;
+    }
+    .er-alert__body {
+      font-size: 14px;
+      font-weight: 500;
+      color: #3a0000;
+      line-height: 1.6;
+    }
+    .er-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .er-metric {
+      background: #f5f2ec;
+      border-radius: 4px;
+      padding: 14px 16px;
+      border-top: 3px solid var(--navy);
+    }
+    .er-metric.danger { border-top-color: #c0392b; }
+    .er-metric__label { font-size: 11px; color: var(--slate); margin-bottom: 6px; line-height: 1.3; }
+    .er-metric__val { font-family: var(--font-serif); font-size: 24px; font-weight: 700; color: var(--navy); }
+    .er-metric.danger .er-metric__val { color: #c0392b; }
+    .er-section { margin-bottom: 22px; }
+    .er-section__head {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .er-bullet { display: flex; gap: 12px; margin-bottom: 12px; }
+    .er-bullet__marker {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #fff4f4;
+      color: #c0392b;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+      border: 1.5px solid #e8b4b4;
+    }
+    .er-bullet__marker.safe { background: #f0f9f0; color: #1a7a1a; border-color: #a8d8a8; }
+    .er-bullet__text { font-size: 13.5px; color: var(--navy); line-height: 1.6; }
+    .er-scenario-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+    .er-scenario-table th {
+      background: var(--navy);
+      color: rgba(255,255,255,0.75);
+      padding: 8px 12px;
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .er-scenario-table td { padding: 9px 12px; border-bottom: 1px solid var(--rule); color: var(--navy); }
+    .er-scenario-table tr:last-child td { border-bottom: none; }
+    .er-scenario-table .loss-safe { color: #1a7a1a; font-weight: 600; }
+    .er-scenario-table .loss-warn { color: #b8902a; font-weight: 600; }
+    .er-scenario-table .loss-danger { color: #c0392b; font-weight: 700; }
+    .er-scenario-table .row-highlight td { background: #fff9f0; }
+    .er-scenario-table .row-danger td { background: #fff4f4; }
+    .er-actions { border: 1.5px solid var(--rule); border-radius: 4px; overflow: hidden; }
+    .er-actions__head {
+      background: var(--navy);
+      padding: 10px 16px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+    }
+    .er-action {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--rule-light);
+      font-size: 13px;
+      color: var(--navy);
+    }
+    .er-action:last-child { border-bottom: none; }
+    .er-badge {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 3px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .er-badge.urgent { background: #fff0f0; color: #8b0000; border: 1px solid #e8b4b4; }
+    .er-badge.quarter { background: #fff8e8; color: #7a5500; border: 1px solid #e8d4a0; }
+    .er-footer {
+      margin-top: 24px;
+      padding-top: 10px;
+      border-top: 1px solid var(--rule);
+      font-size: 11px;
+      color: var(--slate-light);
+    }
+
+    /* ── Annotation layer ── */
+    .annotations-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: var(--space-md);
+    }
+    .annotations-toggle label {
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--slate);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .annotation {
+      display: none;
+      position: relative;
+      background: var(--navy);
+      border-left: 3px solid var(--gold);
+      padding: 10px 14px;
+      margin: 8px 0;
+      border-radius: 0 3px 3px 0;
+    }
+    .annotation.visible { display: block; }
+    .annotation__label {
+      font-family: var(--font-sans);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .annotation__text {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.55;
+    }
+
+    /* ── Reflection section ── */
+    .reflection-card {
+      background: var(--navy);
+      border-radius: 4px;
+      padding: var(--space-lg) var(--space-xl);
+      margin-bottom: var(--space-lg);
+    }
+    .reflection-card__label {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: var(--space-sm);
+    }
+    .reflection-card__q {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: var(--space-md);
+      line-height: 1.4;
+    }
+    .reflection-options { display: flex; flex-direction: column; gap: 10px; }
+    .reflection-opt {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border: 1.5px solid rgba(255,255,255,0.15);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--font-sans);
+      font-size: 13.5px;
+      color: rgba(255,255,255,0.75);
+    }
+    .reflection-opt:hover { border-color: var(--gold); color: var(--white); background: rgba(184,144,42,0.1); }
+    .reflection-opt.selected { border-color: var(--gold); background: rgba(184,144,42,0.18); color: var(--white); }
+    .reflection-opt__marker {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1.5px solid currentColor;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+    .reflection-opt.selected .reflection-opt__marker {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--navy);
+      opacity: 1;
+    }
+    .reflection-result {
+      display: none;
+      margin-top: var(--space-md);
+      padding: var(--space-md);
+      background: rgba(255,255,255,0.07);
+      border-radius: 4px;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.6;
+      border-left: 3px solid var(--gold);
+    }
+    .reflection-result.visible { display: block; }
+    .reflection-result strong { color: var(--gold-light); font-weight: 600; }
+
+    /* ── Key lessons ── */
+    .lesson-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+    .lesson-card {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-top: 3px solid var(--navy);
+      border-radius: 4px;
+      padding: var(--space-lg);
+    }
+    .lesson-card__num {
+      font-family: var(--font-serif);
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--rule);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .lesson-card__title {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .lesson-card__text { font-size: 13px; color: var(--slate); line-height: 1.6; }
+    .lesson-card.gold { border-top-color: var(--gold); }
+    .lesson-card.gold .lesson-card__num { color: #e8d08a; }
+
+    /* ── Tabs for panels ── */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    @media (max-width: 600px) {
+      .er-metrics { grid-template-columns: 1fr; }
+      .report-doc { padding: var(--space-md); }
+    }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__brand">
+    <svg class="topbar__mark" viewBox="0 0 32 32" fill="none">
+      <rect width="32" height="32" rx="4" fill="#b8902a"/>
+      <text x="16" y="22" text-anchor="middle" font-family="serif" font-size="16" font-weight="700" fill="#071429">S</text>
+    </svg>
+    <div class="topbar__text">
+      <span class="topbar__name">SMBC Group</span>
+      <span class="topbar__sub">Learning &amp; Development · APAC</span>
+    </div>
+  </div>
+  <nav class="topbar__nav">
+    <a href="#" class="active">Module 6</a>
+    <a href="#">Case Study</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero__rule"></div>
+  <div class="hero__inner">
+    <div class="hero__eyebrow">
+      <div class="hero__eyebrow-line"></div>
+      <span class="label">Module 6 · Day 2 · Opening Case Study</span>
+    </div>
+    <h1 class="hero__title">Two Banks, One Crisis<br><em>When the analysis was right and the manager wasn't listening</em></h1>
+    <p class="hero__desc">In 2006, a quantitative analyst produced a model that could have saved billions. The analysis was correct. The warning was issued. Nothing happened. This case study examines why — and what it means for how you engage with data in your role.</p>
+    <div class="hero__meta">
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Source</span>
+        <span class="hero__meta-value">Harvard Business Review</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Author</span>
+        <span class="hero__meta-value">Thomas H. Davenport</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Programme</span>
+        <span class="hero__meta-value">Data-Driven Decision Making</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="tab-bar">
+  <button class="tab-bar__btn active" onclick="showPanel('story', this)">The Story</button>
+  <button class="tab-bar__btn" onclick="showPanel('documents', this)">The Documents</button>
+  <button class="tab-bar__btn" onclick="showPanel('lessons', this)">The Lessons</button>
+  <button class="tab-bar__btn" onclick="showPanel('reflection', this)">Your Reflection</button>
+</div>
+
+<!-- PANEL 1: THE STORY -->
+<div id="panel-story" class="panel active">
+  <div class="section-header">
+    <span class="pill">Part 1</span>
+    <span class="section-header__title">What happened — and why it matters to you</span>
+  </div>
+  <div class="page-layout">
+    <main class="fade-up">
+
+      <div class="card card--highlighted">
+        <div class="card__header">
+          <div class="card__num">01</div>
+          <div class="card__meta">
+            <div class="card__tag">The Setup · 2006</div>
+            <div class="card__title">The analyst who was right</div>
+            <div class="card__topics">
+              <div class="card__topic">A large US bank. A mortgage portfolio of $38bn. A quant team running risk models.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p style="font-size:15px; color:var(--slate); line-height:1.75; margin-bottom:var(--space-lg);">
+        In 2006, a senior quantitative analyst at a large US bank built a probability-of-default model across the firm's residential mortgage book. The model incorporated credit scores, loan-to-value ratios, debt-to-income levels, origination vintage, and regional house price trends. The output was unambiguous: a significant portion of the portfolio was at serious risk of default — particularly if house prices stopped rising.
+      </p>
+      <p style="font-size:15px; color:var(--slate); line-height:1.75; margin-bottom:var(--space-lg);">
+        The analyst did what analysts do. He packaged his findings — regression outputs, scenario tables, confidence intervals — and sent the report to the head of the mortgage business. He had done his job.
+      </p>
+
+      <div class="formula-box">
+        <div class="formula-box__label">Direct quote — the analyst, speaking to HBR professor Thomas Davenport</div>
+        <div class="formula-box__text">"I don't know why we didn't get the mortgages off our books. I had a model strongly indicating that a lot of them wouldn't be repaid, and I sent it to the head of our mortgage business."</div>
+      </div>
+
+      <div class="card" style="margin-top:var(--space-lg);">
+        <div class="card__header">
+          <div class="card__num">02</div>
+          <div class="card__meta">
+            <div class="card__tag">The Failure</div>
+            <div class="card__title">The manager who couldn't engage</div>
+            <div class="card__topics">
+              <div class="card__topic">The report landed. Nothing happened. The bank lost billions in bad loans during the 2008–2009 financial crisis.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p style="font-size:15px; color:var(--slate); line-height:1.75; margin-top:var(--space-md); margin-bottom:var(--space-md);">
+        When Davenport later asked the mortgage head why he had ignored the report, the answer revealed not one failure but three:
+      </p>
+
+      <div class="formula-box">
+        <div class="formula-box__label">Direct quote — the head of mortgage business</div>
+        <div class="formula-box__text">"If the analyst showed me a model, it wasn't in terms I could make sense of. I didn't even know his group was working on repayment probabilities."</div>
+        <div class="formula-box__example">Two sentences. Two catastrophic failures packed inside them.</div>
+      </div>
+
+      <div class="objectives" style="margin-top:var(--space-lg);">
+        <div class="objective">
+          <div class="objective__marker">1</div>
+          <p class="objective__text"><strong>He couldn't read the output.</strong> The report was presented as a statistical model — regression coefficients, probability distributions, model fit statistics. The business head lacked the analytical literacy to extract the business implication from it.</p>
+        </div>
+        <div class="objective">
+          <div class="objective__marker">2</div>
+          <p class="objective__text"><strong>He didn't know the work existed.</strong> There was no working relationship between this manager and the analytics function. No regular briefings, no shared framing, no context in which a risk report could land.</p>
+        </div>
+        <div class="objective">
+          <div class="objective__marker">3</div>
+          <p class="objective__text"><strong>He didn't ask for clarification.</strong> Faced with something he couldn't understand, his response was to disengage — not to ask questions, not to seek a simpler explanation, not to escalate the uncertainty.</p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:var(--space-lg);">
+        <div class="card__header">
+          <div class="card__num">03</div>
+          <div class="card__meta">
+            <div class="card__tag">The Contrast · Toronto-Dominion Bank</div>
+            <div class="card__title">The bank that ran the numbers</div>
+            <div class="card__topics">
+              <div class="card__topic">Same market. Same crisis. Entirely different outcome.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p style="font-size:15px; color:var(--slate); line-height:1.75; margin-top:var(--space-md); margin-bottom:var(--space-md);">
+        TD Bank's CEO at the time, Ed Clark, held a PhD in economics. More importantly, he created a culture where managers were expected to understand the mathematics behind any financial product the bank depended on. Analytics was not something a separate team did elsewhere — it was embedded in how decisions were made at every level.
+      </p>
+      <p style="font-size:15px; color:var(--slate); line-height:1.75; margin-bottom:var(--space-lg);">
+        When the risk signals emerged, TD's leadership could read them, interrogate them, and act. The bank avoided the riskiest structured products and exited others before the crisis hit. Clark's own summary of the culture: <em style="color:var(--navy);">"Nobody ever accuses us of not running the numbers."</em>
+      </p>
+
+      <div class="info-box">
+        <div class="info-box__label">The question this raises for you</div>
+        <p>Both banks had access to the same data and the same analytical tools. The difference was entirely in how management engaged with it. As VP and ED-level decision-makers at SMBC, you are the mortgage head in this story — not the analyst. The question is: when the model lands on your desk, what do you do with it?</p>
+      </div>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Impact</div>
+          <div class="sidebar-card__title">The cost of not engaging</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Portfolio size</span>
+            <span class="sidebar-row__val">$38.4bn</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Losses incurred</span>
+            <span class="sidebar-row__val">Billions</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Warning issued?</span>
+            <span class="sidebar-row__val">Yes</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Analysis correct?</span>
+            <span class="sidebar-row__val">Yes</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Action taken?</span>
+            <span class="sidebar-row__val">None</span>
+          </div>
+        </div>
+      </div>
+      <div class="sidebar-card" style="margin-top:var(--space-md);">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">TD Bank outcome</div>
+          <div class="sidebar-card__title">Avoided the crisis</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">CEO background</span>
+            <span class="sidebar-row__val">PhD, Economics</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Culture</span>
+            <span class="sidebar-row__val">Data mandatory</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Result</span>
+            <span class="sidebar-row__val">Losses avoided</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- PANEL 2: THE DOCUMENTS -->
+<div id="panel-documents" class="panel">
+  <div class="section-header">
+    <span class="pill">Part 2</span>
+    <span class="section-header__title">What the analyst sent — and what he should have sent</span>
+  </div>
+  <div class="page-layout">
+    <main>
+      <p style="font-size:14px; color:var(--slate); line-height:1.7; margin-bottom:var(--space-md);">
+        Below are two versions of the same analysis. The first is what a quantitative analyst would typically produce. The second is what the business head needed to receive. Read both. Notice where the critical information lives in each.
+      </p>
+
+      <div class="annotations-toggle">
+        <label>
+          <input type="checkbox" id="annotate-toggle" onchange="toggleAnnotations(this.checked)">
+          Show facilitator annotations
+        </label>
+        <span class="pill--outline">Highlights what to look for</span>
+      </div>
+
+      <div class="report-viewer">
+        <div class="report-toolbar">
+          <div class="report-toolbar__tabs">
+            <button class="rtab active" onclick="switchReport('analyst', this)">Analyst's report (what was sent)</button>
+            <button class="rtab" onclick="switchReport('exec', this)">Executive translation (what was needed)</button>
+          </div>
+          <span class="report-toolbar__badge">September 2006 · Illustrative</span>
+        </div>
+
+        <!-- ANALYST REPORT -->
+        <div id="report-analyst" class="report-doc active">
+          <div class="analyst-report">
+            <div class="ar-header">
+              <div class="ar-stamp">Internal — Quantitative Risk Analysis · Residential Mortgage Portfolio</div>
+              <div class="ar-title">Probabilistic Default Modelling: US Residential Mortgage Book Q3 2006<br>Predictive Risk Assessment via Logistic Regression &amp; Survival Analysis</div>
+              <div class="ar-meta">Prepared by: Quantitative Risk Analytics Group &nbsp;|&nbsp; Distribution: Head of Mortgage Business &nbsp;|&nbsp; Date: September 14, 2006 &nbsp;|&nbsp; Classification: Confidential</div>
+            </div>
+
+            <div class="annotation" id="ann-1">
+              <div class="annotation__label">Facilitator note — title</div>
+              <div class="annotation__text">The title contains no business signal. "Probabilistic Default Modelling" tells the reader nothing about what was found or what action is needed. Compare to the executive version's title: "Mortgage Portfolio: Significant Default Risk Identified."</div>
+            </div>
+
+            <div class="ar-section">
+              <div class="ar-section-head">1. Executive abstract</div>
+              <div class="ar-p">This report presents findings from a logistic regression-based probability of default (PD) model applied to the firm's residential mortgage portfolio (n = 184,320 active loans, gross exposure USD 38.4bn). The model incorporates FICO score, loan-to-value ratio (LTV), debt-to-income ratio (DTI), origination vintage, and geographic concentration as predictor variables. A secondary survival analysis (Cox proportional hazards) estimates time-to-default distributions conditional on macroeconomic scenario inputs. The null hypothesis — that current PD estimates remain within historical tolerance bands — is rejected at p &lt; 0.001.</div>
+            </div>
+
+            <div class="annotation" id="ann-2">
+              <div class="annotation__label">Facilitator note — abstract</div>
+              <div class="annotation__text">"The null hypothesis is rejected at p &lt; 0.001" is the analyst's way of saying the risk is real and statistically significant. A business head who does not know what a null hypothesis is will read straight past this sentence — the most important conclusion in the abstract — without registering it.</div>
+            </div>
+
+            <div class="ar-section">
+              <div class="ar-section-head">2. Model specification &amp; variable selection</div>
+              <div class="ar-p">The primary model is specified as follows:</div>
+              <div class="ar-formula">logit(PD<sub>i</sub>) = β₀ + β₁(FICO<sub>i</sub>) + β₂(LTV<sub>i</sub>) + β₃(DTI<sub>i</sub>) + β₄(Vintage<sub>i</sub>) + β₅(HPI_Δ<sub>regional</sub>) + ε<sub>i</sub></div>
+              <div class="ar-p">Variable selection was performed via stepwise AIC minimisation (AIC = 41,882; BIC = 41,944). All predictors are statistically significant at the 5% level. Multicollinearity was assessed via VIF (all VIF &lt; 4.2). The model achieves an AUC of 0.847 on the holdout validation set, indicating strong discriminatory power.</div>
+
+              <table class="ar-table">
+                <tr>
+                  <th>Variable</th><th>Coefficient (β)</th><th>Std. Error</th><th>z-value</th><th>p-value</th><th>Odds Ratio</th>
+                </tr>
+                <tr><td>Intercept</td><td>-4.821</td><td>0.312</td><td>-15.45</td><td class="ar-sig">&lt;0.001</td><td>—</td></tr>
+                <tr><td>FICO score</td><td>-0.0082</td><td>0.0011</td><td>-7.45</td><td class="ar-sig">&lt;0.001</td><td>0.992</td></tr>
+                <tr><td>LTV ratio</td><td>0.0341</td><td>0.0028</td><td>12.18</td><td class="ar-sig">&lt;0.001</td><td>1.035</td></tr>
+                <tr><td>DTI ratio</td><td>0.0278</td><td>0.0034</td><td>8.18</td><td class="ar-sig">&lt;0.001</td><td>1.028</td></tr>
+                <tr><td>Vintage 2004–06</td><td>0.614</td><td>0.087</td><td>7.06</td><td class="ar-sig">&lt;0.001</td><td>1.848</td></tr>
+                <tr><td>HPI Δ (regional)</td><td>-0.184</td><td>0.031</td><td>-5.94</td><td class="ar-sig">&lt;0.001</td><td>0.832</td></tr>
+              </table>
+              <div style="font-size:10px; color:#888; font-family:var(--font-sans); text-align:center; margin-top:4px;">Table 1: Logistic regression coefficient estimates, standard errors, and significance levels. Holdout AUC = 0.847.</div>
+            </div>
+
+            <div class="annotation" id="ann-3">
+              <div class="annotation__label">Facilitator note — regression table</div>
+              <div class="annotation__text">This table contains the core finding: the "Vintage 2004–06" row shows an odds ratio of 1.848 — meaning 2004–2006 loans are nearly twice as likely to default. But the business head would need to know how to read an odds ratio to extract that. The number 1.848 sitting in a row of six numbers looks identical to 0.0341. Nothing marks it as the most important figure on the page.</div>
+            </div>
+
+            <div class="ar-section">
+              <div class="ar-section-head">3. Scenario analysis: house price index sensitivity</div>
+              <div class="ar-p">Portfolio PD was modelled across four HPI scenarios. The baseline scenario assumes continued HPI appreciation of +4.2% p.a. consistent with 2003–2006 trends. Adverse scenarios incorporate mean-reversion and stress trajectories calibrated to historical regional downturns (1989–1993 Northeast; 1994–1997 California).</div>
+
+              <table class="ar-table">
+                <tr><th>Scenario</th><th>HPI assumption (12m)</th><th>Wtd avg PD (%)</th><th>Est. default volume</th><th>Expected loss</th></tr>
+                <tr><td>Baseline</td><td>+4.2%</td><td>2.1%</td><td>3,871</td><td class="ar-note">$487m</td></tr>
+                <tr><td>Mild deceleration</td><td>0%</td><td>4.8%</td><td>8,847</td><td class="ar-note">$1.1bn</td></tr>
+                <tr><td>Moderate decline</td><td>-8%</td><td>9.3%</td><td>17,142</td><td class="ar-sig">$2.8bn</td></tr>
+                <tr><td>Severe stress</td><td>-18%</td><td>17.6%</td><td>32,440</td><td class="ar-sig">$6.2bn</td></tr>
+              </table>
+              <div style="font-size:10px; color:#888; font-family:var(--font-sans); text-align:center; margin-top:4px;">Table 2: Scenario-conditional PD estimates and expected loss (95% CIs in Appendix C).</div>
+
+              <div class="ar-analyst-note">
+                <strong>Analyst note</strong>
+                The moderate decline scenario (HPI –8%) cannot be excluded on historical grounds. Regional precedent (Northeast 1990–91: –12.4%; California 1994: –9.7%) suggests this scenario warrants non-trivial probability weighting. HPI mean-reversion from current elevated levels represents a plausible tail risk. See Section 5 for model limitation caveats.
+              </div>
+            </div>
+
+            <div class="annotation" id="ann-4">
+              <div class="annotation__label">Facilitator note — the buried warning</div>
+              <div class="annotation__text">This "Analyst Note" is the most important paragraph in the entire report. It says: a $2.8bn loss scenario is historically plausible and should not be dismissed. But it appears on page 3, after a regression formula, a coefficient table, and a scenario table. It is written in hedged, passive academic language. A non-quant business head reading quickly — or not reading at all — will never reach it.</div>
+            </div>
+
+            <div class="ar-section">
+              <div class="ar-section-head">4. Survival analysis: time-to-default</div>
+              <div class="ar-p">A Cox proportional hazards model was fitted to estimate time-to-default distributions, stratified by origination vintage. The hazard ratio for 2005–2006 vintage loans is 1.84 (95% CI: 1.61–2.10) relative to pre-2003 originations. Schoenfeld residual testing confirms proportional hazards assumption holds (p = 0.34).</div>
+              <div class="ar-formula">h(t|x) = h₀(t) · exp(β₁x₁ + β₂x₂ + ... + βₙxₙ)</div>
+              <div class="ar-p">Median time-to-default for loans currently 60+ DPD is estimated at 7.3 months (IQR: 4.1–12.8 months). The Kaplan-Meier survival curves for 2005–2006 vintage loans diverge significantly from earlier cohorts beyond month 18 of seasoning, consistent with ARM reset exposure concentrated in Q2–Q3 2007.</div>
+            </div>
+
+            <div class="ar-section">
+              <div class="ar-section-head">5. Model limitations &amp; assumptions</div>
+              <div class="ar-p">The model assumes stationarity of the FICO-default relationship. This assumption may be violated if underwriting standards have deteriorated over the sample period in ways not captured by observable FICO scores. The HPI sensitivity parameter is calibrated on 1988–2005 data; extrapolation beyond –20% HPI decline is outside the model's training distribution. The model does not account for correlated defaults arising from systemic HPI shock.</div>
+            </div>
+
+            <div class="ar-footer">
+              Quantitative Risk Analytics Group · September 2006 · Appendices A–D available on request · This analysis does not constitute investment advice
+            </div>
+          </div>
+        </div>
+
+        <!-- EXECUTIVE TRANSLATION -->
+        <div id="report-exec" class="report-doc">
+          <div class="exec-report">
+            <div class="er-header">
+              <div class="er-label">For: Head of Mortgage Business &nbsp;·&nbsp; September 14, 2006 &nbsp;·&nbsp; Confidential</div>
+              <div class="er-title">Mortgage Portfolio: Significant Default Risk Identified</div>
+              <div class="er-sub">Action required. This note summarises findings and recommended next steps. Full technical report available on request.</div>
+            </div>
+
+            <div class="er-alert">
+              <div class="er-alert__head">Bottom line — read this first</div>
+              <div class="er-alert__body">Our analysis shows the mortgage book carries materially more risk than current reserves reflect. If house prices stop rising — or fall — losses could reach $2.8bn to $6.2bn. This is not a remote scenario. Historical precedent supports it. We recommend immediate review of portfolio exposure and hedging strategy.</div>
+            </div>
+
+            <div class="er-metrics">
+              <div class="er-metric">
+                <div class="er-metric__label">Total portfolio exposure</div>
+                <div class="er-metric__val">$38.4bn</div>
+              </div>
+              <div class="er-metric danger">
+                <div class="er-metric__label">Projected loss if prices fall 8%</div>
+                <div class="er-metric__val">$2.8bn</div>
+              </div>
+              <div class="er-metric danger">
+                <div class="er-metric__label">Projected loss in stress scenario</div>
+                <div class="er-metric__val">$6.2bn</div>
+              </div>
+            </div>
+
+            <div class="er-section">
+              <div class="er-section__head">Why this is different from prior years</div>
+              <div class="er-bullet">
+                <div class="er-bullet__marker">1</div>
+                <div class="er-bullet__text">Loans originated in 2004–2006 are defaulting at <strong>nearly twice the rate</strong> of earlier loans, even with the same credit scores. The quality of recent originations is worse than headline numbers suggest.</div>
+              </div>
+              <div class="er-bullet">
+                <div class="er-bullet__marker">2</div>
+                <div class="er-bullet__text">The entire model — and our current reserve levels — <strong>assumes house prices keep rising</strong>. They have risen every year since 1991. But in the early 1990s, prices fell 12% in the Northeast and 10% in California. There is nothing structural preventing this from happening again.</div>
+              </div>
+              <div class="er-bullet">
+                <div class="er-bullet__marker">3</div>
+                <div class="er-bullet__text">A large number of adjustable-rate loans in the 2005–2006 book are <strong>due to reset in mid-2007</strong>. When monthly payments increase, we expect a significant spike in defaults — our modelling places this at 7–13 months from now.</div>
+              </div>
+            </div>
+
+            <div class="er-section">
+              <div class="er-section__head">What the numbers mean in plain terms</div>
+              <table class="er-scenario-table">
+                <tr>
+                  <th>Scenario</th>
+                  <th>What it assumes</th>
+                  <th>Expected loss</th>
+                  <th>Likelihood</th>
+                </tr>
+                <tr>
+                  <td>Prices keep rising</td>
+                  <td>+4.2% per year (current trend)</td>
+                  <td class="loss-safe">$487m</td>
+                  <td>Possible, not guaranteed</td>
+                </tr>
+                <tr class="row-highlight">
+                  <td>Prices flatten</td>
+                  <td>0% growth — prices stable</td>
+                  <td class="loss-warn">$1.1bn</td>
+                  <td>Plausible in 12 months</td>
+                </tr>
+                <tr class="row-danger">
+                  <td><strong>Prices fall 8%</strong></td>
+                  <td>Within historical range</td>
+                  <td class="loss-danger"><strong>$2.8bn</strong></td>
+                  <td><strong>Cannot be dismissed</strong></td>
+                </tr>
+                <tr class="row-danger">
+                  <td>Prices fall 18%</td>
+                  <td>Severe but not unprecedented</td>
+                  <td class="loss-danger">$6.2bn</td>
+                  <td>Stress scenario</td>
+                </tr>
+              </table>
+            </div>
+
+            <div class="er-actions">
+              <div class="er-actions__head">Recommended actions</div>
+              <div class="er-action">
+                <span>Review hedging coverage on 2005–2006 vintage exposure</span>
+                <span class="er-badge urgent">Urgent</span>
+              </div>
+              <div class="er-action">
+                <span>Reassess reserve levels against flat and –8% HPI scenarios</span>
+                <span class="er-badge urgent">Urgent</span>
+              </div>
+              <div class="er-action">
+                <span>Tighten origination standards on high-LTV, high-DTI loans immediately</span>
+                <span class="er-badge urgent">Urgent</span>
+              </div>
+              <div class="er-action">
+                <span>Model ARM reset impact on Q2–Q3 2007 default projections</span>
+                <span class="er-badge quarter">This quarter</span>
+              </div>
+              <div class="er-action">
+                <span>Briefing with Risk Committee recommended</span>
+                <span class="er-badge quarter">This quarter</span>
+              </div>
+            </div>
+
+            <div class="er-footer">
+              Prepared by: Quantitative Risk Analytics Group · Full technical report with model specification, regression outputs, scenario confidence intervals, and sensitivity analysis available on request. Contact: quant-risk@[bank].com
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-box__label">Discussion question</div>
+        <p>You receive the analyst's report in your inbox on a Friday afternoon. You have three other reports to review and a management meeting at 4pm. Be honest: what do you do with it? Now look at the executive translation. Does your answer change? What made the difference?</p>
+      </div>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">What to notice</div>
+          <div class="sidebar-card__title">The analyst's report</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Key finding</span>
+            <span class="sidebar-row__val">Page 3, buried</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Bottom line</span>
+            <span class="sidebar-row__val">Not stated</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Action required</span>
+            <span class="sidebar-row__val">Not specified</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Dollar impact</span>
+            <span class="sidebar-row__val">Table 2, row 3</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Jargon count</span>
+            <span class="sidebar-row__val">High</span>
+          </div>
+        </div>
+      </div>
+      <div class="sidebar-card" style="margin-top:var(--space-md);">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">What to notice</div>
+          <div class="sidebar-card__title">The executive version</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Key finding</span>
+            <span class="sidebar-row__val">First paragraph</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Bottom line</span>
+            <span class="sidebar-row__val">Bold, first box</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Action required</span>
+            <span class="sidebar-row__val">Explicit, ranked</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Dollar impact</span>
+            <span class="sidebar-row__val">Above the fold</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Jargon count</span>
+            <span class="sidebar-row__val">Zero</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- PANEL 3: THE LESSONS -->
+<div id="panel-lessons" class="panel">
+  <div class="section-header">
+    <span class="pill">Part 3</span>
+    <span class="section-header__title">What this means for how you manage</span>
+  </div>
+  <div class="page-layout">
+    <main class="fade-up">
+
+      <p style="font-size:15px; color:var(--slate); line-height:1.75; margin-bottom:var(--space-lg);">
+        This case is not primarily about communication — though communication failed. It is about the structural conditions that allowed a correct risk warning to be ignored at the cost of billions. Three lessons apply directly to your role.
+      </p>
+
+      <div class="lesson-grid">
+        <div class="lesson-card">
+          <div class="lesson-card__num">01</div>
+          <div class="lesson-card__title">Your job is to interrogate, not just receive</div>
+          <div class="lesson-card__text">The mortgage head's core failure was passivity. He received a report he couldn't understand and did nothing. The manager's role is not to accept or reject analysis — it is to ask questions until the business implication is clear. "I don't understand this" is not a reason to disengage. It is a reason to demand a better explanation.</div>
+        </div>
+        <div class="lesson-card gold">
+          <div class="lesson-card__num">02</div>
+          <div class="lesson-card__title">Know what assumptions are in the model</div>
+          <div class="lesson-card__text">The entire 2008 crisis was embedded in one hidden assumption: that US house prices would always rise. That assumption was never stated explicitly, never challenged, and never monitored. Every model has assumptions. Your job is to ask: what would have to be true for this analysis to be wrong? And is that true right now?</div>
+        </div>
+        <div class="lesson-card">
+          <div class="lesson-card__num">03</div>
+          <div class="lesson-card__title">Build the relationship before the crisis</div>
+          <div class="lesson-card__text">The mortgage head had no working relationship with the analytics team. When the report arrived, it arrived cold — with no shared context, no prior conversations, no trust. TD Bank built something different: a culture where managers and analysts worked together continuously. By the time risk signals emerged, the relationship to act on them already existed.</div>
+        </div>
+      </div>
+
+      <div class="formula-box" style="margin-bottom:var(--space-lg);">
+        <div class="formula-box__label">The six questions every manager should ask of any analysis</div>
+        <div class="formula-box__text">1. What was the source of this data, and how was it collected?<br>
+2. What are the key assumptions behind this model? What would invalidate them?<br>
+3. What is the business implication — in plain language, in dollar terms?<br>
+4. What action does this analysis recommend, and by when?<br>
+5. What does this analysis not tell us? What is outside its scope?<br>
+6. If you had to act on this tomorrow, what would you do?</div>
+        <div class="formula-box__example">Source: Adapted from Davenport, T.H., "Keep Up with Your Quants," HBR July–August 2013</div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-box__label">The TD Bank standard</div>
+        <p>At TD Bank under Ed Clark, if anyone in a management meeting suggested a new direction, they were pressed for data and analysis to support it. This was not a one-way street — it was a mutual expectation. Managers demanded rigour from analysts. Analysts were expected to communicate in business terms. The culture made both sides accountable. That is the standard this module asks you to consider for your own team.</p>
+      </div>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Module 6</div>
+          <div class="sidebar-card__title">What you will build from here</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Metrics</span>
+            <span class="sidebar-row__val">Validating KPIs</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Risk</span>
+            <span class="sidebar-row__val">Continuous signals</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">AI &amp; ML</span>
+            <span class="sidebar-row__val">When it adds value</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Failure modes</span>
+            <span class="sidebar-row__val">Bias &amp; overfit</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- PANEL 4: REFLECTION -->
+<div id="panel-reflection" class="panel">
+  <div class="section-header">
+    <span class="pill">Part 4</span>
+    <span class="section-header__title">Your reflection — apply this to your own context</span>
+  </div>
+  <div class="page-layout">
+    <main class="fade-up">
+
+      <div class="reflection-card">
+        <div class="reflection-card__label">Reflection question 1 of 3</div>
+        <div class="reflection-card__q">Think about the last time your team presented you with data analysis. How confident were you that you understood what the analysis was — and was not — telling you?</div>
+        <div class="reflection-options" id="rq1">
+          <div class="reflection-opt" onclick="selectOpt('rq1', 0, this)">
+            <div class="reflection-opt__marker">A</div>
+            Very confident — I interrogated the methodology and could defend the conclusion
+          </div>
+          <div class="reflection-opt" onclick="selectOpt('rq1', 1, this)">
+            <div class="reflection-opt__marker">B</div>
+            Reasonably confident — I understood the headline, less sure about the assumptions
+          </div>
+          <div class="reflection-opt" onclick="selectOpt('rq1', 2, this)">
+            <div class="reflection-opt__marker">C</div>
+            Partially confident — I accepted the conclusion but did not probe deeply
+          </div>
+          <div class="reflection-opt" onclick="selectOpt('rq1', 3, this)">
+            <div class="reflection-opt__marker">D</div>
+            Honestly, not very — I deferred to the analyst and moved on
+          </div>
+        </div>
+        <div class="reflection-result" id="rq1-result"></div>
+      </div>
+
+      <div class="reflection-card">
+        <div class="reflection-card__label">Reflection question 2 of 3</div>
+        <div class="reflection-card__q">In your area, what is the most important assumption currently built into your performance reporting or risk models — and when did you last explicitly challenge it?</div>
+        <div class="reflection-options" id="rq2">
+          <div class="reflection-opt" onclick="selectOpt('rq2', 0, this)">
+            <div class="reflection-opt__marker">A</div>
+            I can name the assumption and we reviewed it recently
+          </div>
+          <div class="reflection-opt" onclick="selectOpt('rq2', 1, this)">
+            <div class="reflection-opt__marker">B</div>
+            I can name it but I am not sure when it was last validated
+          </div>
+          <div class="reflection-opt" onclick="selectOpt('rq2', 2, this)">
+            <div class="reflection-opt__marker">C</div>
+            I am not certain what the key assumption is — I would need to ask the team
+          </div>
+          <div class="reflection-opt" onclick="selectOpt('rq2', 3, this)">
+            <div class="reflection-opt__marker">D</div>
+            I have not thought about this in those terms before
+          </div>
+        </div>
+        <div class="reflection-result" id="rq2-result"></div>
+      </div>
+
+      <div class="reflection-card">
+        <div class="reflection-card__label">Reflection question 3 of 3</div>
+        <div class="reflection-card__q">If your analytics team sent you the report shown in this case study — the technical version — what would you do?</div>
+        <div class="reflection-options" id="rq3">
+          <div class="reflection-opt" onclick="selectOpt('rq3', 0, this)">
+            <div class="reflection-opt__marker">A</div>
+            Read it, ask clarifying questions, and request a plain-language summary if needed
+          </div>
+          <div class="reflection-opt" onclick="selectOpt('rq3', 1, this)">
+            <div class="reflection-opt__marker">B</div>
+            Forward it to a more technical colleague for interpretation
+          </div>
+          <div class="reflection-opt" onclick="selectOpt('rq3', 2, this)">
+            <div class="reflection-opt__marker">C</div>
+            Skim it and flag for follow-up when time allows
+          </div>
+          <div class="reflection-opt" onclick="selectOpt('rq3', 3, this)">
+            <div class="reflection-opt__marker">D</div>
+            Honestly — it would sit in my inbox
+          </div>
+        </div>
+        <div class="reflection-result" id="rq3-result"></div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-box__label">Take-away commitment</div>
+        <p>Before you leave this module: identify one report or dashboard your team produces regularly. Commit to asking at least two of the six questions from Part 3 the next time you receive it. That is the smallest version of what Ed Clark built at TD — and it is where it starts.</p>
+      </div>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Remember</div>
+          <div class="sidebar-card__title">The six questions</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">1</span>
+            <span class="sidebar-row__val">Data source?</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">2</span>
+            <span class="sidebar-row__val">Key assumptions?</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">3</span>
+            <span class="sidebar-row__val">Business implication?</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">4</span>
+            <span class="sidebar-row__val">Recommended action?</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">5</span>
+            <span class="sidebar-row__val">What's out of scope?</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">6</span>
+            <span class="sidebar-row__val">If you had to act now?</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<footer>
+  <span class="footer__brand">SMBC Group · Learning &amp; Development · APAC · Data-Driven Decision Making · Module 6</span>
+  <span class="footer__note">Confidential · Programme Materials 2025</span>
+</footer>
+
+<script>
+  function showPanel(id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-bar__btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function switchReport(id, btn) {
+    document.querySelectorAll('.report-doc').forEach(d => d.classList.remove('active'));
+    document.querySelectorAll('.rtab').forEach(t => t.classList.remove('active'));
+    document.getElementById('report-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function toggleAnnotations(on) {
+    document.querySelectorAll('.annotation').forEach(a => {
+      a.classList.toggle('visible', on);
+    });
+  }
+
+  const reflectionResponses = {
+    rq1: [
+      "<strong>That is the TD standard.</strong> The goal of this module is to help you maintain it consistently across your team — and to build the culture where your analysts are expected to meet you there.",
+      "<strong>This is the most common position for senior managers.</strong> The gap between understanding the headline and understanding the assumptions is exactly where the mortgage head's failure lived. The rest of this module focuses on closing that gap.",
+      "<strong>Honest answer — and a useful one.</strong> The difference between accepting a conclusion and probing it is precisely the difference between the two banks in this case. The six questions in Part 3 are the practical tool for changing this habit.",
+      "<strong>The most honest answer in the room, and the most important one to address.</strong> Deferring to analysts is not inherently wrong — but deferring without any interrogation is the mortgage head's failure exactly. The module gives you the tools to engage without needing to become a quant yourself."
+    ],
+    rq2: [
+      "<strong>This is the TD standard.</strong> Named, validated, monitored. Hold that discipline and apply it to every model your team runs.",
+      "<strong>The most common position.</strong> Naming the assumption is the first step — but assumptions need a review cycle, not just awareness. Consider when yours was last tested against current conditions.",
+      "<strong>This is a structural risk.</strong> If you cannot name the key assumption in your own reporting, you are in the same position as the mortgage head — relying on analysis you cannot interrogate. The practical fix: ask the question in your next team meeting.",
+      "<strong>This module is designed for exactly this moment.</strong> The concept of model assumptions — and the manager's responsibility to challenge them — is at the core of Module 6. You are in the right place."
+    ],
+    rq3: [
+      "<strong>This is the right answer and the expected standard at TD Bank.</strong> The skill is in knowing which questions to ask — the six-question framework in Part 3 is the practical guide.",
+      "<strong>A reasonable instinct, but also a risk.</strong> Forwarding for interpretation is fine — but if the interpretation comes back and you still cannot engage with it, the decision still lands on your desk. Build enough literacy to ask the follow-up questions yourself.",
+      "<strong>Honest — and common.</strong> The problem with flagging for follow-up is that high-stakes risk signals do not wait for a clear inbox. Building a habit of immediate engagement, even briefly, is the structural change this case study argues for.",
+      "<strong>The most useful answer to admit.</strong> That is what happened in 2006. The report sat. Naming it is the first step to changing it. The rest of this module gives you the tools to make a different choice next time."
+    ]
+  };
+
+  function selectOpt(qid, idx, el) {
+    document.querySelectorAll('#' + qid + ' .reflection-opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    const result = document.getElementById(qid + '-result');
+    result.innerHTML = reflectionResponses[qid][idx];
+    result.classList.add('visible');
+  }
+</script>
+
+</body>
+</html>
