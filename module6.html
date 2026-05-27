@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 6 — Integrating Data Analytics · SMBC L&D</title>
+  <link rel="stylesheet" href="smbc.css">
+  <style>
+
+    /* ── Progress bar ── */
+    .module-progress {
+      background: var(--navy-mid);
+      padding: 10px var(--page-pad);
+      display: flex;
+      align-items: center;
+      gap: var(--space-lg);
+    }
+    .mp-label {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      white-space: nowrap;
+    }
+    .mp-steps {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex: 1;
+    }
+    .mp-step {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+    .mp-step-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.2);
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-sans);
+      font-size: 9px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.3);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .mp-step-dot.current {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--navy-deep);
+    }
+    .mp-step-dot.done {
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.5);
+    }
+    .mp-step-line {
+      flex: 1;
+      height: 2px;
+      background: rgba(255,255,255,0.1);
+      margin: 0 4px;
+    }
+    .mp-step-line.done { background: rgba(255,255,255,0.25); }
+    .mp-step-name {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      color: rgba(255,255,255,0.3);
+      white-space: nowrap;
+      margin-top: 4px;
+    }
+    .mp-step-name.current { color: var(--gold-light); }
+    .mp-step-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── Back button ── */
+    .back-bar {
+      padding: 12px var(--page-pad);
+      background: var(--cream);
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--slate);
+      text-decoration: none;
+      padding: 5px 12px;
+      border: 1px solid var(--rule);
+      border-radius: 3px;
+      background: var(--white);
+      transition: all 0.15s;
+    }
+    .back-btn:hover {
+      border-color: var(--navy);
+      color: var(--navy);
+      background: var(--warm-white);
+    }
+    .back-btn__arrow { font-size: 14px; line-height: 1; }
+
+    /* ── Segment cards ── */
+    .segment-card {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-left: 4px solid var(--navy);
+      border-radius: 4px;
+      margin-bottom: var(--space-md);
+      overflow: hidden;
+      transition: border-left-color 0.2s;
+    }
+    .segment-card:hover { border-left-color: var(--gold); }
+    .segment-card__head {
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-md);
+      border-bottom: 1px solid var(--rule-light);
+    }
+    .segment-card__num {
+      font-family: var(--font-serif);
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--rule);
+      line-height: 1;
+      flex-shrink: 0;
+      min-width: 44px;
+    }
+    .segment-card__meta { flex: 1; }
+    .segment-card__timing {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate-light);
+      margin-bottom: 4px;
+    }
+    .segment-card__title {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    .segment-card__desc {
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--slate);
+      line-height: 1.65;
+    }
+    .segment-card__body {
+      padding: var(--space-md) var(--space-lg);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: var(--space-lg);
+    }
+    .segment-card__topics {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .segment-card__topic {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-family: var(--font-sans);
+      font-size: 12.5px;
+      color: var(--slate);
+      line-height: 1.5;
+    }
+    .segment-card__topic::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+    .segment-card__actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-end;
+    }
+    .segment-card__artifact {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--white);
+      background: var(--navy);
+      padding: 8px 16px;
+      border-radius: 3px;
+      text-decoration: none;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .segment-card__artifact:hover { background: var(--navy-light); }
+    .segment-card__artifact.gold {
+      background: var(--gold);
+      color: var(--navy-deep);
+    }
+    .segment-card__artifact.gold:hover { background: var(--gold-light); }
+    .segment-card__artifact__icon { font-size: 14px; }
+    .artifact-badge {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      color: var(--slate-light);
+      letter-spacing: 0.03em;
+    }
+
+    /* ── Opening segment (no artifact link) ── */
+    .opening-card {
+      background: var(--navy);
+      border: none;
+      border-left: 4px solid var(--gold);
+      border-radius: 4px;
+      padding: var(--space-lg) var(--space-xl);
+      margin-bottom: var(--space-md);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: var(--space-xl);
+    }
+    .opening-card__label {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .opening-card__title {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .opening-card__desc {
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.65;
+    }
+    .opening-card__meta {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-end;
+      flex-shrink: 0;
+    }
+    .opening-card__time {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--gold-pale);
+      line-height: 1;
+    }
+    .opening-card__time-label {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.06em;
+      text-align: right;
+      margin-top: 2px;
+    }
+
+    /* ── Outcomes grid ── */
+    .outcomes-section {
+      margin-bottom: var(--space-lg);
+    }
+    .outcomes-label {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate-light);
+      margin-bottom: var(--space-md);
+      padding-bottom: var(--space-sm);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    /* ── Run order ── */
+    .run-order {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: var(--space-md);
+    }
+    .run-order__head {
+      background: var(--navy-deep);
+      padding: 10px 16px;
+    }
+    .run-order__title {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .run-row {
+      display: flex;
+      align-items: center;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--rule-light);
+      gap: var(--space-md);
+    }
+    .run-row:last-child { border-bottom: none; }
+    .run-row__time {
+      font-family: var(--font-serif);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+      min-width: 36px;
+    }
+    .run-row__bar {
+      width: 3px;
+      height: 32px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .run-row__content { flex: 1; }
+    .run-row__name {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 2px;
+    }
+    .run-row__detail {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      color: var(--slate-light);
+    }
+    .run-row__badge {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .rb-story { background: #FAEEDA; color: #633806; }
+    .rb-exercise { background: #E6F1FB; color: #0C447C; }
+    .rb-reference { background: #EEEDFE; color: #3C3489; }
+    .rb-discussion { background: #EAF3DE; color: #27500A; }
+
+    /* ── Facilitator note box ── */
+    .fac-note {
+      background: var(--warm-white);
+      border: 1px solid var(--rule);
+      border-top: 3px solid var(--gold);
+      border-radius: 4px;
+      padding: var(--space-md) var(--space-lg);
+      margin-bottom: var(--space-md);
+    }
+    .fac-note__label {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .fac-note__text {
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--slate);
+      line-height: 1.65;
+    }
+
+    @media (max-width: 700px) {
+      .opening-card { grid-template-columns: 1fr; gap: var(--space-md); }
+      .opening-card__meta { align-items: flex-start; }
+      .segment-card__body { grid-template-columns: 1fr; }
+      .segment-card__actions { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
+      .mp-steps { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Topbar ── -->
+<header class="topbar">
+  <div class="topbar__brand">
+    <svg class="topbar__mark" viewBox="0 0 32 32" fill="none">
+      <rect width="32" height="32" rx="4" fill="#b8902a"/>
+      <text x="16" y="22" text-anchor="middle" font-family="serif" font-size="16" font-weight="700" fill="#071429">S</text>
+    </svg>
+    <div class="topbar__text">
+      <span class="topbar__name">SMBC Group</span>
+      <span class="topbar__sub">Learning &amp; Development · APAC</span>
+    </div>
+  </div>
+  <nav class="topbar__nav">
+    <a href="index.html">Programme</a>
+    <a href="#" class="active">Module 6</a>
+  </nav>
+</header>
+
+<!-- ── Module progress ── -->
+<div class="module-progress">
+  <span class="mp-label">Day 2</span>
+  <div class="mp-steps">
+    <div class="mp-step">
+      <div class="mp-step-wrap">
+        <div class="mp-step-dot done">4</div>
+        <div class="mp-step-name">Tools</div>
+      </div>
+      <div class="mp-step-line done"></div>
+    </div>
+    <div class="mp-step">
+      <div class="mp-step-wrap">
+        <div class="mp-step-dot done">5</div>
+        <div class="mp-step-name">Case Studies</div>
+      </div>
+      <div class="mp-step-line done"></div>
+    </div>
+    <div class="mp-step">
+      <div class="mp-step-wrap">
+        <div class="mp-step-dot current">6</div>
+        <div class="mp-step-name current">Managerial Practice</div>
+      </div>
+      <div class="mp-step-line"></div>
+    </div>
+    <div class="mp-step">
+      <div class="mp-step-wrap">
+        <div class="mp-step-dot">7</div>
+        <div class="mp-step-name">AI in Banking</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Back bar ── -->
+<div class="back-bar">
+  <a href="index.html" class="back-btn">
+    <span class="back-btn__arrow">&#8592;</span>
+    Back to programme overview
+  </a>
+</div>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="hero__rule"></div>
+  <div class="hero__inner">
+    <div class="hero__eyebrow">
+      <div class="hero__eyebrow-line"></div>
+      <span class="label">Module 6 · Day 2 · Data-Driven Decision Making</span>
+    </div>
+    <h1 class="hero__title">Integrating Data Analytics<br><em>into Managerial Practice</em></h1>
+    <p class="hero__desc">The previous modules gave you the tools. This module is about how to use them — in the decisions you make, the metrics you trust, the risks you monitor, and the AI recommendations your teams will soon be presenting to you.</p>
+    <div class="hero__meta">
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Total duration</span>
+        <span class="hero__meta-value">75 minutes</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Segments</span>
+        <span class="hero__meta-value">Opening + 3</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Interactive artefacts</span>
+        <span class="hero__meta-value">3 pages</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Day</span>
+        <span class="hero__meta-value">Day 2 · 2026</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Main content ── -->
+<div class="section-header">
+  <span class="pill">Module 6</span>
+  <span class="section-header__title">Session guide — segments, learning outcomes &amp; artefacts</span>
+</div>
+
+<div class="page-layout">
+  <main>
+
+    <!-- Learning outcomes -->
+    <div class="outcomes-section">
+      <div class="outcomes-label">Learning outcomes — by the end of this module participants will be able to</div>
+      <div class="objectives">
+        <div class="objective">
+          <div class="objective__marker">1</div>
+          <p class="objective__text">Explain why analytical capability at management level is a risk management obligation — not a technical nice-to-have — using the TD Bank and mortgage bank case as evidence.</p>
+        </div>
+        <div class="objective">
+          <div class="objective__marker">2</div>
+          <p class="objective__text">Apply a four-question framework to evaluate whether any metric they currently track is persistent, predictive, controllable, and still valid.</p>
+        </div>
+        <div class="objective">
+          <div class="objective__marker">3</div>
+          <p class="objective__text">Describe how analytics shifts risk and compliance management from periodic review to continuous signal monitoring — and name the managerial behaviours that shift requires.</p>
+        </div>
+        <div class="objective">
+          <div class="objective__marker">4</div>
+          <p class="objective__text">Use a four-question readiness test to assess whether an AI or ML proposal is fit for purpose in their area — and identify the failure modes that most commonly undermine data-driven decisions.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Opening -->
+    <div class="opening-card">
+      <div>
+        <div class="opening-card__label">Opening · 12–15 minutes</div>
+        <div class="opening-card__title">Two Banks, One Crisis — the story that frames the module</div>
+        <div class="opening-card__desc">
+          In 2006, a quantitative analyst built a model that could have saved billions. The analysis was correct. The warning was issued. The report was sent. Nothing happened — because the manager who received it could not engage with it. This story is not about analysis. It is about what happens when management lacks the capability to act on analysis it receives. It sets the question this entire module answers.
+        </div>
+        <div style="margin-top:var(--space-md)">
+          <a href="module6-case.html" class="segment-card__artifact gold">
+            <span class="segment-card__artifact__icon">&#9654;</span>
+            Open case study artefact
+          </a>
+        </div>
+      </div>
+      <div class="opening-card__meta">
+        <div>
+          <div class="opening-card__time">15'</div>
+          <div class="opening-card__time-label">Opening</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Segment 1 -->
+    <div class="segment-card">
+      <div class="segment-card__head">
+        <div class="segment-card__num">01</div>
+        <div class="segment-card__meta">
+          <div class="segment-card__timing">Segment 1 · 20 minutes</div>
+          <div class="segment-card__title">Metrics That Actually Predict Outcomes</div>
+          <div class="segment-card__desc">Most management dashboards track what has happened. Very few track what is about to happen. This segment gives participants a four-question framework to tell the difference — tested against a live banking dashboard that mirrors what they open on a Monday morning.</div>
+        </div>
+      </div>
+      <div class="segment-card__body">
+        <div class="segment-card__topics">
+          <div class="segment-card__topic">The problem with most dashboards — overloaded and underused, describing the past rather than predicting the future</div>
+          <div class="segment-card__topic">Vanity metrics and the DoSomething.org example — 1.5 million views, eight sign-ups, zero donations</div>
+          <div class="segment-card__topic">The four-question test: persistent, predictive, controllable, still valid — applied to each metric in the banking dashboard</div>
+          <div class="segment-card__topic">Planted traps: average credit score (the 2006 metric), branch staff turnover (the TD teller example), and NPL ratio (leading vs lagging)</div>
+          <div class="segment-card__topic">Peer discussion exercise: participants test one metric from their own area and share one observation</div>
+        </div>
+        <div class="segment-card__actions">
+          <span class="artifact-badge">Interactive artefact</span>
+          <a href="module6-metrics.html" class="segment-card__artifact gold">
+            <span class="segment-card__artifact__icon">&#9654;</span>
+            Open metrics exercise
+          </a>
+          <span class="pill--outline">20 min · Exercise</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Segment 2 -->
+    <div class="segment-card">
+      <div class="segment-card__head">
+        <div class="segment-card__num">02</div>
+        <div class="segment-card__meta">
+          <div class="segment-card__timing">Segment 2 · 15 minutes</div>
+          <div class="segment-card__title">Risk, Compliance &amp; Continuous Signal Monitoring</div>
+          <div class="segment-card__desc">Analytics does not just make risk management more accurate. It makes it faster. The shift from periodic review to continuous monitoring replaces the calendar with signals — and changes the manager's role from reviewer to responder. This segment makes that shift visible with a live credit deterioration timeline and a signal-to-action reference covering APAC regulatory expectations.</div>
+        </div>
+      </div>
+      <div class="segment-card__body">
+        <div class="segment-card__topics">
+          <div class="segment-card__topic">The shift from periodic to continuous — how the trigger changes from a date to a threshold breach</div>
+          <div class="segment-card__topic">APAC regulatory context: MAS 626, HKMA AML-2, BSP, BNM — continuous monitoring is increasingly an obligation, not a best practice</div>
+          <div class="segment-card__topic">Interactive timeline: an 18-month corporate credit deterioration showing the detection gap between periodic review (11-week lag) and continuous monitoring (3-day detection)</div>
+          <div class="segment-card__topic">Signal-to-action reference: 13 specific signals across credit, transaction, and compliance — each with defined threshold and management decision</div>
+          <div class="segment-card__topic">Self-assessment: which signals does your team monitor, which have a defined threshold, which have a defined response</div>
+        </div>
+        <div class="segment-card__actions">
+          <span class="artifact-badge">Interactive artefact</span>
+          <a href="module6-risk.html" class="segment-card__artifact gold">
+            <span class="segment-card__artifact__icon">&#9654;</span>
+            Open risk &amp; monitoring page
+          </a>
+          <span class="pill--outline">15 min · Reference</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Segment 3 -->
+    <div class="segment-card">
+      <div class="segment-card__head">
+        <div class="segment-card__num">03</div>
+        <div class="segment-card__meta">
+          <div class="segment-card__timing">Segment 3 · 20 minutes · No dedicated artefact — links to Module 7</div>
+          <div class="segment-card__title">AI &amp; ML — A Decision Framework for Managers</div>
+          <div class="segment-card__desc">Module 7 covers AI in banking in depth. This segment does not duplicate it. Its purpose is to give participants a tool — the ML Readiness Test — for evaluating any AI or ML proposal they receive. The framing is deliberately positioned as preparation for Module 7: participants leave with a framework to apply to the case studies they are about to see.</div>
+        </div>
+      </div>
+      <div class="segment-card__body">
+        <div class="segment-card__topics">
+          <div class="segment-card__topic">AI and ML as a category of analytical tool — when pattern complexity justifies ML over simpler analytics</div>
+          <div class="segment-card__topic">The ML Readiness Test: Is the pattern too complex for a rule? Is there sufficient clean data? Is the cost of a wrong prediction acceptable? Can we act on the output?</div>
+          <div class="segment-card__topic">Mentimeter scenario vote: SME credit scoring ML vs back-office document classification — which passes the test and why</div>
+          <div class="segment-card__topic">The Harley-Davidson example — assessing ML fit in practice using a manufacturing use case transferable to banking</div>
+          <div class="segment-card__topic">Transition to Module 7: "You now have a framework. The next session gives you the cases to apply it to."</div>
+        </div>
+        <div class="segment-card__actions">
+          <span class="artifact-badge">Leads into Module 7</span>
+          <span class="pill--outline">20 min · Discussion</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Closing -->
+    <div class="fac-note">
+      <div class="fac-note__label">Closing — 10 minutes</div>
+      <div class="fac-note__text">
+        Close with three failure modes drawn from the HBR material — confirmation bias, overfitting and overconfidence, and vanity metrics — framed as practical diagnostics rather than academic concepts. Use a final Mentimeter poll: <em>"Which of these three failure modes is most likely to affect your team right now?"</em> The distribution closes the module on honest self-reflection rather than lecture. Transition directly into Module 7.
+      </div>
+    </div>
+
+    <!-- Formula box -->
+    <div class="formula-box">
+      <div class="formula-box__label">The thread across all four segments</div>
+      <div class="formula-box__text">Every segment in Module 6 asks the same question in a different context: when the analysis lands on your desk, what do you do with it? The case study makes the cost of the wrong answer concrete. The metrics exercise makes the framework practical. The risk segment makes the tempo visible. The AI segment makes the evaluation tool explicit.</div>
+      <div class="formula-box__example">Source thread: Davenport, T.H., "Keep Up with Your Quants," HBR Jul–Aug 2013 · Mauboussin, M., "The True Measures of Success," HBR Oct 2012 · HBR Guide to Data Analytics Basics for Managers</div>
+    </div>
+
+  </main>
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+
+    <div class="sidebar-card sidebar-card--gold">
+      <div class="sidebar-card__head">
+        <div class="sidebar-card__label">Module at a glance</div>
+        <div class="sidebar-card__title">Timing &amp; format</div>
+      </div>
+      <div class="sidebar-card__body">
+        <div class="sidebar-row">
+          <span class="sidebar-row__label">Total</span>
+          <span class="sidebar-row__val">75 minutes</span>
+        </div>
+        <div class="sidebar-row">
+          <span class="sidebar-row__label">Opening</span>
+          <span class="sidebar-row__val">15 min</span>
+        </div>
+        <div class="sidebar-row">
+          <span class="sidebar-row__label">Segment 1</span>
+          <span class="sidebar-row__val">20 min</span>
+        </div>
+        <div class="sidebar-row">
+          <span class="sidebar-row__label">Segment 2</span>
+          <span class="sidebar-row__val">15 min</span>
+        </div>
+        <div class="sidebar-row">
+          <span class="sidebar-row__label">Segment 3</span>
+          <span class="sidebar-row__val">20 min</span>
+        </div>
+        <div class="sidebar-row">
+          <span class="sidebar-row__label">Closing</span>
+          <span class="sidebar-row__val">10 min</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Run order -->
+    <div class="run-order" style="margin-top:var(--space-md)">
+      <div class="run-order__head">
+        <div class="run-order__title">Facilitator run order</div>
+      </div>
+      <div class="run-row">
+        <div class="run-row__time">0'</div>
+        <div class="run-row__bar" style="background:#b8902a"></div>
+        <div class="run-row__content">
+          <div class="run-row__name">Opening story</div>
+          <div class="run-row__detail">Two banks · No slide needed</div>
+        </div>
+        <span class="run-row__badge rb-story">Story</span>
+      </div>
+      <div class="run-row">
+        <div class="run-row__time">15'</div>
+        <div class="run-row__bar" style="background:#185FA5"></div>
+        <div class="run-row__content">
+          <div class="run-row__name">Document walk-through</div>
+          <div class="run-row__detail">Case study artefact</div>
+        </div>
+        <span class="run-row__badge rb-exercise">Artefact</span>
+      </div>
+      <div class="run-row">
+        <div class="run-row__time">25'</div>
+        <div class="run-row__bar" style="background:#185FA5"></div>
+        <div class="run-row__content">
+          <div class="run-row__name">Metrics framework</div>
+          <div class="run-row__detail">Four questions + dashboard</div>
+        </div>
+        <span class="run-row__badge rb-exercise">Artefact</span>
+      </div>
+      <div class="run-row">
+        <div class="run-row__time">42'</div>
+        <div class="run-row__bar" style="background:#534AB7"></div>
+        <div class="run-row__content">
+          <div class="run-row__name">Peer discussion</div>
+          <div class="run-row__detail">Own metric · 5 min pairs</div>
+        </div>
+        <span class="run-row__badge rb-discussion">Discussion</span>
+      </div>
+      <div class="run-row">
+        <div class="run-row__time">47'</div>
+        <div class="run-row__bar" style="background:#993C1D"></div>
+        <div class="run-row__content">
+          <div class="run-row__name">Risk &amp; monitoring</div>
+          <div class="run-row__detail">Timeline + signal table</div>
+        </div>
+        <span class="run-row__badge rb-exercise">Artefact</span>
+      </div>
+      <div class="run-row">
+        <div class="run-row__time">62'</div>
+        <div class="run-row__bar" style="background:#3B6D11"></div>
+        <div class="run-row__content">
+          <div class="run-row__name">AI readiness test</div>
+          <div class="run-row__detail">ML framework + Mentimeter</div>
+        </div>
+        <span class="run-row__badge rb-discussion">Discussion</span>
+      </div>
+      <div class="run-row">
+        <div class="run-row__time">67'</div>
+        <div class="run-row__bar" style="background:#b8902a"></div>
+        <div class="run-row__content">
+          <div class="run-row__name">Closing failure modes</div>
+          <div class="run-row__detail">3 modes · Mentimeter close</div>
+        </div>
+        <span class="run-row__badge rb-discussion">Discussion</span>
+      </div>
+    </div>
+
+    <!-- Artefacts quick links -->
+    <div class="sidebar-card" style="margin-top:var(--space-md)">
+      <div class="sidebar-card__head">
+        <div class="sidebar-card__label">Artefacts</div>
+        <div class="sidebar-card__title">Quick links</div>
+      </div>
+      <div class="sidebar-card__body">
+        <div class="sidebar-row">
+          <span class="sidebar-row__label"><a href="module6-case.html" style="color:var(--gold);text-decoration:none;font-weight:600">Case study &#8599;</a></span>
+          <span class="sidebar-row__val">Opening</span>
+        </div>
+        <div class="sidebar-row">
+          <span class="sidebar-row__label"><a href="module6-metrics.html" style="color:var(--gold);text-decoration:none;font-weight:600">Metrics &#8599;</a></span>
+          <span class="sidebar-row__val">Segment 1</span>
+        </div>
+        <div class="sidebar-row">
+          <span class="sidebar-row__label"><a href="module6-risk.html" style="color:var(--gold);text-decoration:none;font-weight:600">Risk &amp; monitoring &#8599;</a></span>
+          <span class="sidebar-row__val">Segment 2</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delivery note -->
+    <div class="sidebar-card" style="margin-top:var(--space-md)">
+      <div class="sidebar-card__head">
+        <div class="sidebar-card__label">Delivery</div>
+        <div class="sidebar-card__title">Tools in use</div>
+      </div>
+      <div class="sidebar-card__body">
+        <div class="sidebar-row">
+          <span class="sidebar-row__label">Platform</span>
+          <span class="sidebar-row__val">Webex</span>
+        </div>
+        <div class="sidebar-row">
+          <span class="sidebar-row__label">Polls</span>
+          <span class="sidebar-row__val">Mentimeter</span>
+        </div>
+        <div class="sidebar-row">
+          <span class="sidebar-row__label">Quiz</span>
+          <span class="sidebar-row__val">MS Forms</span>
+        </div>
+        <div class="sidebar-row">
+          <span class="sidebar-row__label">Participants</span>
+          <span class="sidebar-row__val">26 · APAC</span>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+</div>
+
+<footer>
+  <span class="footer__brand">SMBC Group · Learning &amp; Development · APAC · Data-Driven Decision Making · Module 6 · 2026</span>
+  <span class="footer__note">Confidential · Programme Materials</span>
+</footer>
+
+</body>
+</html>
