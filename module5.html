@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 5 — Facilitator Script · SMBC L&D</title>
+  <link rel="stylesheet" href="smbc.css">
+  <style>
+    /* ── Script-specific overrides ── */
+    .script-block {
+      background: var(--white);
+      border-radius: 6px;
+      margin-bottom: 28px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+    .script-block__head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 20px;
+      background: var(--navy);
+      color: #fff;
+    }
+    .script-block__time {
+      font-family: var(--font-serif);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--gold-light);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .script-block__label {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      white-space: nowrap;
+    }
+    .script-block__title {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      flex: 1;
+    }
+    .script-block__body {
+      padding: 20px 24px;
+    }
+    .say {
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--navy);
+      margin: 0 0 14px;
+    }
+    .say strong {
+      color: var(--navy);
+    }
+    .facilitator-note {
+      background: var(--warm-white);
+      border-left: 3px solid var(--gold);
+      padding: 10px 16px;
+      margin: 14px 0;
+      border-radius: 0 4px 4px 0;
+    }
+    .facilitator-note .fn-label {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .facilitator-note p {
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--slate);
+      margin: 0;
+      line-height: 1.6;
+    }
+    .slide-cue {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--navy-mid);
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 3px;
+      margin: 10px 0 6px;
+    }
+    .mentimeter-cue {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #5c4acf;
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 3px;
+      margin: 10px 0 6px;
+    }
+    .webex-cue {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #007aa3;
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 3px;
+      margin: 10px 0 6px;
+    }
+    .transition-strip {
+      background: var(--cream);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 8px 16px;
+      margin: 16px 0;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: var(--slate-light);
+      text-align: center;
+      letter-spacing: 0.06em;
+    }
+    .case-card {
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 14px 0;
+    }
+    .case-card__head {
+      background: var(--navy-mid);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .case-card__tag {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 2px;
+    }
+    .tag-ops { background: #1a55b020; color: #7fb3ff; border: 1px solid #7fb3ff40; }
+    .tag-mkt { background: #1a7a3a20; color: #7fd99a; border: 1px solid #7fd99a40; }
+    .tag-fin { background: #aa333320; color: #ffaaaa; border: 1px solid #ffaaaa40; }
+    .case-card__name {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .case-card__body {
+      padding: 14px 16px;
+      background: var(--white);
+    }
+    .case-card__body p {
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--slate);
+      margin: 0 0 8px;
+      line-height: 1.6;
+    }
+    .case-card__questions {
+      margin-top: 10px;
+      border-top: 1px solid var(--rule-light);
+      padding-top: 10px;
+    }
+    .case-card__questions .q-label {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .case-card__questions ol {
+      margin: 0;
+      padding-left: 18px;
+    }
+    .case-card__questions li {
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--navy);
+      line-height: 1.6;
+      margin-bottom: 4px;
+    }
+    .delta-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin: 14px 0;
+    }
+    @media (max-width: 700px) {
+      .delta-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .delta-cell {
+      background: var(--navy);
+      border-radius: 6px;
+      padding: 14px 10px;
+      text-align: center;
+    }
+    .delta-cell__letter {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--gold-light);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .delta-cell__word {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 6px;
+    }
+    .delta-cell__desc {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.4;
+    }
+    .timing-bar {
+      display: flex;
+      gap: 4px;
+      margin: 20px 0 28px;
+    }
+    .timing-seg {
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 600;
+      color: #fff;
+      text-align: center;
+      line-height: 1.3;
+    }
+    .seg-open { background: var(--navy-mid); flex: 1.5; }
+    .seg-delta { background: #5c4acf; flex: 2; }
+    .seg-cases { background: #007aa3; flex: 3; }
+    .seg-debrief { background: var(--navy); flex: 2; }
+    .seg-close { background: #7a5a00; flex: 1; }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__brand">
+    <svg class="topbar__mark" width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <rect width="28" height="28" rx="4" fill="#b8902a"/>
+      <text x="14" y="20" font-family="serif" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">S</text>
+    </svg>
+    <div class="topbar__text">
+      <span class="topbar__name">SMBC Group</span>
+      <span class="topbar__sub">Learning &amp; Development · APAC</span>
+    </div>
+  </div>
+  <nav class="topbar__nav">
+    <a href="#" class="active">Module 5</a>
+    <a href="#">Facilitator Script</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero__rule"></div>
+  <div class="hero__inner">
+    <div class="hero__eyebrow">
+      <div class="hero__eyebrow-line"></div>
+      <span class="label">Day 2 · Module 5</span>
+    </div>
+    <h1 class="hero__title">Real-World Applications<br><em>&amp; Case Studies</em></h1>
+    <p class="hero__desc">Facilitator Script — Data-Driven Decision Making Programme</p>
+    <div class="hero__meta">
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Duration</span>
+        <span class="hero__meta-value">60 min</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Participants</span>
+        <span class="hero__meta-value">26 VP / ED</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Delivery</span>
+        <span class="hero__meta-value">Webex · Online</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Frameworks</span>
+        <span class="hero__meta-value">DELTA · BCG Correlation Matrix</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="tab-bar">
+  <button class="tab-bar__btn active" onclick="showPanel('overview')">Overview</button>
+  <button class="tab-bar__btn" onclick="showPanel('script')">Full Script</button>
+  <button class="tab-bar__btn" onclick="showPanel('cases')">Case Briefs</button>
+  <button class="tab-bar__btn" onclick="showPanel('frameworks')">Frameworks</button>
+</div>
+
+<!-- ═══════════════════ PANEL: OVERVIEW ═══════════════════ -->
+<div id="panel-overview" class="panel active">
+  <div class="section-header">
+    <span class="pill">Module 5</span>
+    <span class="section-header__title">Session at a Glance</span>
+  </div>
+  <div class="page-layout">
+    <main>
+
+      <div class="timing-bar">
+        <div class="timing-seg seg-open">Open<br>5 min</div>
+        <div class="timing-seg seg-delta">DELTA Framework<br>12 min</div>
+        <div class="timing-seg seg-cases">Case Breakouts<br>25 min</div>
+        <div class="timing-seg seg-debrief">Debrief + BCG<br>13 min</div>
+        <div class="timing-seg seg-close">Close<br>5 min</div>
+      </div>
+
+      <div class="objectives">
+        <div class="objective">
+          <div class="objective__marker">1</div>
+          <p class="objective__text">Participants can articulate what organisational conditions allow data analytics to deliver results — not just what analytics found.</p>
+        </div>
+        <div class="objective">
+          <div class="objective__marker">2</div>
+          <p class="objective__text">Participants apply the BCG Correlation Action Framework to evaluate whether a data finding justifies action.</p>
+        </div>
+        <div class="objective">
+          <div class="objective__marker">3</div>
+          <p class="objective__text">Participants leave with a self-assessment of their team's analytics readiness and one action they will take the following week.</p>
+        </div>
+      </div>
+
+      <div class="info-box" style="margin-top:24px;">
+        <div class="info-box__label">Facilitator Orientation</div>
+        <p>This module is deliberately discussion-heavy. Your role is to anchor the frameworks, then get out of the way. The case breakouts will surface the best insights — your job in the debrief is to map what participants say onto the frameworks, not to present the answers yourself. Resist the urge to lecture. These are VP and ED level professionals; they will generate sharper insights than any slide if given the right structure.</p>
+      </div>
+
+      <div class="formula-box" style="margin-top:24px;">
+        <div class="formula-box__label">The Core Insight of This Module</div>
+        <div class="formula-box__text">Analytics does not fail because the math is wrong. It fails because the organisation was not ready to use it.</div>
+        <div class="formula-box__example">Return to this repeatedly. Every case study in this module illustrates it.</div>
+      </div>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Preparation</div>
+          <div class="sidebar-card__title">Before the Session</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">Mentimeter</span><span class="sidebar-row__val">Set up 2 polls in advance</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Webex</span><span class="sidebar-row__val">Pre-assign 3 breakout rooms</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Case PDFs</span><span class="sidebar-row__val">Send to participants 10 min before</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Timer</span><span class="sidebar-row__val">Use Webex countdown for breakouts</span></div>
+        </div>
+      </div>
+      <div class="sidebar-card" style="margin-top:16px;">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Materials</div>
+          <div class="sidebar-card__title">Required</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">Slide 1</span><span class="sidebar-row__val">Mentimeter QR / link</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Slide 2</span><span class="sidebar-row__val">DELTA framework visual</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Slide 3–5</span><span class="sidebar-row__val">Case study one-pagers</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Slide 6</span><span class="sidebar-row__val">BCG matrix (blank)</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Slide 7</span><span class="sidebar-row__val">BCG matrix (populated)</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- ═══════════════════ PANEL: FULL SCRIPT ═══════════════════ -->
+<div id="panel-script" class="panel">
+  <div class="section-header">
+    <span class="pill">Script</span>
+    <span class="section-header__title">Word-for-Word Facilitator Guide</span>
+  </div>
+  <div class="page-layout">
+    <main>
+
+      <!-- BLOCK 1: OPEN -->
+      <div class="script-block">
+        <div class="script-block__head">
+          <span class="script-block__time">0:00 – 0:05</span>
+          <span class="script-block__label">Opening</span>
+          <span class="script-block__title">Setting the Stakes</span>
+        </div>
+        <div class="script-block__body">
+
+          <div class="mentimeter-cue">▶ MENTIMETER — Launch Poll 1</div>
+
+          <p class="say">Before we get into the content, I want to get a quick read from the room. On your screen you'll see a Mentimeter question — I'd like you to rate your team's analytics readiness on a scale of 1 to 5.</p>
+
+          <p class="say"><strong>1 means:</strong> we have data, but decisions still run on gut feel and hierarchy.<br>
+          <strong>5 means:</strong> my team runs structured analysis before every significant decision, and I trust the outputs.</p>
+
+          <p class="say">Take 30 seconds — be honest, this is anonymous.</p>
+
+          <div class="facilitator-note">
+            <div class="fn-label">Facilitator Note</div>
+            <p>Wait for responses to populate. Most groups cluster around 2–3. Do not comment on low scores negatively — this is the honest baseline you are building from. Display the distribution briefly.</p>
+          </div>
+
+          <p class="say">Interesting. What you're looking at is the honest state of analytics readiness in this room — and it's probably not far from what you'd find at most banks in the region, including some very sophisticated ones.</p>
+
+          <p class="say">This module is about understanding <em>why</em> that gap exists — and more practically, what you as a manager can do about it. We're going to look at three real cases from banking, extract a framework for reading them, and then I want you to apply that framework to your own situation.</p>
+
+          <p class="say">One thing I want to establish upfront: in every case we'll look at today, the analytics itself was not the hard part. The data science was not the reason these organisations succeeded or struggled. The reason was always something more fundamental — and it's something every person in this room has direct influence over.</p>
+
+        </div>
+      </div>
+
+      <!-- BLOCK 2: DELTA -->
+      <div class="script-block">
+        <div class="script-block__head">
+          <span class="script-block__time">0:05 – 0:17</span>
+          <span class="script-block__label">Framework 1</span>
+          <span class="script-block__title">The DELTA Model — What Makes Analytics Work</span>
+        </div>
+        <div class="script-block__body">
+
+          <div class="slide-cue">▶ SLIDE — DELTA Framework</div>
+
+          <p class="say">Thomas Davenport at Harvard Business School spent years studying organisations that consistently generated value from analytics versus those that didn't. What he found was not about algorithms or tools. It was about five organisational conditions he called DELTA.</p>
+
+          <div class="delta-grid">
+            <div class="delta-cell">
+              <div class="delta-cell__letter">D</div>
+              <div class="delta-cell__word">Data</div>
+              <div class="delta-cell__desc">Clean, accessible, trusted data that the organisation agrees on</div>
+            </div>
+            <div class="delta-cell">
+              <div class="delta-cell__letter">E</div>
+              <div class="delta-cell__word">Enterprise</div>
+              <div class="delta-cell__desc">Analytics capability shared across the organisation, not siloed</div>
+            </div>
+            <div class="delta-cell">
+              <div class="delta-cell__letter">L</div>
+              <div class="delta-cell__word">Leadership</div>
+              <div class="delta-cell__desc">Senior managers who champion, commission, and challenge data work</div>
+            </div>
+            <div class="delta-cell">
+              <div class="delta-cell__letter">T</div>
+              <div class="delta-cell__word">Targets</div>
+              <div class="delta-cell__desc">Specific, measurable business problems analytics is aimed at solving</div>
+            </div>
+            <div class="delta-cell">
+              <div class="delta-cell__letter">A</div>
+              <div class="delta-cell__word">Analysts</div>
+              <div class="delta-cell__desc">Skilled people with both technical capability and business judgment</div>
+            </div>
+          </div>
+
+          <p class="say">Let me give you the version of this that matters for your role specifically. Of these five conditions, which one do you think a VP or ED has the most direct influence over?</p>
+
+          <div class="facilitator-note">
+            <div class="fn-label">Facilitator Note</div>
+            <p>Pause and take 2–3 responses via Webex chat or unmute. Common answers: Leadership, Targets, Analysts. Accept all answers — they are all correct to varying degrees. The point you are building to is that Leadership is the multiplier — without it, the other four stall.</p>
+          </div>
+
+          <p class="say">The honest answer is: all five, to some degree. But Leadership is the multiplier. Without someone at your level who actively commissions analytical work, challenges the outputs, and creates space for the findings to change decisions — the other four conditions don't translate into outcomes. The data sits in a warehouse. The analysts work on things that don't matter. The tools get built and ignored.</p>
+
+          <p class="say">There is a bank in the HBR case material — unnamed, but real — where a quant analyst built a model showing clearly that a large portfolio of mortgage loans would not be repaid. He sent it to the head of the mortgage business. The business head never read it. The bank lost billions. The data was right. The analytics was sound. But the leadership condition was missing.</p>
+
+          <p class="say">Keep DELTA in the back of your mind as we go through the cases. After each one, I want you to ask: which DELTA condition was the real reason this worked — or failed?</p>
+
+          <div class="mentimeter-cue">▶ MENTIMETER — Launch Poll 2</div>
+
+          <p class="say">Quick pulse check before we go into the cases. In your current team, which DELTA condition is your weakest right now? Select one.</p>
+
+          <div class="facilitator-note">
+            <div class="fn-label">Facilitator Note</div>
+            <p>Display results briefly — typically Data and Targets surface as the most common weak points. Acknowledge the distribution without dwelling. Tell participants: "We will come back to this at the end of the session." This creates a loop that pays off in the close.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- BLOCK 3: CASE BREAKOUTS -->
+      <div class="script-block">
+        <div class="script-block__head">
+          <span class="script-block__time">0:17 – 0:42</span>
+          <span class="script-block__label">Case Breakouts</span>
+          <span class="script-block__title">Three Cases · Three Breakout Rooms</span>
+        </div>
+        <div class="script-block__body">
+
+          <p class="say">We're going into breakout rooms now. You've each been pre-assigned to one of three groups — your case is in the chat right now as a one-page PDF.</p>
+
+          <p class="say">Each case is from a real banking or financial services organisation. Your job is not to summarise the case — I assume you can read. Your job is to answer two questions:</p>
+
+          <div class="formula-box">
+            <div class="formula-box__label">Breakout Discussion Questions</div>
+            <div class="formula-box__text">Q1. Which DELTA condition was most critical to why this worked — or why it struggled?</div>
+            <div class="formula-box__example">Q2. Would you have acted on this data finding? Use the BCG framework: how confident are you in the relationship, and does the reward justify the risk?</div>
+          </div>
+
+          <p class="say">You have 15 minutes. Nominate someone to speak for 2 minutes when we reconvene. Go.</p>
+
+          <div class="webex-cue">▶ WEBEX — Open Breakout Rooms (15 min timer)</div>
+
+          <div class="facilitator-note">
+            <div class="fn-label">Facilitator Note</div>
+            <p>Drop into each room briefly — spend 2 minutes per room. Do not steer the conversation. Listen for the sharpest insights to call out in the debrief. If a group is stuck, prompt with: "What would you have needed to know before acting on this finding?" Return to main room at 13 minutes to give the one-minute warning.</p>
+          </div>
+
+          <div class="transition-strip">— Breakout rooms close · All participants return to main session —</div>
+
+          <p class="say">Welcome back. Let's hear from each group — two minutes each, please. I'll be mapping your responses onto the frameworks as you speak.</p>
+
+          <div class="slide-cue">▶ SLIDE — BCG Matrix (blank axes, no content)</div>
+
+          <div class="facilitator-note">
+            <div class="fn-label">Facilitator Note</div>
+            <p>As each group reports, annotate the BCG matrix live on screen — place their case finding in the appropriate quadrant based on what they describe. This is the most important facilitation moment in the module. The visual mapping shows participants that the same analytical framework applies across all three very different cases. Group reporting order: Operational → Marketing → Financial.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- BLOCK 4: DEBRIEF + BCG -->
+      <div class="script-block">
+        <div class="script-block__head">
+          <span class="script-block__time">0:42 – 0:55</span>
+          <span class="script-block__label">Debrief</span>
+          <span class="script-block__title">Synthesising with the BCG Framework</span>
+        </div>
+        <div class="script-block__body">
+
+          <div class="slide-cue">▶ SLIDE — BCG Matrix (populated with case findings)</div>
+
+          <p class="say">Look at what we've just done. Three completely different cases — one operational, one marketing, one credit risk — and the same two questions cut through all of them cleanly. How confident are we in the relationship? And does the benefit of acting outweigh the risk of being wrong?</p>
+
+          <p class="say">That is the BCG framework doing what a good framework should do: it gives you a consistent way to evaluate a data finding regardless of what function you're in or what the data shows.</p>
+
+          <p class="say">Now let me give you the version that connects it back to DELTA. The BCG matrix tells you whether to act on a finding. The DELTA model tells you whether your organisation was capable of producing a trustworthy finding in the first place. You need both.</p>
+
+          <div class="formula-box">
+            <div class="formula-box__label">The Two-Framework Decision Test</div>
+            <div class="formula-box__text">Step 1 — DELTA check: Is the data clean? Was the right question asked? Do I trust the people who ran the analysis?</div>
+            <div class="formula-box__example">Step 2 — BCG check: How confident am I in this finding? And does acting on it make sense given the stakes?</div>
+          </div>
+
+          <p class="say">Here is the uncomfortable truth that sits behind all three of our cases today. Most analytics failures in banking are not statistical errors. They are management failures. Someone did not ask the right question upfront. Someone did not push back on a finding that seemed too convenient. Someone did not create the conditions for the analyst to say "actually, I don't think this data is clean enough to act on."</p>
+
+          <p class="say">That is your job. Not to run the analysis. To create the conditions where the analysis can be trusted, and to apply the judgment that determines what happens with it.</p>
+
+          <div class="facilitator-note">
+            <div class="fn-label">Facilitator Note</div>
+            <p>This is the emotional peak of the module. Allow a beat of silence after this point before moving to close. If participants push back — "but we don't have control over the data quality" — redirect: "That is exactly the point. If you don't have control over it, who in your organisation does? And are you in conversation with them?" This reframe turns a complaint into an action item.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- BLOCK 5: CLOSE -->
+      <div class="script-block">
+        <div class="script-block__head">
+          <span class="script-block__time">0:55 – 1:00</span>
+          <span class="script-block__label">Close</span>
+          <span class="script-block__title">One Action Before Next Week</span>
+        </div>
+        <div class="script-block__body">
+
+          <p class="say">We looked at your DELTA weak points at the start of this session. I want to come back to that now.</p>
+
+          <p class="say">Before this session ends, I'd like each of you to identify one concrete action — not a project, not a strategy — one specific thing you will do in the next five working days to strengthen your weakest DELTA condition.</p>
+
+          <p class="say">If your weak point was Data — identify one report your team uses regularly where you genuinely don't know how the underlying data is sourced or validated. Ask that question this week.</p>
+
+          <p class="say">If your weak point was Targets — identify one decision your team makes on instinct that could be sharpened with data. Frame it as a question and give it to your analyst.</p>
+
+          <p class="say">If your weak point was Leadership — which means yourself — find one moment in a meeting this week where data is presented and you push back with the BCG two questions instead of accepting the finding at face value.</p>
+
+          <div class="facilitator-note">
+            <div class="fn-label">Facilitator Note</div>
+            <p>Ask 2–3 volunteers to state their one action in the chat or unmute. This is a public commitment device — it dramatically increases follow-through. Close by restating the module's core insight one final time before transitioning to Module 6.</p>
+          </div>
+
+          <div class="formula-box">
+            <div class="formula-box__label">Closing Statement — Say This Verbatim</div>
+            <div class="formula-box__text">The organisations that win with data are not the ones with the best algorithms. They are the ones with the managers who know how to ask the right question, create the right conditions, and make the right call when the analysis lands on their desk.</div>
+            <div class="formula-box__example">That is exactly what you've been practising in this session.</div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Time Tracker</div>
+          <div class="sidebar-card__title">Running Clock</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">0:00</span><span class="sidebar-row__val">Opening + Menti Poll 1</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">0:05</span><span class="sidebar-row__val">DELTA framework</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">0:15</span><span class="sidebar-row__val">Menti Poll 2</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">0:17</span><span class="sidebar-row__val">Breakout rooms open</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">0:32</span><span class="sidebar-row__val">Breakout rooms close</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">0:35</span><span class="sidebar-row__val">Group reports back</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">0:42</span><span class="sidebar-row__val">BCG debrief + synthesis</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">0:55</span><span class="sidebar-row__val">One action close</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">1:00</span><span class="sidebar-row__val">Module 6 handoff</span></div>
+        </div>
+      </div>
+      <div class="sidebar-card" style="margin-top:16px;">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Recovery Moves</div>
+          <div class="sidebar-card__title">If Things Go Off Script</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">Running long</span><span class="sidebar-row__val">Cut group 3 report to 1 min; skip BCG populated slide</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Quiet room</span><span class="sidebar-row__val">Put BCG question to a specific person by name</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Debate erupts</span><span class="sidebar-row__val">Let it run 2 min then park it — "let's flag this for Module 6"</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Tech failure</span><span class="sidebar-row__val">Skip Menti; run polls verbally — raise hands</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- ═══════════════════ PANEL: CASE BRIEFS ═══════════════════ -->
+<div id="panel-cases" class="panel">
+  <div class="section-header">
+    <span class="pill">Cases</span>
+    <span class="section-header__title">Three Breakout Case Briefs</span>
+  </div>
+  <div class="page-layout">
+    <main>
+
+      <div class="info-box">
+        <div class="info-box__label">Usage</div>
+        <p>Each case brief is distributed to one breakout group as a one-page PDF. Participants read it in the first 3–4 minutes of the breakout, then discuss the two framework questions for the remaining time. Cases are designed to be read cold — no pre-reading required.</p>
+      </div>
+
+      <!-- CASE 1 -->
+      <div class="case-card" style="margin-top:24px;">
+        <div class="case-card__head">
+          <span class="case-card__tag tag-ops">Operational</span>
+          <span class="case-card__name">Group A · OCBC Bank — Real-Time Fraud Detection</span>
+        </div>
+        <div class="case-card__body">
+          <p><strong>Background.</strong> In late 2021 and early 2022, Singapore experienced a significant wave of SMS phishing scams targeting retail banking customers. OCBC was among the hardest hit, with customers losing a publicly reported SGD 13.7 million across 469 victims in a single month. The incident triggered immediate regulatory scrutiny from MAS and significant reputational damage.</p>
+          <p><strong>The data response.</strong> OCBC accelerated the deployment of behavioural analytics across its transaction monitoring infrastructure. Rather than relying solely on rules-based triggers — fixed thresholds for transaction size or frequency — the new system built a behavioural baseline for each customer: their typical login device, login times, transaction types, payee patterns, and amounts. Any deviation from the individual baseline triggered a real-time risk score. High-risk sessions prompted additional friction — delayed transfers, in-app verification, or outright blocks.</p>
+          <p><strong>Organisational context.</strong> The capability was not built from scratch after the scam wave — elements of it existed. What changed was leadership priority. The CEO publicly committed to accelerated investment. MAS issued new requirements mandating kill switches for high-risk transactions. The combination of regulatory pressure and executive mandate shifted the analytics from a background compliance function to a front-line operational priority.</p>
+          <p><strong>Outcome.</strong> OCBC reported a significant reduction in scam losses in subsequent quarters. Industry-wide, Singapore's total scam losses fell from SGD 660 million in 2022 to SGD 385 million in 2023, with behavioural analytics and real-time intervention cited by MAS as a primary contributing factor.</p>
+          <div class="case-card__questions">
+            <div class="q-label">Your Discussion Questions</div>
+            <ol>
+              <li>Which DELTA condition was most critical to whether this analytics capability actually worked? Was it the data, the leadership, the targets, or something else?</li>
+              <li>Before the scam wave, the behavioural analytics capability partially existed but was not a priority. Using the BCG framework — was the data finding there all along, but the risk/reward calculus had not shifted enough to act? What changed it?</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- CASE 2 -->
+      <div class="case-card" style="margin-top:20px;">
+        <div class="case-card__head">
+          <span class="case-card__tag tag-mkt">Marketing</span>
+          <span class="case-card__name">Group B · Standard Chartered — Next Best Conversation</span>
+        </div>
+        <div class="case-card__body">
+          <p><strong>Background.</strong> Standard Chartered's Priority Banking business in Asia operates through a network of relationship managers who serve affluent clients across Singapore, Hong Kong, Malaysia, India, and other APAC markets. Historically, RM interactions were driven by relationship instinct and product push targets — RMs called clients when a campaign was running or when a product quota needed filling.</p>
+          <p><strong>The data response.</strong> Standard Chartered deployed what it called a "Next Best Conversation" engine — an analytics platform that ingests each client's portfolio composition, life stage indicators, recent transaction behaviour, and market movements to generate a prioritised suggestion for the most relevant conversation an RM should have with that client at any given moment. The system does not replace the RM's judgment — it surfaces a recommendation. The RM decides whether to follow it.</p>
+          <p><strong>What the data showed.</strong> Clients contacted with a contextually relevant, data-triggered conversation had materially higher product uptake and lower attrition than those contacted on a calendar or campaign cycle. The correlation between conversation relevance and client engagement was consistent and strong across markets.</p>
+          <p><strong>Organisational challenge.</strong> Adoption by RMs was uneven. Senior RMs with strong existing client relationships were initially resistant — viewing the system as a signal that their judgment was being replaced. Adoption improved significantly when the framing shifted from "the system tells you what to do" to "the system gives you ammunition for a conversation you were already going to have."</p>
+          <p><strong>Outcome.</strong> Standard Chartered has cited analytics-driven RM productivity improvements in multiple investor presentations, though specific figures are not publicly disclosed. The capability has been extended across priority and private banking segments in Asia.</p>
+          <div class="case-card__questions">
+            <div class="q-label">Your Discussion Questions</div>
+            <ol>
+              <li>The analytics was strong, but adoption was the problem. Which DELTA condition does this reflect — and whose responsibility was it to address?</li>
+              <li>The correlation between contextual conversations and client engagement is clear. Using the BCG framework, what would it take for this to justify changing how RM performance is measured and incentivised — a much higher-stakes action than just deploying a tool?</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- CASE 3 -->
+      <div class="case-card" style="margin-top:20px;">
+        <div class="case-card__head">
+          <span class="case-card__tag tag-fin">Financial Analysis</span>
+          <span class="case-card__name">Group C · Mizuho Financial Group — SME Credit Scoring</span>
+        </div>
+        <div class="case-card__body">
+          <p><strong>Background.</strong> SME lending in Japan and across Asia has historically been constrained by the limitations of traditional credit assessment. Small businesses often lack audited financials, multi-year track records, or sufficient collateral — the standard inputs for credit scoring models. As a result, creditworthy SMEs are either declined or face long processing times that damage the lending relationship.</p>
+          <p><strong>The data response.</strong> Mizuho developed an alternative credit scoring capability that draws on non-traditional data sources alongside traditional financial statements. Transaction history with the bank, payment behaviour to suppliers, industry sector dynamics, and in some cases publicly available data on business networks and supply chain relationships are incorporated into the model. The system generates a credit recommendation — with an associated confidence interval — that the credit officer uses alongside their own judgment.</p>
+          <p><strong>What changed operationally.</strong> Credit assessment time for eligible SMEs was reduced from a process measured in weeks to one measured in days in pilot deployments. More significantly, the model expanded the addressable lending population — identifying SMEs that traditional scoring would have declined but that the broader data profile suggested were acceptable risks.</p>
+          <p><strong>The governance challenge.</strong> When a model recommends approval for a borrower that a traditional scorecard would have declined, the credit officer faces a judgment call with real P&L consequences. The question is not whether to trust the model — it is how to govern the decisions that sit at the boundary of the model's confidence range.</p>
+          <p><strong>Outcome.</strong> Mizuho has publicly discussed its alternative data credit initiatives in investor materials. The broader industry trend — alternative credit data for SME lending — has been validated by multiple Japanese megabanks and regional institutions across APAC, with MAS and other regulators publishing guidance on responsible use.</p>
+          <div class="case-card__questions">
+            <div class="q-label">Your Discussion Questions</div>
+            <ol>
+              <li>When the model recommends approving a borrower that traditional scoring would decline, a credit officer must decide whether to act on it. Map this decision onto the BCG framework — what is the confidence level, and what is the risk/reward calculation?</li>
+              <li>Which DELTA condition is the binding constraint in scaling this capability — and what would you need to put in place to address it?</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Debrief Guide</div>
+          <div class="sidebar-card__title">What to Listen For</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">OCBC</span><span class="sidebar-row__val">Leadership was the trigger — capability existed, mandate was missing</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">StanChart</span><span class="sidebar-row__val">Analysts condition — human adoption, not the model, was the bottleneck</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Mizuho</span><span class="sidebar-row__val">Targets condition — clear problem definition unlocked the analytics</span></div>
+        </div>
+      </div>
+      <div class="sidebar-card" style="margin-top:16px;">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">BCG Mapping</div>
+          <div class="sidebar-card__title">Expected Quadrant Placement</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">OCBC</span><span class="sidebar-row__val">High confidence · High reward → Act (but only after mandate)</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">StanChart</span><span class="sidebar-row__val">High confidence · Medium risk → Act on tool, don't act on comp change yet</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Mizuho</span><span class="sidebar-row__val">Medium confidence · High stakes → Act with governance guardrails</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- ═══════════════════ PANEL: FRAMEWORKS ═══════════════════ -->
+<div id="panel-frameworks" class="panel">
+  <div class="section-header">
+    <span class="pill">Reference</span>
+    <span class="section-header__title">Framework Quick Reference</span>
+  </div>
+  <div class="page-layout">
+    <main>
+
+      <div class="formula-box">
+        <div class="formula-box__label">Framework 1 — DELTA Model (Davenport, HBR)</div>
+        <div class="formula-box__text">The five organisational conditions that determine whether analytics produces business value: Data · Enterprise · Leadership · Targets · Analysts</div>
+        <div class="formula-box__example">Use to diagnose why analytics succeeded or failed. Use to identify where a manager should focus their effort.</div>
+      </div>
+
+      <div class="formula-box" style="margin-top:20px;">
+        <div class="formula-box__label">Framework 2 — BCG Correlation Action Matrix (Ritter, BCG / HBR)</div>
+        <div class="formula-box__text">Two questions determine whether to act on a data finding: (1) How confident are you in the relationship — frequency and clarity of causality? (2) Do the benefits of acting outweigh the cost of being wrong?</div>
+        <div class="formula-box__example">Use to evaluate a specific data finding and decide whether and how to act on it.</div>
+      </div>
+
+      <div class="formula-box" style="margin-top:20px;">
+        <div class="formula-box__label">The Manager's Three Questions — Apply Before Every Analytical Briefing</div>
+        <div class="formula-box__text">1. How was this data sourced, and do I trust it? (DELTA: Data)<br>2. Was the right business question asked before the analysis began? (DELTA: Targets)<br>3. How confident are we in this finding, and what is the cost if we act and we are wrong? (BCG Matrix)</div>
+        <div class="formula-box__example">This is the immediately applicable takeaway from Module 5. Participants should be able to recite these three questions without looking at their notes.</div>
+      </div>
+
+      <div class="info-box" style="margin-top:24px;">
+        <div class="info-box__label">Source Attribution</div>
+        <p>DELTA Model: Thomas H. Davenport, "Competing on Analytics," Harvard Business Review, 2006, and subsequent work at Babson College and MIT. BCG Correlation Action Matrix: David Ritter, "When to Act On a Correlation, and When Not To," HBR.org, March 2014. Both are included in the HBR Guide to Data Analytics Basics for Managers, assigned reading for this programme.</p>
+      </div>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Mentimeter</div>
+          <div class="sidebar-card__title">Poll Setup</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">Poll 1</span><span class="sidebar-row__val">Rating scale 1–5: "How analytics-ready is your team right now?"</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Poll 2</span><span class="sidebar-row__val">Multiple choice: "Which DELTA condition is your team's weakest?" (D / E / L / T / A)</span></div>
+        </div>
+      </div>
+      <div class="sidebar-card" style="margin-top:16px;">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Webex Setup</div>
+          <div class="sidebar-card__title">Breakout Rooms</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">Room A</span><span class="sidebar-row__val">OCBC — 8–9 participants</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Room B</span><span class="sidebar-row__val">StanChart — 8–9 participants</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Room C</span><span class="sidebar-row__val">Mizuho — 8–9 participants</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Timer</span><span class="sidebar-row__val">15 min · 1-min warning enabled</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<footer>
+  <span class="footer__brand">SMBC Group · Learning &amp; Development · APAC</span>
+  <span class="footer__note">Confidential — Facilitator Use Only</span>
+</footer>
+
+<script>
+  function showPanel(id) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    document.querySelectorAll('.tab-bar__btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
