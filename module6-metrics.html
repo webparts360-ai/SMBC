@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Metrics That Predict — Module 6 · SMBC L&D</title>
+  <link rel="stylesheet" href="smbc.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ── Dashboard chrome ── */
+    .db-chrome {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: var(--space-lg);
+    }
+    .db-topbar {
+      background: var(--navy-deep);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .db-topbar-left { display: flex; flex-direction: column; gap: 3px; }
+    .db-topbar-title { font-family: var(--font-sans); font-size: 13px; font-weight: 600; color: var(--white); letter-spacing: 0.02em; }
+    .db-topbar-sub { font-family: var(--font-sans); font-size: 11px; color: rgba(255,255,255,0.4); }
+    .db-topbar-right { font-family: var(--font-sans); font-size: 11px; color: rgba(255,255,255,0.3); text-align: right; line-height: 1.5; }
+    .db-tabs {
+      background: var(--navy);
+      display: flex;
+      padding: 0 24px;
+      gap: 0;
+    }
+    .db-tab {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.4);
+      padding: 10px 18px;
+      border-bottom: 2px solid transparent;
+      cursor: default;
+      letter-spacing: 0.02em;
+    }
+    .db-tab.active { color: var(--gold-light); border-bottom-color: var(--gold); }
+    .db-body { padding: 20px 24px; background: #f0ede8; }
+
+    /* ── Metric cards ── */
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .mc {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-top: 3px solid transparent;
+      border-radius: 4px;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .mc:hover { border-color: var(--gold); }
+    .mc.selected { border-top-color: var(--gold); border-color: var(--gold); background: var(--warm-white); }
+    .mc.flagged { border-top-color: #c0392b; border-color: #e8b4b4; background: #fff8f8; }
+    .mc.passed { border-top-color: #3B6D11; }
+    .mc__label { font-family: var(--font-sans); font-size: 10px; color: var(--slate-light); margin-bottom: 6px; line-height: 1.35; letter-spacing: 0.02em; }
+    .mc__value { font-family: var(--font-serif); font-size: 22px; font-weight: 700; color: var(--navy); line-height: 1; margin-bottom: 5px; }
+    .mc__delta { font-family: var(--font-sans); font-size: 11px; display: flex; align-items: center; gap: 3px; }
+    .mc__delta.up { color: #27500A; }
+    .mc__delta.down { color: #A32D2D; }
+    .mc__delta.flat { color: var(--slate-light); }
+    .mc__hint { font-family: var(--font-sans); font-size: 10px; color: var(--gold); margin-top: 6px; opacity: 0; transition: opacity 0.2s; }
+    .mc:hover .mc__hint, .mc.selected .mc__hint { opacity: 1; }
+
+    /* ── Chart row ── */
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .chart-panel {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 14px;
+    }
+    .chart-panel__label {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate-light);
+      margin-bottom: 12px;
+    }
+
+    /* ── Table ── */
+    .table-panel {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 14px;
+    }
+    .table-panel__label {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate-light);
+      margin-bottom: 12px;
+    }
+    .dt { width: 100%; border-collapse: collapse; font-family: var(--font-sans); font-size: 12px; }
+    .dt th { padding: 6px 10px; text-align: left; font-weight: 600; font-size: 10px; color: var(--slate-light); border-bottom: 1px solid var(--rule); letter-spacing: 0.04em; text-transform: uppercase; }
+    .dt td { padding: 7px 10px; border-bottom: 1px solid var(--rule-light); color: var(--navy); }
+    .dt tr:last-child td { border-bottom: none; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; margin-right: 5px; vertical-align: middle; }
+    .dot-g { background: #3B6D11; }
+    .dot-a { background: #854F0B; }
+    .dot-r { background: #c0392b; }
+
+    /* ── Hint bar ── */
+    .hint-bar {
+      text-align: center;
+      padding: 8px 0 2px;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: var(--slate-light);
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Four-question panel ── */
+    .fq-panel {
+      display: none;
+      margin-top: 14px;
+      border: 1.5px solid var(--gold);
+      border-radius: 4px;
+      background: var(--white);
+      overflow: hidden;
+    }
+    .fq-panel.open { display: block; }
+    .fq-head {
+      background: var(--navy);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .fq-head-title { font-family: var(--font-serif); font-size: 14px; color: var(--gold-light); }
+    .fq-head-close {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.4);
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      padding: 0;
+      transition: color 0.15s;
+    }
+    .fq-head-close:hover { color: var(--white); }
+    .fq-body { padding: 20px; }
+    .fq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .fq-item {
+      background: var(--cream);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 14px;
+    }
+    .fq-item__num { font-family: var(--font-serif); font-size: 28px; font-weight: 700; color: var(--rule); line-height: 1; margin-bottom: 4px; }
+    .fq-item__q { font-family: var(--font-sans); font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+    .fq-item__hint { font-family: var(--font-sans); font-size: 11px; color: var(--slate); line-height: 1.5; margin-bottom: 10px; }
+    .fq-opts { display: flex; gap: 6px; }
+    .fq-opt {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--rule);
+      cursor: pointer;
+      color: var(--slate);
+      background: var(--white);
+      transition: all 0.15s;
+    }
+    .fq-opt:hover { border-color: var(--navy); color: var(--navy); }
+    .fq-opt.yes { background: #EAF3DE; border-color: #3B6D11; color: #173404; }
+    .fq-opt.no { background: #FCEBEB; border-color: #A32D2D; color: #501313; }
+    .fq-opt.unsure { background: #fff8e8; border-color: #854F0B; color: #412402; }
+
+    /* ── Verdict ── */
+    .verdict { display: none; padding: 16px 20px; border-radius: 4px; font-family: var(--font-sans); font-size: 13px; line-height: 1.65; }
+    .verdict.show { display: block; }
+    .verdict__label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+    .verdict.pass { background: #EAF3DE; border-left: 4px solid #3B6D11; color: #173404; }
+    .verdict.pass .verdict__label { color: #3B6D11; }
+    .verdict.warn { background: #fff8e8; border-left: 4px solid #854F0B; color: #412402; }
+    .verdict.warn .verdict__label { color: #854F0B; }
+    .verdict.fail { background: #FCEBEB; border-left: 4px solid #c0392b; color: #501313; }
+    .verdict.fail .verdict__label { color: #c0392b; }
+
+    /* ── Framework section ── */
+    .framework-intro {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      color: var(--slate);
+      line-height: 1.75;
+      margin-bottom: var(--space-lg);
+    }
+    .fq-framework-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+    .fq-fw-card {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-top: 3px solid var(--navy);
+      border-radius: 4px;
+      padding: var(--space-lg);
+    }
+    .fq-fw-card.gold { border-top-color: var(--gold); }
+    .fq-fw-card__num { font-family: var(--font-serif); font-size: 36px; font-weight: 700; color: var(--rule); line-height: 1; margin-bottom: 8px; }
+    .fq-fw-card__title { font-family: var(--font-serif); font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .fq-fw-card__body { font-family: var(--font-sans); font-size: 13px; color: var(--slate); line-height: 1.65; }
+    .fq-fw-card__example {
+      margin-top: 12px;
+      padding: 10px 14px;
+      background: var(--cream);
+      border-left: 2px solid var(--gold);
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: var(--slate);
+      line-height: 1.55;
+      border-radius: 0;
+    }
+    .fq-fw-card__example strong { color: var(--navy); font-weight: 600; }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      .metrics-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .charts-row { grid-template-columns: 1fr; }
+      .fq-grid { grid-template-columns: 1fr; }
+      .fq-framework-grid { grid-template-columns: 1fr; }
+      .db-topbar { flex-direction: column; align-items: flex-start; gap: 6px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__brand">
+    <svg class="topbar__mark" viewBox="0 0 32 32" fill="none">
+      <rect width="32" height="32" rx="4" fill="#b8902a"/>
+      <text x="16" y="22" text-anchor="middle" font-family="serif" font-size="16" font-weight="700" fill="#071429">S</text>
+    </svg>
+    <div class="topbar__text">
+      <span class="topbar__name">SMBC Group</span>
+      <span class="topbar__sub">Learning &amp; Development · APAC</span>
+    </div>
+  </div>
+  <nav class="topbar__nav">
+    <a href="#">Module 6</a>
+    <a href="#" class="active">Segment 1</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero__rule"></div>
+  <div class="hero__inner">
+    <div class="hero__eyebrow">
+      <div class="hero__eyebrow-line"></div>
+      <span class="label">Module 6 · Segment 1 · Day 2</span>
+    </div>
+    <h1 class="hero__title">Metrics That Actually<br><em>Predict Outcomes</em></h1>
+    <p class="hero__desc">Most management dashboards track what has happened. Very few track what is about to happen. This session gives you a four-question framework to tell the difference — and a real banking dashboard to test it on.</p>
+    <div class="hero__meta">
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Programme</span>
+        <span class="hero__meta-value">Data-Driven Decision Making</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Duration</span>
+        <span class="hero__meta-value">20 minutes</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Format</span>
+        <span class="hero__meta-value">Interactive exercise</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="tab-bar">
+  <button class="tab-bar__btn active" onclick="showPanel('framework', this)">The framework</button>
+  <button class="tab-bar__btn" onclick="showPanel('dashboard', this)">Dashboard exercise</button>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PANEL 1 — THE FRAMEWORK
+════════════════════════════════════════════ -->
+<div id="panel-framework" class="panel active">
+  <div class="section-header">
+    <span class="pill">Part 1</span>
+    <span class="section-header__title">Four questions every manager should ask of any metric</span>
+  </div>
+  <div class="page-layout">
+    <main class="fade-up">
+
+      <p class="framework-intro">
+        Management reporting is overloaded and underused. Most organisations track more metrics than they validate — numbers accumulate on dashboards for historical, political, or regulatory reasons, and are rarely re-examined. The result is a dashboard that describes the past with confidence and says almost nothing about the future. These four questions are designed to test whether a metric deserves the management attention it currently receives.
+      </p>
+
+      <div class="fq-framework-grid">
+
+        <div class="fq-fw-card">
+          <div class="fq-fw-card__num">01</div>
+          <div class="fq-fw-card__title">Is this metric persistent?</div>
+          <div class="fq-fw-card__body">Persistence means the relationship between this metric and the outcome you care about is stable and consistent over time — not a single-quarter coincidence. If you went back through five years of data, would you consistently find that when this number moved, the outcome followed?</div>
+          <div class="fq-fw-card__example"><strong>Warning sign:</strong> the metric was introduced recently, or has only been tracked for one or two reporting cycles. You are managing on faith, not evidence.</div>
+        </div>
+
+        <div class="fq-fw-card gold">
+          <div class="fq-fw-card__num">02</div>
+          <div class="fq-fw-card__title">Is this metric predictive?</div>
+          <div class="fq-fw-card__body">Predictive means a change in this metric today reliably precedes a change in the outcome — not just correlates with it after the fact. A metric can be highly correlated with an outcome without predicting it. Revenue and headcount correlate. Headcount does not predict revenue.</div>
+          <div class="fq-fw-card__example"><strong>The test:</strong> does this number lead the outcome, or describe it once it has already happened? Lagging indicators confirm. Leading indicators enable action.</div>
+        </div>
+
+        <div class="fq-fw-card">
+          <div class="fq-fw-card__num">03</div>
+          <div class="fq-fw-card__title">Is this metric within our control?</div>
+          <div class="fq-fw-card__body">A metric your team cannot influence through management decisions is a measurement, not a management tool. You can monitor it. You cannot manage to it. Many organisations report external market indicators alongside internal performance metrics and treat them with equal urgency.</div>
+          <div class="fq-fw-card__example"><strong>Distinction:</strong> monitoring external signals you cannot control — interest rates, HPI, sector stress — is right. The question is: what internal lever does this external signal tell you to pull?</div>
+        </div>
+
+        <div class="fq-fw-card gold">
+          <div class="fq-fw-card__num">04</div>
+          <div class="fq-fw-card__title">Is this metric still valid?</div>
+          <div class="fq-fw-card__body">Metrics have a shelf life. The conditions under which a metric was validated can change — and when they do, the metric stops being predictive, even though it continues appearing on the dashboard as if nothing has changed. This is the question most organisations forget to ask.</div>
+          <div class="fq-fw-card__example"><strong>The 2006 lesson:</strong> average credit scores looked healthy. The metric was still being reported. But the underwriting conditions behind those scores had changed. Nobody asked question four. The model was no longer valid.</div>
+        </div>
+
+      </div>
+
+      <div class="formula-box">
+        <div class="formula-box__label">The practical standard — TD Bank under Ed Clark</div>
+        <div class="formula-box__text">If anyone in a management meeting suggested a new direction, they were pressed for data and analysis to support it. This was not a one-way street. Managers demanded rigour from analysts. Analysts were expected to communicate in business terms. Both sides were accountable. Nobody ever accused TD of not running the numbers.</div>
+        <div class="formula-box__example">The goal of this framework is not to make you an analyst. It is to make you a manager who cannot be misled by a metric that has stopped working.</div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-box__label">Vanity metrics — a word of warning</div>
+        <p>A nonprofit ran a YouTube campaign in 2011. The video received 1.5 million views — twice their previous record. By every traffic measure, it was a success. Then they looked at the outcome data: eight people signed up. Zero donations. Views had no predictive relationship to the outcome they needed. The metric was measuring activity, not impact. Every dashboard contains at least one vanity metric. The four-question test will find it.</p>
+      </div>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Quick reference</div>
+          <div class="sidebar-card__title">The four questions</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Q1</span>
+            <span class="sidebar-row__val">Persistent?</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Q2</span>
+            <span class="sidebar-row__val">Predictive?</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Q3</span>
+            <span class="sidebar-row__val">Controllable?</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Q4</span>
+            <span class="sidebar-row__val">Still valid?</span>
+          </div>
+        </div>
+      </div>
+      <div class="sidebar-card" style="margin-top: var(--space-md);">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Source</div>
+          <div class="sidebar-card__title">HBR reference</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Author</span>
+            <span class="sidebar-row__val">Mauboussin, M.</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Publication</span>
+            <span class="sidebar-row__val">HBR Oct 2012</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Adapted by</span>
+            <span class="sidebar-row__val">Davenport, T.H.</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PANEL 2 — DASHBOARD EXERCISE
+════════════════════════════════════════════ -->
+<div id="panel-dashboard" class="panel">
+  <div class="section-header">
+    <span class="pill">Part 2</span>
+    <span class="section-header__title">Apply the framework — select any metric from the dashboard below</span>
+  </div>
+  <div class="page-layout">
+    <main>
+
+      <p style="font-family:var(--font-sans);font-size:14px;color:var(--slate);line-height:1.75;margin-bottom:var(--space-md);">
+        This is a representative management dashboard for a senior banker at a regional APAC institution — the kind of view that opens on a Monday morning. Select any metric. The four-question panel will open beneath it. Answer each question honestly and a verdict will appear. Some metrics will surprise you.
+      </p>
+
+      <!-- ── The Dashboard ── -->
+      <div class="db-chrome">
+        <div class="db-topbar">
+          <div class="db-topbar-left">
+            <span class="db-topbar-title">SMBC — Regional Portfolio Management Dashboard</span>
+            <span class="db-topbar-sub">APAC Corporate Banking · Senior Management View</span>
+          </div>
+          <div class="db-topbar-right">
+            Monday 4 May 2026<br>
+            <span style="font-size:10px;color:rgba(255,255,255,0.2)">08:47 SGT · Refreshed 07:00</span>
+          </div>
+        </div>
+        <div class="db-tabs">
+          <div class="db-tab active">Portfolio overview</div>
+          <div class="db-tab">Credit risk</div>
+          <div class="db-tab">Operations</div>
+          <div class="db-tab">Compliance</div>
+        </div>
+        <div class="db-body">
+
+          <div class="metrics-row" id="metrics-row">
+
+            <div class="mc" onclick="selectMetric(0,this)">
+              <div class="mc__label">Loan book growth (YTD)</div>
+              <div class="mc__value">+8.4%</div>
+              <div class="mc__delta up">&#9650; vs +6.1% prior year</div>
+              <div class="mc__hint">Click to test this metric &rarr;</div>
+            </div>
+
+            <div class="mc" onclick="selectMetric(1,this)">
+              <div class="mc__label">NPL ratio</div>
+              <div class="mc__value">1.82%</div>
+              <div class="mc__delta flat">&#9644; stable vs last month</div>
+              <div class="mc__hint">Click to test this metric &rarr;</div>
+            </div>
+
+            <div class="mc" onclick="selectMetric(2,this)">
+              <div class="mc__label">Average credit score</div>
+              <div class="mc__value">718</div>
+              <div class="mc__delta up">&#9650; +4 pts vs Q4 2025</div>
+              <div class="mc__hint">Click to test this metric &rarr;</div>
+            </div>
+
+            <div class="mc" onclick="selectMetric(3,this)">
+              <div class="mc__label">Customer satisfaction (NPS)</div>
+              <div class="mc__value">+42</div>
+              <div class="mc__delta down">&#9660; &minus;3 pts vs last quarter</div>
+              <div class="mc__hint">Click to test this metric &rarr;</div>
+            </div>
+
+            <div class="mc" onclick="selectMetric(4,this)">
+              <div class="mc__label">Branch staff turnover</div>
+              <div class="mc__value">14.2%</div>
+              <div class="mc__delta down">&#9660; up from 11.8% prior year</div>
+              <div class="mc__hint">Click to test this metric &rarr;</div>
+            </div>
+
+            <div class="mc" onclick="selectMetric(5,this)">
+              <div class="mc__label">Cost-to-income ratio</div>
+              <div class="mc__value">58.3%</div>
+              <div class="mc__delta down">&#9660; up from 55.1% prior year</div>
+              <div class="mc__hint">Click to test this metric &rarr;</div>
+            </div>
+
+            <div class="mc" onclick="selectMetric(6,this)">
+              <div class="mc__label">Loan processing time (avg days)</div>
+              <div class="mc__value">7.4d</div>
+              <div class="mc__delta down">&#9660; up from 5.9d prior year</div>
+              <div class="mc__hint">Click to test this metric &rarr;</div>
+            </div>
+
+            <div class="mc" onclick="selectMetric(7,this)">
+              <div class="mc__label">Digital channel adoption</div>
+              <div class="mc__value">67%</div>
+              <div class="mc__delta up">&#9650; +11 pts vs prior year</div>
+              <div class="mc__hint">Click to test this metric &rarr;</div>
+            </div>
+
+          </div><!-- /metrics-row -->
+
+          <div class="charts-row">
+            <div class="chart-panel">
+              <div class="chart-panel__label">NPL ratio — 18-month trend</div>
+              <div style="position:relative;height:120px;">
+                <canvas id="nplChart" role="img" aria-label="NPL ratio over 18 months, rising gradually from 1.58% to 1.82%">NPL ratio trending upward from 1.58 to 1.82 percent over 18 months.</canvas>
+              </div>
+            </div>
+            <div class="chart-panel">
+              <div class="chart-panel__label">Loan book by segment (SGD bn)</div>
+              <div style="position:relative;height:120px;">
+                <canvas id="loanChart" role="img" aria-label="Loan book by segment: Corporate 14.2bn, SME 8.7bn, Retail 6.1bn, Trade Finance 4.4bn">Loan book segments.</canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-panel">
+            <div class="table-panel__label">Portfolio concentration — top 5 sector exposures (corporate segment)</div>
+            <table class="dt">
+              <thead>
+                <tr>
+                  <th>Sector</th>
+                  <th>Exposure (SGD bn)</th>
+                  <th>% of book</th>
+                  <th>YTD change</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Real estate &amp; construction</td>
+                  <td>5.8</td>
+                  <td>17.4%</td>
+                  <td>+2.1%</td>
+                  <td><span class="dot dot-a"></span>Watch</td>
+                </tr>
+                <tr>
+                  <td>Technology &amp; telecoms</td>
+                  <td>4.2</td>
+                  <td>12.6%</td>
+                  <td>+4.8%</td>
+                  <td><span class="dot dot-g"></span>Normal</td>
+                </tr>
+                <tr>
+                  <td>Shipping &amp; logistics</td>
+                  <td>3.9</td>
+                  <td>11.7%</td>
+                  <td>&minus;0.3%</td>
+                  <td><span class="dot dot-g"></span>Normal</td>
+                </tr>
+                <tr>
+                  <td>Manufacturing</td>
+                  <td>3.4</td>
+                  <td>10.2%</td>
+                  <td>+1.2%</td>
+                  <td><span class="dot dot-g"></span>Normal</td>
+                </tr>
+                <tr>
+                  <td>Hospitality &amp; retail</td>
+                  <td>2.1</td>
+                  <td>6.3%</td>
+                  <td>&minus;1.4%</td>
+                  <td><span class="dot dot-r"></span>Review</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="hint-bar" id="hint-bar">Select any metric card above to run the four-question test</div>
+
+          <!-- ── Four-question panel ── -->
+          <div class="fq-panel" id="fq-panel">
+            <div class="fq-head">
+              <span class="fq-head-title" id="fq-title">Four-question test</span>
+              <button class="fq-head-close" onclick="closePanel()" aria-label="Close">&#x2715;</button>
+            </div>
+            <div class="fq-body">
+              <div class="fq-grid" id="fq-grid"></div>
+              <div class="verdict" id="verdict">
+                <div class="verdict__label" id="verdict-label"></div>
+                <div id="verdict-text"></div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /db-body -->
+      </div><!-- /db-chrome -->
+
+      <div class="info-box">
+        <div class="info-box__label">Discussion prompt</div>
+        <p>After working through two or three metrics: which question proved hardest to answer — and why? In most groups, Question 4 (still valid?) is the one that creates the longest pause. That pause is the point.</p>
+      </div>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Planted traps</div>
+          <div class="sidebar-card__title">Try these first</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Credit score</span>
+            <span class="sidebar-row__val">The 2006 metric</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Staff turnover</span>
+            <span class="sidebar-row__val">TD Bank example</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">NPL ratio</span>
+            <span class="sidebar-row__val">Leading or lagging?</span>
+          </div>
+        </div>
+      </div>
+      <div class="sidebar-card" style="margin-top:var(--space-md);">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Remember</div>
+          <div class="sidebar-card__title">The four questions</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">Q1</span><span class="sidebar-row__val">Persistent?</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Q2</span><span class="sidebar-row__val">Predictive?</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Q3</span><span class="sidebar-row__val">Controllable?</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Q4</span><span class="sidebar-row__val">Still valid?</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<footer>
+  <span class="footer__brand">SMBC Group · Learning &amp; Development · APAC · Data-Driven Decision Making · Module 6 · 2026</span>
+  <span class="footer__note">Confidential · Programme Materials</span>
+</footer>
+
+<script>
+  /* ── Panel switching ── */
+  function showPanel(id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-bar__btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  /* ── Metric data ── */
+  const metrics = [
+    {
+      name: "Loan book growth (YTD) — +8.4%",
+      questions: [
+        { q: "Persistent?", hint: "Does growth reliably predict portfolio quality over time — or just volume?" },
+        { q: "Predictive?", hint: "Does a higher growth rate today predict better outcomes, or higher risk?" },
+        { q: "Controllable?", hint: "Can management directly influence new loan origination pace?" },
+        { q: "Still valid?", hint: "Was this target set before the current rate and credit environment?" }
+      ],
+      verdicts: {
+        "Y,Y,Y,Y": { cls:"pass", label:"Strong metric", text:"Persistent, predictive, and controllable when linked to a clear target. Ensure the growth composition — by segment, vintage, and LTV — is tracked alongside volume. Growth without composition context is incomplete." },
+        "Y,Y,Y,N": { cls:"warn", label:"Needs re-calibration", text:"Fast growth in a rising-rate environment carries different risk than in a low-rate period. The target may have been set in a context that no longer applies. Has the growth benchmark been reviewed against current conditions?" },
+        "Y,N,Y,Y": { cls:"warn", label:"Leading indicator missing", text:"Growth tracks volume, not quality or direction of travel. Consider whether loan pipeline or approval rate are better leading predictors of the outcome you care about — sustainable book quality, not just scale." },
+        default: { cls:"warn", label:"Incomplete standalone metric", text:"Growth tracks volume. It is a necessary operational metric but insufficient as a standalone management indicator. Pair with NPL vintage data, LTV distribution, and segment concentration to get a complete picture." }
+      }
+    },
+    {
+      name: "NPL ratio — 1.82%",
+      questions: [
+        { q: "Persistent?", hint: "Has NPL reliably tracked portfolio health across previous credit cycles?" },
+        { q: "Predictive?", hint: "Does the current NPL tell you where the book is going — or where it has already been?" },
+        { q: "Controllable?", hint: "Can management actions today actually move the NPL ratio in the near term?" },
+        { q: "Still valid?", hint: "A stable 1.82% — is this reassuring, or is it masking deterioration in recent vintages?" }
+      ],
+      verdicts: {
+        "Y,N,Y,Y": { cls:"warn", label:"Lagging indicator — the critical limitation", text:"This is the most important answer in this exercise. NPL is confirmatory, not predictive — it confirms defaults after they occur. A stable NPL today can coexist with a deteriorating book if recent vintages have not yet seasoned. Ask your team for 30-DPD and 60-DPD early warning data alongside the NPL figure." },
+        "Y,Y,Y,Y": { cls:"pass", label:"Strong foundational metric", text:"NPL with genuine predictive power requires it to be broken down by vintage and segment. Aggregate stability can mask concentration in newer cohorts. If you are tracking NPL at vintage level, this metric is earning its place." },
+        default: { cls:"warn", label:"Lagging — not leading", text:"NPL is a foundational risk metric but it answers a backward-looking question. By the time a loan appears in the NPL ratio, the credit decision that caused it is 12–24 months old. The question to ask your team: what are the 60-DPD trends in 2024 and 2025 originations?" }
+      }
+    },
+    {
+      name: "Average credit score — 718",
+      questions: [
+        { q: "Persistent?", hint: "Has credit score historically predicted default accurately in your portfolio?" },
+        { q: "Predictive?", hint: "Is the score still capturing true credit quality — or have underwriting practices shifted?" },
+        { q: "Controllable?", hint: "Can you influence the average score through origination and credit policy decisions?" },
+        { q: "Still valid?", hint: "This is the 2006 question. Have market or underwriting conditions changed what a 718 score means today?" }
+      ],
+      verdicts: {
+        "Y,N,Y,N": { cls:"fail", label:"This is the 2006 failure — exactly", text:"Average credit scores appeared healthy in 2005 and 2006 while the actual risk in the portfolio was rising. If underwriting standards have loosened — even subtly — the score stops predicting defaults accurately. Ask: what is the default rate on 2024–2025 originations compared to prior years at the same score band? If it is higher, the metric is misleading you." },
+        "Y,Y,Y,N": { cls:"warn", label:"Question 4 requires urgent attention", text:"Even if historically predictive, in a higher-rate, higher-DTI environment, borrowers at a given credit score carry more stress than the same score indicated in 2020. The assumption behind the metric may no longer hold. Validate against recent vintage default data before relying on this number." },
+        "Y,Y,Y,Y": { cls:"pass", label:"Validated — but monitor closely", text:"If you have explicitly validated that a 718 score today carries the same predictive power as it did in prior periods, and that underwriting standards have not shifted, this metric is sound. The key is that the validation is explicit, not assumed." },
+        default: { cls:"warn", label:"Deserves question 4 scrutiny above all others", text:"Average credit score is the metric whose predictive validity most depends on environmental conditions. When those conditions change — as they did in 2006 — it becomes dangerously misleading while still looking healthy on the dashboard. This is the metric to validate first." }
+      }
+    },
+    {
+      name: "Customer satisfaction (NPS) — +42",
+      questions: [
+        { q: "Persistent?", hint: "Has NPS consistently correlated with customer retention and revenue in your portfolio data?" },
+        { q: "Predictive?", hint: "Does a change in NPS today predict wallet share, attrition, or cross-sell in 6–12 months?" },
+        { q: "Controllable?", hint: "Which specific service drivers can your team move — and are those being tracked?" },
+        { q: "Still valid?", hint: "How is NPS collected? Are the driver categories still representative of what customers care about?" }
+      ],
+      verdicts: {
+        "Y,Y,Y,Y": { cls:"pass", label:"NPS working as intended", text:"When NPS is linked statistically to retention and revenue outcomes, it is a genuine predictive metric. The &minus;3pt decline warrants driver-level investigation. Is it digital experience, response time, relationship quality, or pricing? The headline number alone does not tell you where to act." },
+        "Y,N,Y,Y": { cls:"warn", label:"Tracking sentiment, not behaviour", text:"NPS as a standalone number measures how customers feel at a point in time, not what they will do. To make it predictive, it needs to be linked to actual retention, cross-sell, or revenue outcomes in your specific book. Has that linkage been validated with your own data?" },
+        default: { cls:"warn", label:"Widely tracked, frequently misused", text:"NPS measures satisfaction. The gap between a customer who says they are satisfied and one who stays, deepens the relationship, and refers others requires its own validation. Benchmark the NPS against actual churn and wallet share data before treating it as a leading indicator." }
+      }
+    },
+    {
+      name: "Branch staff turnover — 14.2%",
+      questions: [
+        { q: "Persistent?", hint: "Has branch staff turnover historically correlated with customer satisfaction and retention?" },
+        { q: "Predictive?", hint: "In your current customer mix, does turnover still move NPS or product usage rates?" },
+        { q: "Controllable?", hint: "Can HR and branch management reduce turnover through available people and process levers?" },
+        { q: "Still valid?", hint: "Digital adoption on this dashboard is 67% and rising. Is branch staff still the primary driver of service quality?" }
+      ],
+      verdicts: {
+        "Y,N,Y,N": { cls:"fail", label:"The TD Bank teller metric — obsolete", text:"This is the exact failure documented in the HBR material. A bank tracked teller turnover as a driver of customer satisfaction — and it was valid, until the customer base went digital. With adoption at 67% and rising, the predictive relationship between staff turnover and customer outcomes is weakening. Is this metric still earning its place on your Monday dashboard?" },
+        "Y,Y,Y,N": { cls:"warn", label:"Validity questionable at 67% digital", text:"If branch interactions remain critical for specific high-value segments — corporate relationship banking, wealth management, HNW — turnover in those teams may still be relevant. But aggregate branch turnover across a 67%-digital customer base is increasingly a legacy metric." },
+        default: { cls:"warn", label:"Question 4 is the critical one here", text:"The predictive power of this metric depends entirely on how much of your customer satisfaction is driven by in-branch experience. At 67% digital adoption, that share is shrinking. Consider whether digital experience quality — app reliability, response time, self-service completion rate — has replaced teller turnover as the real driver to track." }
+      }
+    },
+    {
+      name: "Cost-to-income ratio — 58.3%",
+      questions: [
+        { q: "Persistent?", hint: "Has C/I ratio tracked operational efficiency reliably across business cycles?" },
+        { q: "Predictive?", hint: "Does a higher C/I today predict profitability pressure, or does it simply confirm it?" },
+        { q: "Controllable?", hint: "Which specific cost and income levers can management realistically influence in the near term?" },
+        { q: "Still valid?", hint: "In a period of active technology and talent investment, is a rising C/I a warning signal or an expected transition cost?" }
+      ],
+      verdicts: {
+        "Y,N,Y,Y": { cls:"warn", label:"Lagging efficiency indicator", text:"C/I tells you the ratio has changed — not why, or what will follow. For it to be genuinely actionable, you need to track the underlying cost drivers: which lines are rising, whether they are structural or investment, and what the expected ROI of investment spend is. The number alone does not tell you what to do." },
+        "Y,Y,Y,N": { cls:"warn", label:"Benchmark may be outdated", text:"If the business is in an active investment phase — technology build, digital transformation, talent acquisition — a rising C/I is expected and potentially healthy. The question is whether the benchmark was set for the current context or carried over from a period when the cost structure looked very different." },
+        default: { cls:"warn", label:"Useful gauge, incomplete tool", text:"C/I is a necessary efficiency measure but answers a backward-looking question. It confirms that costs have outpaced income — after it has happened. Pair it with forward-looking cost driver data, investment ROI forecasts, and income pipeline indicators to make it a basis for action rather than confirmation." }
+      }
+    },
+    {
+      name: "Loan processing time — 7.4 days",
+      questions: [
+        { q: "Persistent?", hint: "Has processing time consistently correlated with customer satisfaction and retention over time?" },
+        { q: "Predictive?", hint: "Does a rise in processing time today predict NPS decline or attrition in the coming quarter?" },
+        { q: "Controllable?", hint: "Can operations and credit teams reduce processing time through available process and staffing levers?" },
+        { q: "Still valid?", hint: "As product mix and customer types shift, is 7.4 days against the right benchmark?" }
+      ],
+      verdicts: {
+        "Y,Y,Y,Y": { cls:"pass", label:"One of the strongest metrics on this dashboard", text:"Loan processing time has a validated causal chain — the HBR material documents it as a direct driver of customer satisfaction, which in turn drives returns on assets. The increase from 5.9 to 7.4 days is a meaningful adverse signal. What is driving it — volume, staffing, credit policy complexity, or system constraints? This metric is telling you something. Follow it." },
+        "Y,Y,Y,N": { cls:"warn", label:"Benchmark needs updating", text:"If new product types or customer segments have been added, the aggregate average may mask significantly worse performance in segments that matter most. A 7.4-day average across a mixed book can hide a 12-day average on SME originations if corporate processing is faster." },
+        default: { cls:"pass", label:"Earning its place on the dashboard", text:"Processing time is one of the more actionable metrics in any banking dashboard. It is within management control, it has a validated link to customer outcomes, and the trend is currently adverse. This is a metric that should be driving a conversation, not just being reported." }
+      }
+    },
+    {
+      name: "Digital channel adoption — 67%",
+      questions: [
+        { q: "Persistent?", hint: "Has digital adoption consistently correlated with cost efficiency or customer retention outcomes?" },
+        { q: "Predictive?", hint: "Does a higher adoption rate today predict future cost savings, NPS improvement, or share of wallet growth?" },
+        { q: "Controllable?", hint: "Can product, marketing, and service teams actively drive adoption through specific interventions?" },
+        { q: "Still valid?", hint: "What counts as 'adoption' in this definition — and is it measuring engagement or just registration?" }
+      ],
+      verdicts: {
+        "Y,Y,Y,N": { cls:"warn", label:"Definition drives everything", text:"The predictive power of digital adoption depends entirely on how it is defined. If adoption means logged in once in 90 days, the metric measures exposure, not engagement. If it means completed a transaction without branch assistance in the last 30 days, it is a different — and much more useful — number. Has the definition been reviewed against what you actually need to predict?" },
+        "Y,N,Y,Y": { cls:"warn", label:"Volume metric without outcome linkage", text:"67% adoption is a channel-shift metric. For it to be genuinely predictive, it needs to be linked to cost-per-transaction, NPS among digital-primary customers versus branch-primary customers, and retention differentials. Has that linkage been validated in your book?" },
+        default: { cls:"warn", label:"Tracks shift, not value", text:"Digital adoption measures how many customers use the channel. It does not measure whether digital engagement is creating better outcomes — for the customer or the bank. The strategic question: what outcome does high digital adoption produce in your portfolio, and do you have data showing the relationship holds?" }
+      }
+    }
+  ];
+
+  let currentIdx = null;
+  let answers = {};
+
+  function selectMetric(idx, el) {
+    document.querySelectorAll('.mc').forEach(c => {
+      c.classList.remove('selected');
+    });
+    el.classList.add('selected');
+    currentIdx = idx;
+    answers = {};
+
+    const m = metrics[idx];
+    document.getElementById('fq-title').textContent = 'Testing: ' + m.name;
+
+    const grid = document.getElementById('fq-grid');
+    grid.innerHTML = '';
+    m.questions.forEach((q, i) => {
+      const d = document.createElement('div');
+      d.className = 'fq-item';
+      d.innerHTML = `
+        <div class="fq-item__num">Q${i+1}</div>
+        <div class="fq-item__q">${q.q}</div>
+        <div class="fq-item__hint">${q.hint}</div>
+        <div class="fq-opts">
+          <button class="fq-opt" onclick="answer(${i},'Y',this)">Yes</button>
+          <button class="fq-opt" onclick="answer(${i},'N',this)">No</button>
+          <button class="fq-opt" onclick="answer(${i},'?',this)">Not sure</button>
+        </div>`;
+      grid.appendChild(d);
+    });
+
+    const v = document.getElementById('verdict');
+    v.className = 'verdict';
+    document.getElementById('verdict-label').textContent = '';
+    document.getElementById('verdict-text').textContent = '';
+
+    const panel = document.getElementById('fq-panel');
+    panel.classList.add('open');
+    document.getElementById('hint-bar').style.display = 'none';
+
+    setTimeout(() => {
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+  }
+
+  function answer(qIdx, val, btn) {
+    const row = btn.closest('.fq-opts');
+    row.querySelectorAll('.fq-opt').forEach(b => b.classList.remove('yes','no','unsure'));
+    if (val === 'Y') btn.classList.add('yes');
+    else if (val === 'N') btn.classList.add('no');
+    else btn.classList.add('unsure');
+    answers[qIdx] = val;
+    if (Object.keys(answers).length === 4) showVerdict();
+  }
+
+  function showVerdict() {
+    const m = metrics[currentIdx];
+    const key = [0,1,2,3].map(i => answers[i] || '?').join(',');
+    const v = m.verdicts[key] || m.verdicts.default;
+    const el = document.getElementById('verdict');
+    el.className = 'verdict show ' + v.cls;
+    document.getElementById('verdict-label').textContent = v.label;
+    document.getElementById('verdict-text').textContent = v.text;
+    const card = document.querySelectorAll('.mc')[currentIdx];
+    card.classList.remove('passed','flagged');
+    if (v.cls === 'pass') card.classList.add('passed');
+    if (v.cls === 'fail') card.classList.add('flagged');
+  }
+
+  function closePanel() {
+    document.getElementById('fq-panel').classList.remove('open');
+    document.querySelectorAll('.mc').forEach(c => c.classList.remove('selected'));
+    document.getElementById('hint-bar').style.display = 'block';
+    currentIdx = null;
+    answers = {};
+  }
+
+  /* ── Charts ── */
+  window.addEventListener('load', function() {
+    const nplData = [1.61,1.58,1.60,1.63,1.67,1.65,1.68,1.71,1.69,1.72,1.74,1.76,1.75,1.78,1.79,1.80,1.81,1.82];
+    const nplLabels = ['Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr'];
+
+    new Chart(document.getElementById('nplChart'), {
+      type: 'line',
+      data: {
+        labels: nplLabels,
+        datasets: [{
+          data: nplData,
+          borderColor: '#185FA5',
+          borderWidth: 2,
+          pointRadius: 0,
+          tension: 0.35,
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.y.toFixed(2) + '%' } } },
+        scales: {
+          x: {
+            ticks: { font: { size: 9 }, color: '#8899aa', maxRotation: 0, autoSkip: true, maxTicksLimit: 6 },
+            grid: { display: false }
+          },
+          y: {
+            ticks: { font: { size: 9 }, color: '#8899aa', callback: v => v.toFixed(2) + '%' },
+            grid: { color: 'rgba(0,0,0,0.06)' },
+            min: 1.50,
+            max: 2.00
+          }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('loanChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Corporate', 'SME', 'Retail', 'Trade finance'],
+        datasets: [{
+          data: [14.2, 8.7, 6.1, 4.4],
+          backgroundColor: ['#0C447C','#185FA5','#378ADD','#85B7EB'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => 'SGD ' + ctx.parsed.y.toFixed(1) + 'bn' } } },
+        scales: {
+          x: {
+            ticks: { font: { size: 9 }, color: '#8899aa' },
+            grid: { display: false }
+          },
+          y: {
+            ticks: { font: { size: 9 }, color: '#8899aa', callback: v => '$' + v + 'bn' },
+            grid: { color: 'rgba(0,0,0,0.06)' }
+          }
+        }
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
