@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Risk &amp; Continuous Monitoring — Module 6 · SMBC L&D</title>
+  <link rel="stylesheet" href="smbc.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ── Timeline ── */
+    .timeline-wrap {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: var(--space-lg);
+    }
+    .timeline-header {
+      background: var(--navy-deep);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .timeline-header__title {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--white);
+    }
+    .timeline-header__sub {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      margin-top: 2px;
+    }
+    .timeline-legend {
+      display: flex;
+      gap: var(--space-lg);
+      padding: 12px 24px;
+      background: var(--navy);
+      flex-wrap: wrap;
+    }
+    .tl-leg {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: rgba(255,255,255,0.65);
+    }
+    .tl-leg__dot {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    }
+    .tl-leg__line {
+      width: 24px; height: 3px; border-radius: 2px; flex-shrink: 0;
+    }
+    .timeline-body { padding: 24px; }
+    .chart-container { position: relative; height: 260px; margin-bottom: 16px; }
+
+    /* ── Event markers below chart ── */
+    .event-row {
+      display: flex;
+      gap: 0;
+      border-top: 1px solid var(--rule);
+      padding-top: 14px;
+      margin-bottom: var(--space-md);
+      overflow-x: auto;
+    }
+    .event-item {
+      flex: 1;
+      min-width: 80px;
+      padding: 0 6px;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-radius: 4px;
+    }
+    .event-item:hover { background: var(--cream); }
+    .event-item.active { background: var(--cream); }
+    .event-item__marker {
+      width: 10px; height: 10px; border-radius: 50%;
+      margin: 0 auto 6px;
+    }
+    .event-item__date {
+      font-family: var(--font-sans);
+      font-size: 9px;
+      color: var(--slate-light);
+      text-align: center;
+      margin-bottom: 3px;
+      letter-spacing: 0.03em;
+    }
+    .event-item__label {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      color: var(--slate);
+      text-align: center;
+      line-height: 1.35;
+    }
+
+    /* ── Event detail card ── */
+    .event-detail {
+      display: none;
+      border: 1.5px solid var(--gold);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .event-detail.open { display: block; }
+    .event-detail__head {
+      background: var(--navy);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .event-detail__head-title {
+      font-family: var(--font-serif);
+      font-size: 13px;
+      color: var(--gold-light);
+    }
+    .event-detail__head-date {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+    }
+    .event-detail__body {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0;
+    }
+    .event-col {
+      padding: 16px 18px;
+      border-right: 1px solid var(--rule);
+    }
+    .event-col:last-child { border-right: none; }
+    .event-col__label {
+      font-family: var(--font-sans);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .event-col__label.signal { color: #854F0B; }
+    .event-col__label.periodic { color: #A32D2D; }
+    .event-col__label.continuous { color: #3B6D11; }
+    .event-col__text {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: var(--slate);
+      line-height: 1.6;
+    }
+    .event-col__text strong { color: var(--navy); font-weight: 600; }
+    .gap-badge {
+      display: inline-block;
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-top: 8px;
+    }
+    .gap-badge.red { background: #FCEBEB; color: #791F1F; border: 1px solid #F09595; }
+    .gap-badge.green { background: #EAF3DE; color: #173404; border: 1px solid #97C459; }
+    .gap-badge.amber { background: #FAEEDA; color: #412402; border: 1px solid #EF9F27; }
+
+    /* ── Gap summary ── */
+    .gap-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .gap-card {
+      background: var(--cream);
+      border-radius: 4px;
+      padding: 14px 16px;
+      border-top: 3px solid var(--rule);
+    }
+    .gap-card.danger { border-top-color: #c0392b; }
+    .gap-card.warn { border-top-color: #854F0B; }
+    .gap-card.safe { border-top-color: #3B6D11; }
+    .gap-card__label {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      color: var(--slate-light);
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+    }
+    .gap-card__value {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .gap-card.danger .gap-card__value { color: #c0392b; }
+    .gap-card.warn .gap-card__value { color: #854F0B; }
+    .gap-card.safe .gap-card__value { color: #3B6D11; }
+    .gap-card__sub {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      color: var(--slate);
+      line-height: 1.4;
+    }
+
+    /* ── Signal table ── */
+    .signal-table-wrap {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: var(--space-lg);
+    }
+    .signal-table-head {
+      background: var(--navy);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .signal-table-head__title {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      color: var(--gold-light);
+    }
+    .domain-filters {
+      display: flex;
+      gap: 6px;
+    }
+    .df-btn {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
+      cursor: pointer;
+      color: rgba(255,255,255,0.5);
+      background: transparent;
+      transition: all 0.15s;
+      letter-spacing: 0.02em;
+    }
+    .df-btn:hover { border-color: var(--gold); color: var(--gold-light); }
+    .df-btn.active { background: rgba(184,144,42,0.2); border-color: var(--gold); color: var(--gold-light); }
+    .st { width: 100%; border-collapse: collapse; font-family: var(--font-sans); font-size: 12.5px; }
+    .st thead tr { background: #f0ede8; }
+    .st th {
+      padding: 9px 14px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 10px;
+      color: var(--slate);
+      border-bottom: 2px solid var(--rule);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .st td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--rule-light);
+      color: var(--navy);
+      vertical-align: top;
+    }
+    .st tr:last-child td { border-bottom: none; }
+    .st tr.hidden { display: none; }
+    .st tr:hover td { background: var(--cream); }
+    .domain-pill {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 9px;
+      border-radius: 20px;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+    .dp-credit { background: #E6F1FB; color: #0C447C; }
+    .dp-transaction { background: #FAEEDA; color: #633806; }
+    .dp-compliance { background: #EEEDFE; color: #3C3489; }
+    .severity-pill {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 20px;
+    }
+    .sp-high { background: #FCEBEB; color: #791F1F; }
+    .sp-medium { background: #FAEEDA; color: #633806; }
+    .st td.action-col { font-size: 12px; color: var(--slate); }
+
+    /* ── The shift section ── */
+    .shift-grid {
+      display: grid;
+      grid-template-columns: 1fr 40px 1fr;
+      gap: 0;
+      align-items: center;
+      margin-bottom: var(--space-lg);
+    }
+    .shift-col {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: var(--space-lg);
+    }
+    .shift-col.old { border-top: 3px solid #c0392b; }
+    .shift-col.new { border-top: 3px solid #3B6D11; }
+    .shift-col__label {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .shift-col.old .shift-col__label { color: #A32D2D; }
+    .shift-col.new .shift-col__label { color: #3B6D11; }
+    .shift-col__title {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    .shift-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--slate);
+      line-height: 1.55;
+    }
+    .shift-item__icon {
+      font-size: 14px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .shift-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: var(--gold);
+    }
+
+    @media (max-width: 700px) {
+      .event-detail__body { grid-template-columns: 1fr; }
+      .event-col { border-right: none; border-bottom: 1px solid var(--rule); }
+      .event-col:last-child { border-bottom: none; }
+      .gap-summary { grid-template-columns: 1fr; }
+      .shift-grid { grid-template-columns: 1fr; }
+      .shift-arrow { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__brand">
+    <svg class="topbar__mark" viewBox="0 0 32 32" fill="none">
+      <rect width="32" height="32" rx="4" fill="#b8902a"/>
+      <text x="16" y="22" text-anchor="middle" font-family="serif" font-size="16" font-weight="700" fill="#071429">S</text>
+    </svg>
+    <div class="topbar__text">
+      <span class="topbar__name">SMBC Group</span>
+      <span class="topbar__sub">Learning &amp; Development · APAC</span>
+    </div>
+  </div>
+  <nav class="topbar__nav">
+    <a href="#">Module 6</a>
+    <a href="#" class="active">Segment 2</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero__rule"></div>
+  <div class="hero__inner">
+    <div class="hero__eyebrow">
+      <div class="hero__eyebrow-line"></div>
+      <span class="label">Module 6 · Segment 2 · Day 2</span>
+    </div>
+    <h1 class="hero__title">Risk, Compliance &amp;<br><em>Continuous Signal Monitoring</em></h1>
+    <p class="hero__desc">Traditional risk management is structured around time — monthly reviews, quarterly reports, annual stress tests. Analytics replaces the calendar with signals. This session shows what that shift means in practice, and what it demands of you as a manager.</p>
+    <div class="hero__meta">
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Programme</span>
+        <span class="hero__meta-value">Data-Driven Decision Making</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Duration</span>
+        <span class="hero__meta-value">15 minutes</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Format</span>
+        <span class="hero__meta-value">Visual + reference tool</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="tab-bar">
+  <button class="tab-bar__btn active" onclick="showPanel('shift', this)">The shift</button>
+  <button class="tab-bar__btn" onclick="showPanel('timeline', this)">Timeline: the detection gap</button>
+  <button class="tab-bar__btn" onclick="showPanel('signals', this)">Signal-to-action reference</button>
+</div>
+
+
+<!-- ═══════════════════ PANEL 1: THE SHIFT ═══════════════════ -->
+<div id="panel-shift" class="panel active">
+  <div class="section-header">
+    <span class="pill">Part 1</span>
+    <span class="section-header__title">From periodic review to continuous monitoring — what changes</span>
+  </div>
+  <div class="page-layout">
+    <main class="fade-up">
+
+      <p style="font-family:var(--font-sans);font-size:14px;color:var(--slate);line-height:1.75;margin-bottom:var(--space-lg);">
+        The most important thing analytics does to risk management is not make it more accurate. It makes it faster. The traditional cycle — collect data, compile report, review at scheduled meeting, decide — introduces weeks or months of lag between when a risk signal appears and when a manager sees it. In credit, compliance, and operations, that lag has a cost. The visual below maps what changes.
+      </p>
+
+      <div class="shift-grid">
+        <div class="shift-col old">
+          <div class="shift-col__label">Traditional model</div>
+          <div class="shift-col__title">Periodic review — structured around the calendar</div>
+          <div class="shift-item">
+            <span class="shift-item__icon" style="color:#c0392b">&#8635;</span>
+            <span>Risk is assessed at fixed intervals — monthly credit reviews, quarterly compliance reports, annual stress tests</span>
+          </div>
+          <div class="shift-item">
+            <span class="shift-item__icon" style="color:#c0392b">&#8635;</span>
+            <span>Data is aggregated before review — individual signals are averaged or summarised before a manager sees them</span>
+          </div>
+          <div class="shift-item">
+            <span class="shift-item__icon" style="color:#c0392b">&#8635;</span>
+            <span>Action depends on the next scheduled meeting — a risk identified on day 3 of the month may not surface until day 28</span>
+          </div>
+          <div class="shift-item">
+            <span class="shift-item__icon" style="color:#c0392b">&#8635;</span>
+            <span>The manager's role is to <strong style="color:var(--navy)">review</strong> — read the report, validate the findings, approve or escalate</span>
+          </div>
+        </div>
+
+        <div class="shift-arrow">&#8594;</div>
+
+        <div class="shift-col new">
+          <div class="shift-col__label">Analytics-enabled model</div>
+          <div class="shift-col__title">Continuous monitoring — structured around thresholds</div>
+          <div class="shift-item">
+            <span class="shift-item__icon" style="color:#3B6D11">&#10003;</span>
+            <span>Risk signals are monitored in real time or near-real time — the system flags when a threshold is crossed, not when the calendar says to look</span>
+          </div>
+          <div class="shift-item">
+            <span class="shift-item__icon" style="color:#3B6D11">&#10003;</span>
+            <span>Individual borrower or transaction signals surface directly — patterns are visible before they aggregate into portfolio-level problems</span>
+          </div>
+          <div class="shift-item">
+            <span class="shift-item__icon" style="color:#3B6D11">&#10003;</span>
+            <span>Action is triggered by the signal, not the schedule — response time is measured in days or hours, not weeks</span>
+          </div>
+          <div class="shift-item">
+            <span class="shift-item__icon" style="color:#3B6D11">&#10003;</span>
+            <span>The manager's role is to <strong style="color:var(--navy)">respond</strong> — know what the signal means, know what the decision is, act within the threshold window</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula-box">
+        <div class="formula-box__label">The managerial implication</div>
+        <div class="formula-box__text">Continuous monitoring only works if the manager on the receiving end knows what to do with a signal. A threshold breach that lands in an inbox and generates no response is no better than a monthly report that goes unread. The system changes the speed. The manager's analytical capability determines whether that speed advantage is used.</div>
+        <div class="formula-box__example">This is the same failure as the mortgage bank — except the warning now arrives in real time. The question is the same: when the signal lands, what do you do with it?</div>
+      </div>
+
+      <div class="card card--highlighted">
+        <div class="card__header">
+          <div class="card__num">!</div>
+          <div class="card__meta">
+            <div class="card__tag">APAC regulatory context</div>
+            <div class="card__title">Continuous monitoring is increasingly a regulatory expectation, not a best practice</div>
+            <div class="card__topics">
+              <div class="card__topic">MAS (Singapore) has issued guidance under MAS 626 and the AML/CFT framework requiring banks to implement ongoing transaction monitoring with alert-based escalation — not just periodic sampling.</div>
+              <div class="card__topic">HKMA (Hong Kong) expects real-time or near-real-time transaction monitoring as part of its Supervisory Policy Manual AML-2 standards. Periodic batch review is increasingly viewed as insufficient for higher-risk customer segments.</div>
+              <div class="card__topic">Bangko Sentral ng Pilipinas and Bank Negara Malaysia have both signalled expectations that AML controls reflect the volume and velocity of digital transaction flows — which batch processing cannot keep pace with.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="objectives" style="margin-top:var(--space-lg);">
+        <div class="objective">
+          <div class="objective__marker">1</div>
+          <p class="objective__text"><strong>Credit risk.</strong> Continuous monitoring surfaces borrower deterioration — rising utilisation, payment pattern changes, sector stress exposure — weeks before a formal review cycle would catch it. The question is whether your team is commissioning forward-looking signals or backward-looking confirmation.</p>
+        </div>
+        <div class="objective">
+          <div class="objective__marker">2</div>
+          <p class="objective__text"><strong>Transaction monitoring.</strong> Pattern-based analytics flags anomalies in real time — unusual velocity, structuring behaviour, counterparty changes — rather than surfacing them in a monthly reconciliation. The value is in lead time. Lead time requires a manager who knows what the alert means.</p>
+        </div>
+        <div class="objective">
+          <div class="objective__marker">3</div>
+          <p class="objective__text"><strong>Compliance monitoring.</strong> AML, KYC, and conduct obligations can be monitored continuously against defined thresholds — expiry clustering, client review backlogs, policy breach rates. Continuous monitoring converts compliance from a periodic audit function into a live operational control.</p>
+        </div>
+      </div>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">The core shift</div>
+          <div class="sidebar-card__title">Calendar to threshold</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Old trigger</span>
+            <span class="sidebar-row__val">The date</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">New trigger</span>
+            <span class="sidebar-row__val">The signal</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Old role</span>
+            <span class="sidebar-row__val">Reviewer</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">New role</span>
+            <span class="sidebar-row__val">Responder</span>
+          </div>
+        </div>
+      </div>
+      <div class="sidebar-card" style="margin-top:var(--space-md);">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Three domains</div>
+          <div class="sidebar-card__title">Where it applies</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Credit</span>
+            <span class="sidebar-row__val">Borrower signals</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Transaction</span>
+            <span class="sidebar-row__val">Anomaly detection</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Compliance</span>
+            <span class="sidebar-row__val">Threshold control</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+
+<!-- ═══════════════════ PANEL 2: TIMELINE ═══════════════════ -->
+<div id="panel-timeline" class="panel">
+  <div class="section-header">
+    <span class="pill">Part 2</span>
+    <span class="section-header__title">The detection gap — what periodic review misses and when</span>
+  </div>
+  <div class="page-layout">
+    <main>
+
+      <p style="font-family:var(--font-sans);font-size:14px;color:var(--slate);line-height:1.75;margin-bottom:var(--space-md);">
+        The scenario below tracks a single corporate borrower — a mid-size manufacturing company in Southeast Asia — over 18 months of credit deterioration. The orange line shows exposure growth. The red line shows the deteriorating risk score. Click any event marker to see what each monitoring model saw, when it saw it, and what the detection gap cost.
+      </p>
+
+      <div class="timeline-wrap">
+        <div class="timeline-header">
+          <div>
+            <div class="timeline-header__title">Corporate credit deterioration — illustrative scenario</div>
+            <div class="timeline-header__sub">Mid-size manufacturing borrower · SGD 42m facility · APAC regional bank · Jan 2025 – Jun 2026</div>
+          </div>
+        </div>
+        <div class="timeline-legend">
+          <div class="tl-leg"><div class="tl-leg__line" style="background:#854F0B"></div> Credit risk score (deteriorating)</div>
+          <div class="tl-leg"><div class="tl-leg__line" style="background:#185FA5"></div> Outstanding exposure (SGD m)</div>
+          <div class="tl-leg"><div class="tl-leg__dot" style="background:#E24B4A"></div> Signal event (click to explore)</div>
+          <div class="tl-leg"><div class="tl-leg__dot" style="background:#A32D2D; border:2px solid #E24B4A"></div> Periodic review catches it</div>
+          <div class="tl-leg"><div class="tl-leg__dot" style="background:#3B6D11"></div> Continuous monitoring catches it</div>
+        </div>
+        <div class="timeline-body">
+          <div class="chart-container">
+            <canvas id="timelineChart" role="img" aria-label="Line chart showing credit risk score deteriorating and exposure growing over 18 months with annotated events">Timeline chart showing risk deterioration and exposure growth.</canvas>
+          </div>
+
+          <div class="event-row" id="event-row"></div>
+
+          <div class="event-detail" id="event-detail">
+            <div class="event-detail__head">
+              <span class="event-detail__head-title" id="ed-title"></span>
+              <span class="event-detail__head-date" id="ed-date"></span>
+            </div>
+            <div class="event-detail__body">
+              <div class="event-col">
+                <div class="event-col__label signal">What the data showed</div>
+                <div class="event-col__text" id="ed-signal"></div>
+              </div>
+              <div class="event-col">
+                <div class="event-col__label periodic">Periodic review model</div>
+                <div class="event-col__text" id="ed-periodic"></div>
+              </div>
+              <div class="event-col">
+                <div class="event-col__label continuous">Continuous monitoring</div>
+                <div class="event-col__text" id="ed-continuous"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="gap-summary">
+            <div class="gap-card danger">
+              <div class="gap-card__label">Detection gap (periodic)</div>
+              <div class="gap-card__value">11 weeks</div>
+              <div class="gap-card__sub">Average lag between first signal and monthly review catching it</div>
+            </div>
+            <div class="gap-card warn">
+              <div class="gap-card__label">Additional exposure accumulated</div>
+              <div class="gap-card__value">SGD 8.4m</div>
+              <div class="gap-card__sub">New drawdowns approved during the detection gap, now at elevated risk</div>
+            </div>
+            <div class="gap-card safe">
+              <div class="gap-card__label">Continuous detection lag</div>
+              <div class="gap-card__value">3 days</div>
+              <div class="gap-card__sub">Average time from threshold breach to management alert under continuous model</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-box__label">The managerial question this raises</div>
+        <p>In your current credit review process, what is the realistic lag between a borrower exhibiting the first signals of stress and a manager seeing it as a classified risk? If the answer is measured in months, the question is not whether continuous monitoring would add value. It is whether you have the analytical infrastructure — and the management capability — to act on it when it arrives.</p>
+      </div>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Scenario</div>
+          <div class="sidebar-card__title">What to look for</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Borrower</span>
+            <span class="sidebar-row__val">Manufacturing, SEA</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Facility</span>
+            <span class="sidebar-row__val">SGD 42m</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Period</span>
+            <span class="sidebar-row__val">18 months</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Outcome</span>
+            <span class="sidebar-row__val">Watch-listed</span>
+          </div>
+        </div>
+      </div>
+      <div class="sidebar-card" style="margin-top:var(--space-md);">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Click each marker</div>
+          <div class="sidebar-card__title">5 events to explore</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">E1</span><span class="sidebar-row__val">Utilisation spike</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">E2</span><span class="sidebar-row__val">Payment pattern shift</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">E3</span><span class="sidebar-row__val">Sector stress signal</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">E4</span><span class="sidebar-row__val">Covenant proximity</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">E5</span><span class="sidebar-row__val">Formal classification</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+
+<!-- ═══════════════════ PANEL 3: SIGNAL TABLE ═══════════════════ -->
+<div id="panel-signals" class="panel">
+  <div class="section-header">
+    <span class="pill">Part 3</span>
+    <span class="section-header__title">Signal-to-action reference — three domains, APAC context</span>
+  </div>
+  <div class="page-layout">
+    <main>
+
+      <p style="font-family:var(--font-sans);font-size:14px;color:var(--slate);line-height:1.75;margin-bottom:var(--space-md);">
+        This reference maps specific risk signals — by domain — to the data source that surfaces them, the threshold that should trigger management attention, and the decision the manager needs to make. Use it as a starting point to map your own area: which signals does your team currently monitor, which are missing, and which have no defined management response?
+      </p>
+
+      <div class="signal-table-wrap">
+        <div class="signal-table-head">
+          <span class="signal-table-head__title">Risk signals — credit, transaction &amp; compliance</span>
+          <div class="domain-filters">
+            <button class="df-btn active" onclick="filterDomain('all', this)">All</button>
+            <button class="df-btn" onclick="filterDomain('credit', this)">Credit</button>
+            <button class="df-btn" onclick="filterDomain('transaction', this)">Transaction</button>
+            <button class="df-btn" onclick="filterDomain('compliance', this)">Compliance</button>
+          </div>
+        </div>
+        <table class="st" id="signal-table">
+          <thead>
+            <tr>
+              <th style="width:110px">Domain</th>
+              <th style="width:180px">Signal</th>
+              <th>Data source</th>
+              <th>Threshold for action</th>
+              <th>Management decision</th>
+              <th style="width:70px">Severity</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- CREDIT -->
+            <tr data-domain="credit">
+              <td><span class="domain-pill dp-credit">Credit</span></td>
+              <td><strong>Revolving facility utilisation spike</strong></td>
+              <td>Core banking system — daily draw-down data</td>
+              <td>Utilisation exceeds 85% for 5+ consecutive days, or jumps &gt;20% in a single week</td>
+              <td class="action-col">Initiate unscheduled relationship call. Review cash flow position. Assess whether drawdown reflects operational need or liquidity stress.</td>
+              <td><span class="severity-pill sp-high">High</span></td>
+            </tr>
+            <tr data-domain="credit">
+              <td><span class="domain-pill dp-credit">Credit</span></td>
+              <td><strong>Payment pattern deterioration</strong></td>
+              <td>Loan servicing system — payment date and amount tracking</td>
+              <td>First occurrence of 15-DPD on any facility; or trend of payments arriving progressively later over 3 consecutive months</td>
+              <td class="action-col">Flag for watch-list review. Do not approve new drawdowns pending assessment. Escalate to credit committee if 30-DPD reached.</td>
+              <td><span class="severity-pill sp-high">High</span></td>
+            </tr>
+            <tr data-domain="credit">
+              <td><span class="domain-pill dp-credit">Credit</span></td>
+              <td><strong>Sector stress correlation</strong></td>
+              <td>External market data feed — sector credit indices, PMI, trade flow data</td>
+              <td>Borrower's sector PMI falls below 48 for 2 consecutive months AND borrower has &gt;60% revenue from that sector</td>
+              <td class="action-col">Commission sector stress scenario analysis for affected exposures. Review concentration limits. Consider whether new originations in sector require enhanced credit conditions.</td>
+              <td><span class="severity-pill sp-medium">Medium</span></td>
+            </tr>
+            <tr data-domain="credit">
+              <td><span class="domain-pill dp-credit">Credit</span></td>
+              <td><strong>Covenant proximity alert</strong></td>
+              <td>Financial covenant monitoring system — quarterly financials input</td>
+              <td>Borrower within 10% of any financial covenant threshold (DSCR, leverage, interest cover)</td>
+              <td class="action-col">Proactive engagement before breach. Review waiver position and escalation protocol. Assess whether covenant reset is appropriate or whether exposure reduction is required.</td>
+              <td><span class="severity-pill sp-high">High</span></td>
+            </tr>
+            <tr data-domain="credit">
+              <td><span class="domain-pill dp-credit">Credit</span></td>
+              <td><strong>Collateral value erosion</strong></td>
+              <td>Property valuation feeds, equity price monitoring — automated revaluation</td>
+              <td>LTV rises above 80% due to collateral value decline of &gt;10% from last formal valuation</td>
+              <td class="action-col">Instruct independent revaluation. Review margin call or additional security requirements per facility agreement. Escalate if LTV breach confirmed.</td>
+              <td><span class="severity-pill sp-high">High</span></td>
+            </tr>
+
+            <!-- TRANSACTION -->
+            <tr data-domain="transaction">
+              <td><span class="domain-pill dp-transaction">Transaction</span></td>
+              <td><strong>Unusual transaction velocity</strong></td>
+              <td>Transaction monitoring system — real-time or T+1 feeds</td>
+              <td>Transaction volume exceeds 3x the 90-day average in a 48-hour window, particularly in cash or near-cash instruments</td>
+              <td class="action-col">Generate SAR consideration report. Relationship manager to contact client for business justification. Do not alert client to monitoring activity. Escalate to Compliance within 24 hours.</td>
+              <td><span class="severity-pill sp-high">High</span></td>
+            </tr>
+            <tr data-domain="transaction">
+              <td><span class="domain-pill dp-transaction">Transaction</span></td>
+              <td><strong>Structuring pattern detection</strong></td>
+              <td>Transaction monitoring system — pattern recognition model</td>
+              <td>Multiple transactions just below reporting thresholds (e.g., &lt;SGD 20,000) from same originator within 72 hours</td>
+              <td class="action-col">Immediate escalation to Compliance / MLRO. Do not process further transactions pending review. Follow MAS Notice 626 / HKMA AML-2 escalation procedures.</td>
+              <td><span class="severity-pill sp-high">High</span></td>
+            </tr>
+            <tr data-domain="transaction">
+              <td><span class="domain-pill dp-transaction">Transaction</span></td>
+              <td><strong>Counterparty jurisdiction change</strong></td>
+              <td>Payment processing system — beneficiary country flagging</td>
+              <td>New counterparty in FATF high-risk or monitored jurisdiction, or sudden shift away from established counterparty network</td>
+              <td class="action-col">Enhanced due diligence on new counterparty. Hold transaction pending compliance sign-off for sanctioned or high-risk jurisdictions. Document rationale.</td>
+              <td><span class="severity-pill sp-high">High</span></td>
+            </tr>
+            <tr data-domain="transaction">
+              <td><span class="domain-pill dp-transaction">Transaction</span></td>
+              <td><strong>Round-sum transaction clustering</strong></td>
+              <td>Transaction monitoring system — round-number detection module</td>
+              <td>Three or more transactions of identical or near-identical round amounts (e.g., exactly USD 50,000) within 30 days to/from same counterparty</td>
+              <td class="action-col">Review transaction purpose and business justification with relationship manager. Assess against customer risk profile. Escalate if no credible explanation obtained within 48 hours.</td>
+              <td><span class="severity-pill sp-medium">Medium</span></td>
+            </tr>
+
+            <!-- COMPLIANCE -->
+            <tr data-domain="compliance">
+              <td><span class="domain-pill dp-compliance">Compliance</span></td>
+              <td><strong>KYC renewal expiry clustering</strong></td>
+              <td>Client lifecycle management system — expiry date tracking dashboard</td>
+              <td>More than 15% of a portfolio segment's KYC reviews falling due in a single 30-day window, or any high-risk client review overdue by &gt;7 days</td>
+              <td class="action-col">Redistribute review workload across team. Escalate high-risk client overdue cases immediately to Compliance. Do not approve new transactions for clients with overdue reviews per MAS 626.</td>
+              <td><span class="severity-pill sp-high">High</span></td>
+            </tr>
+            <tr data-domain="compliance">
+              <td><span class="domain-pill dp-compliance">Compliance</span></td>
+              <td><strong>Policy breach rate trend</strong></td>
+              <td>Internal audit and compliance tracking system — exception log</td>
+              <td>Policy exceptions exceed 5% of transactions in any team for two consecutive months, or any single exception type exceeds 3% alone</td>
+              <td class="action-col">Root cause analysis of exception pattern. Determine whether breach reflects a process failure, training gap, or policy ambiguity. Report to Risk Committee with remediation plan within 30 days.</td>
+              <td><span class="severity-pill sp-medium">Medium</span></td>
+            </tr>
+            <tr data-domain="compliance">
+              <td><span class="domain-pill dp-compliance">Compliance</span></td>
+              <td><strong>Adverse media — client mention</strong></td>
+              <td>Automated adverse media screening tool — daily sweep of news and regulatory databases</td>
+              <td>Any mention of existing client in regulatory enforcement action, criminal proceedings, or significant reputational event</td>
+              <td class="action-col">Immediate notification to Compliance and relationship senior management. Assess whether relationship continuation is appropriate. Review for SAR obligation. Do not discuss with client pending internal decision.</td>
+              <td><span class="severity-pill sp-high">High</span></td>
+            </tr>
+            <tr data-domain="compliance">
+              <td><span class="domain-pill dp-compliance">Compliance</span></td>
+              <td><strong>Sanctions list match — new designation</strong></td>
+              <td>Sanctions screening system — automated feed from OFAC, UN, MAS, HKMA lists</td>
+              <td>Any exact or fuzzy match (&gt;85% confidence) between existing client or counterparty and updated sanctions designation</td>
+              <td class="action-col">Freeze all transactions immediately. Notify Compliance and Legal within 1 hour. No client contact until legal position confirmed. Follow jurisdictional reporting obligations (MAS, HKMA, AUSTRAC) within prescribed timeframe.</td>
+              <td><span class="severity-pill sp-high">High</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-box">
+        <div class="info-box__label">How to use this reference in your team</div>
+        <p>Map your own area against this table. For each signal type relevant to your function: does your team currently monitor this signal? Is there a defined threshold — or is the trigger still a matter of judgement? Is there a defined management response — or does each occurrence require a fresh decision? The gaps in those three columns are your action items.</p>
+      </div>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Coverage check</div>
+          <div class="sidebar-card__title">Three questions for your team</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Q1</span>
+            <span class="sidebar-row__val">Which signals do we monitor?</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Q2</span>
+            <span class="sidebar-row__val">Is each threshold defined?</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Q3</span>
+            <span class="sidebar-row__val">Is each response defined?</span>
+          </div>
+        </div>
+      </div>
+      <div class="sidebar-card" style="margin-top:var(--space-md);">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Regulatory references</div>
+          <div class="sidebar-card__title">APAC frameworks</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Singapore</span>
+            <span class="sidebar-row__val">MAS 626</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Hong Kong</span>
+            <span class="sidebar-row__val">HKMA AML-2</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Australia</span>
+            <span class="sidebar-row__val">AUSTRAC AML/CTF</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Malaysia</span>
+            <span class="sidebar-row__val">BNM AML/CFT</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Philippines</span>
+            <span class="sidebar-row__val">BSP Circ. 950</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<footer>
+  <span class="footer__brand">SMBC Group · Learning &amp; Development · APAC · Data-Driven Decision Making · Module 6 · 2026</span>
+  <span class="footer__note">Confidential · Programme Materials</span>
+</footer>
+
+<script>
+  /* ── Panel switching ── */
+  function showPanel(id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-bar__btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  /* ── Domain filter ── */
+  function filterDomain(domain, btn) {
+    document.querySelectorAll('.df-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#signal-table tbody tr').forEach(row => {
+      if (domain === 'all' || row.dataset.domain === domain) {
+        row.classList.remove('hidden');
+      } else {
+        row.classList.add('hidden');
+      }
+    });
+  }
+
+  /* ── Timeline events ── */
+  const events = [
+    {
+      id: 'E1',
+      date: 'Mar 2025',
+      label: 'Utilisation spike',
+      color: '#E24B4A',
+      chartIdx: 2,
+      title: 'E1 — Revolving facility utilisation spike',
+      signal: 'Facility utilisation jumps from 61% to 88% over a 9-day period. No drawdown request explanation provided to relationship manager. Coincides with end of customer\'s quarter.',
+      periodic: '<strong>Not visible until month-end review.</strong> The drawdown occurs on March 14. The monthly credit report is compiled on March 31 and reviewed by the credit manager on April 7. <span class="gap-badge red">24-day lag</span>',
+      continuous: '<strong>Alert generated March 19</strong> — 5 days after utilisation crosses 85% threshold. Relationship manager notified same day for client contact and business justification. <span class="gap-badge green">5-day detection</span>'
+    },
+    {
+      id: 'E2',
+      date: 'Jun 2025',
+      label: 'Payment pattern shift',
+      color: '#E24B4A',
+      chartIdx: 5,
+      title: 'E2 — Payment pattern deterioration',
+      signal: 'June payment arrives 11 days late. July payment arrives 14 days late. August payment arrives 9 days late. No single payment is technically in default — all arrive before 30-DPD threshold.',
+      periodic: '<strong>Pattern not visible in periodic review.</strong> Monthly report shows all payments received — technically accurate. No flag raised. The trend across three months is not surfaced because reports are reviewed in isolation, not as a sequence. <span class="gap-badge red">Pattern invisible</span>',
+      continuous: '<strong>Trend model flags after second late payment</strong> (July). Progressive deterioration pattern identified. Credit analyst commissioned to review cash flow position before third payment due. <span class="gap-badge amber">6-week detection</span>'
+    },
+    {
+      id: 'E3',
+      date: 'Sep 2025',
+      label: 'Sector stress signal',
+      color: '#E24B4A',
+      chartIdx: 8,
+      title: 'E3 — Sector stress correlation',
+      signal: 'Regional manufacturing PMI falls to 46.8 — below the 48 threshold for a second consecutive month. Customer derives approximately 74% of revenue from export manufacturing to markets now under tariff pressure.',
+      periodic: '<strong>Not part of standard credit review inputs.</strong> Periodic review covers internal financial data — most recently Q2 2025 financials submitted in August. External sector data is not systematically linked to borrower files in the current review process. <span class="gap-badge red">Signal not captured</span>',
+      continuous: '<strong>Automated sector alert generated September 12</strong> — linked to borrower\'s SIC code and revenue composition in the credit file. Portfolio manager notified to commission sector scenario analysis for all affected exposures above SGD 10m. <span class="gap-badge green">Same-day detection</span>'
+    },
+    {
+      id: 'E4',
+      date: 'Jan 2026',
+      label: 'Covenant proximity',
+      color: '#E24B4A',
+      chartIdx: 12,
+      title: 'E4 — Covenant proximity alert',
+      signal: 'Q3 2025 financials (submitted January 2026) show DSCR of 1.18x — within 8% of the 1.10x covenant floor. Interest cover ratio has declined for three consecutive quarters.',
+      periodic: '<strong>Caught — but only when financials submitted.</strong> Financials arrive in January for the September quarter. The credit manager reviews them at the February credit committee. By then, Q4 data is already generating and the position may have moved further. <span class="gap-badge amber">4-month data lag</span>',
+      continuous: '<strong>Covenant proximity alert generated January 22</strong> — same day financials loaded into system. Automatic threshold check against all covenant conditions. Relationship manager briefed for proactive borrower engagement before breach. <span class="gap-badge green">Same-day detection</span>'
+    },
+    {
+      id: 'E5',
+      date: 'Apr 2026',
+      label: 'Formal classification',
+      color: '#A32D2D',
+      chartIdx: 15,
+      title: 'E5 — Watch-list classification and outcome',
+      signal: 'Q4 2025 financials confirm DSCR of 0.97x — covenant breach. Facility formally classified as Watch. SGD 8.4m in additional drawdowns were approved between March 2025 and April 2026 before classification.',
+      periodic: '<strong>Formally classified at April credit committee.</strong> The borrower has been deteriorating for 13 months. The additional SGD 8.4m exposure approved during this period now carries elevated default risk. First signal (March 2025 utilisation spike) was not connected to classification 13 months later. <span class="gap-badge red">13-month detection gap</span>',
+      continuous: '<strong>Watch recommendation generated in October 2025</strong> — 6 months earlier — based on accumulated signal pattern: utilisation spike, payment trend, sector stress, covenant proximity. New drawdown approvals flagged for enhanced scrutiny from October. Exposure growth limited. <span class="gap-badge green">6-month earlier action</span>'
+    }
+  ];
+
+  /* ── Build event markers ── */
+  const row = document.getElementById('event-row');
+  events.forEach((e, i) => {
+    const div = document.createElement('div');
+    div.className = 'event-item';
+    div.id = 'ei-' + i;
+    div.onclick = () => showEvent(i);
+    div.innerHTML = `
+      <div class="event-item__marker" style="background:${e.color}"></div>
+      <div class="event-item__date">${e.date}</div>
+      <div class="event-item__label">${e.id}: ${e.label}</div>`;
+    row.appendChild(div);
+  });
+
+  function showEvent(idx) {
+    document.querySelectorAll('.event-item').forEach(el => el.classList.remove('active'));
+    document.getElementById('ei-' + idx).classList.add('active');
+    const e = events[idx];
+    document.getElementById('ed-title').textContent = e.title;
+    document.getElementById('ed-date').textContent = e.date;
+    document.getElementById('ed-signal').innerHTML = e.signal;
+    document.getElementById('ed-periodic').innerHTML = e.periodic;
+    document.getElementById('ed-continuous').innerHTML = e.continuous;
+    const detail = document.getElementById('event-detail');
+    detail.classList.add('open');
+    setTimeout(() => detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+  }
+
+  /* ── Timeline chart ── */
+  window.addEventListener('load', function () {
+    const months = ['Jan 25','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan 26','Feb','Mar','Apr','May','Jun'];
+
+    const riskScore = [82, 81, 79, 78, 77, 74, 73, 71, 68, 66, 64, 62, 58, 55, 52, 47, 44, 41];
+    const exposure  = [33.5, 34.1, 37.2, 37.8, 38.0, 38.6, 39.0, 39.4, 39.8, 40.1, 40.3, 40.5, 40.8, 41.2, 41.6, 41.9, 42.0, 42.0];
+
+    const eventPoints = events.map(e => e.chartIdx);
+
+    const signalPlugin = {
+      id: 'eventLines',
+      afterDraw(chart) {
+        const ctx = chart.ctx;
+        const xAxis = chart.scales.x;
+        const yAxis = chart.scales.y;
+        eventPoints.forEach(idx => {
+          const x = xAxis.getPixelForValue(idx);
+          ctx.save();
+          ctx.beginPath();
+          ctx.setLineDash([4, 3]);
+          ctx.strokeStyle = 'rgba(226,75,74,0.35)';
+          ctx.lineWidth = 1;
+          ctx.moveTo(x, yAxis.top);
+          ctx.lineTo(x, yAxis.bottom);
+          ctx.stroke();
+          ctx.restore();
+        });
+      }
+    };
+
+    new Chart(document.getElementById('timelineChart'), {
+      type: 'line',
+      plugins: [signalPlugin],
+      data: {
+        labels: months,
+        datasets: [
+          {
+            label: 'Credit risk score',
+            data: riskScore,
+            borderColor: '#854F0B',
+            borderWidth: 2.5,
+            pointRadius: 3,
+            pointBackgroundColor: '#854F0B',
+            tension: 0.35,
+            yAxisID: 'yLeft',
+            fill: false
+          },
+          {
+            label: 'Exposure (SGD m)',
+            data: exposure,
+            borderColor: '#185FA5',
+            borderWidth: 2,
+            pointRadius: 2,
+            pointBackgroundColor: '#185FA5',
+            borderDash: [6, 3],
+            tension: 0.3,
+            yAxisID: 'yRight',
+            fill: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => {
+                if (ctx.datasetIndex === 0) return 'Risk score: ' + ctx.parsed.y;
+                return 'Exposure: SGD ' + ctx.parsed.y.toFixed(1) + 'm';
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { font: { size: 10 }, color: '#8899aa', maxRotation: 0, autoSkip: true, maxTicksLimit: 9 },
+            grid: { color: 'rgba(0,0,0,0.05)' }
+          },
+          yLeft: {
+            type: 'linear',
+            position: 'left',
+            min: 30, max: 100,
+            ticks: { font: { size: 10 }, color: '#854F0B', stepSize: 10 },
+            grid: { color: 'rgba(0,0,0,0.05)' },
+            title: { display: true, text: 'Risk score', color: '#854F0B', font: { size: 10 } }
+          },
+          yRight: {
+            type: 'linear',
+            position: 'right',
+            min: 25, max: 50,
+            ticks: { font: { size: 10 }, color: '#185FA5', callback: v => 'SGD ' + v + 'm' },
+            grid: { display: false },
+            title: { display: true, text: 'Exposure', color: '#185FA5', font: { size: 10 } }
+          }
+        }
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
