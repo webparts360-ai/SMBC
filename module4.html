@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 4A: Data Cleansing — Post-Module Reference</title>
+  <link rel="stylesheet" href="smbc.css">
+  <style>
+    /* ── Page-level overrides ─────────────────────────────────────── */
+    body { background: var(--cream); }
+
+    .note-hero {
+      background: var(--navy-deep);
+      padding: var(--space-xl) var(--page-pad);
+      border-bottom: 3px solid var(--gold);
+    }
+    .note-hero__eyebrow {
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: var(--space-sm);
+    }
+    .note-hero__title {
+      font-family: var(--font-serif);
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 0 var(--space-sm);
+      line-height: 1.25;
+    }
+    .note-hero__sub {
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.55);
+      margin: 0;
+    }
+    .note-hero__meta {
+      display: flex;
+      gap: var(--space-md);
+      margin-top: var(--space-md);
+      flex-wrap: wrap;
+    }
+    .meta-pill {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--navy-deep);
+      background: var(--gold);
+      padding: 3px 10px;
+      border-radius: 2px;
+    }
+
+    /* ── Content wrapper ──────────────────────────────────────────── */
+    .note-body {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: var(--space-xl) var(--page-pad);
+    }
+
+    /* ── Section label ────────────────────────────────────────────── */
+    .section-label {
+      font-family: var(--font-sans);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin: 0 0 var(--space-md);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--rule);
+    }
+
+    /* ── Two-column grid ──────────────────────────────────────────── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-xl);
+    }
+    @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+    }
+    @media (max-width: 700px) { .three-col { grid-template-columns: 1fr; } }
+
+    /* ── Note card ────────────────────────────────────────────────── */
+    .note-card {
+      background: var(--white);
+      border: 1px solid var(--rule-light);
+      border-top: 3px solid var(--gold);
+      border-radius: 2px;
+      padding: var(--space-lg);
+    }
+    .note-card--navy {
+      background: var(--navy);
+      border-top-color: var(--gold);
+    }
+    .note-card--full {
+      grid-column: 1 / -1;
+    }
+    .note-card__title {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 0 0 var(--space-md);
+      line-height: 1.3;
+    }
+    .note-card--navy .note-card__title {
+      color: #fff;
+    }
+    .note-card p {
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+      color: var(--slate);
+      line-height: 1.7;
+      margin: 0 0 var(--space-md);
+    }
+    .note-card--navy p {
+      color: rgba(255,255,255,0.65);
+    }
+    .note-card p:last-child { margin-bottom: 0; }
+
+    /* ── Issue table ──────────────────────────────────────────────── */
+    .issue-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      margin-bottom: var(--space-xl);
+    }
+    .issue-table thead tr {
+      background: var(--navy);
+      color: #fff;
+    }
+    .issue-table thead th {
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .issue-table tbody tr:nth-child(even) { background: var(--warm-white); }
+    .issue-table tbody tr:nth-child(odd)  { background: var(--white); }
+    .issue-table tbody td {
+      padding: 9px 14px;
+      color: var(--slate);
+      vertical-align: top;
+      line-height: 1.55;
+      border-bottom: 1px solid var(--rule-light);
+    }
+    .issue-table tbody td:first-child {
+      font-weight: 600;
+      color: var(--navy);
+      white-space: nowrap;
+    }
+    .sev { display: inline-block; padding: 2px 7px; border-radius: 2px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+    .sev--red    { background: #fde8e8; color: #c0392b; }
+    .sev--amber  { background: #fef3c7; color: #92400e; }
+    .sev--blue   { background: #dbeafe; color: #1d4ed8; }
+
+    /* ── Step list ────────────────────────────────────────────────── */
+    .step-list { list-style: none; margin: 0; padding: 0; }
+    .step-list li {
+      display: flex;
+      gap: var(--space-md);
+      padding: var(--space-sm) 0;
+      border-bottom: 1px solid var(--rule-light);
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--slate);
+      line-height: 1.55;
+      align-items: flex-start;
+    }
+    .step-list li:last-child { border-bottom: none; }
+    .step-num {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+    .step-phase {
+      flex-shrink: 0;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      padding: 3px 7px;
+      border: 1px solid var(--gold);
+      border-radius: 2px;
+      margin-top: 2px;
+      white-space: nowrap;
+    }
+    .step-phase--pq  { color: #1d4ed8; border-color: #1d4ed8; }
+    .step-phase--pt  { color: var(--navy); border-color: var(--navy); background: var(--warm-white); }
+
+    /* ── Formula box ──────────────────────────────────────────────── */
+    .formula-box {
+      background: var(--navy);
+      border-left: 4px solid var(--gold);
+      padding: var(--space-md) var(--space-lg);
+      border-radius: 2px;
+      margin-bottom: var(--space-xl);
+    }
+    .formula-box__label {
+      font-family: var(--font-sans);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: var(--space-sm);
+    }
+    .formula-box__text {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      color: #fff;
+      line-height: 1.5;
+      margin-bottom: var(--space-sm);
+    }
+    .formula-box__example {
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+      font-style: italic;
+    }
+
+    /* ── Reinforcement prompts ────────────────────────────────────── */
+    .prompt-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+    }
+    .prompt-card {
+      background: var(--white);
+      border: 1px solid var(--rule-light);
+      border-left: 4px solid var(--navy-mid);
+      border-radius: 2px;
+      padding: var(--space-md);
+    }
+    .prompt-card__q {
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: var(--space-sm);
+      line-height: 1.4;
+    }
+    .prompt-card__hint {
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      color: var(--slate-light);
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    /* ── Takeaway strip ───────────────────────────────────────────── */
+    .takeaway-strip {
+      background: var(--gold);
+      padding: var(--space-lg) var(--page-pad);
+      margin-bottom: var(--space-xl);
+    }
+    .takeaway-strip__label {
+      font-family: var(--font-sans);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--navy-deep);
+      margin-bottom: var(--space-sm);
+    }
+    .takeaway-strip__text {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--navy-deep);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* ── Info box ─────────────────────────────────────────────────── */
+    .info-box {
+      background: var(--warm-white);
+      border-top: 3px solid var(--gold);
+      padding: var(--space-md) var(--space-lg);
+      border-radius: 2px;
+      margin-bottom: var(--space-lg);
+    }
+    .info-box__label {
+      font-family: var(--font-sans);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: var(--space-sm);
+    }
+    .info-box p {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--slate);
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    /* ── Checklist ────────────────────────────────────────────────── */
+    .checklist { list-style: none; margin: 0; padding: 0; }
+    .checklist li {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--slate);
+      line-height: 1.6;
+      padding: 5px 0 5px 22px;
+      position: relative;
+      border-bottom: 1px solid var(--rule-light);
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li::before {
+      content: '□';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-size: 1rem;
+      line-height: 1.3;
+    }
+
+    /* ── Footer ───────────────────────────────────────────────────── */
+    footer {
+      background: var(--navy-deep);
+      padding: var(--space-lg) var(--page-pad);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      border-top: 3px solid var(--gold);
+    }
+    .footer__brand, .footer__note {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.4);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HERO ─────────────────────────────────────────────────────────── -->
+<div class="note-hero">
+  <div class="note-hero__eyebrow">Post-Module Reference · Data-Driven Decision Making Programme</div>
+  <h1 class="note-hero__title">Module 4A: Data Cleansing Using Power Query</h1>
+  <p class="note-hero__sub">Keep this page as a desk reference after the session. It summarises what was covered, what to say to reinforce the learning with your team, and what to practise next.</p>
+  <div class="note-hero__meta">
+    <span class="meta-pill">Day 1 · 1:50 PM</span>
+    <span class="meta-pill">75 Minutes</span>
+    <span class="meta-pill">Facilitated Demo</span>
+    <span class="meta-pill">Excel + Power Query</span>
+  </div>
+</div>
+
+<!-- ── BODY ─────────────────────────────────────────────────────────── -->
+<div class="note-body">
+
+
+  <!-- SECTION 1 — What this module was about -->
+  <div class="section-label">What This Module Covered</div>
+
+  <div class="two-col" style="margin-bottom: var(--space-xl);">
+    <div class="note-card">
+      <div class="note-card__title">The core argument</div>
+      <p>Raw data — as it typically arrives from core banking systems, CRM exports, or manual spreadsheets — is almost never ready for analysis. It contains structural problems and quality defects that produce wrong answers silently, with no error message.</p>
+      <p>Power Query is the tool that bridges the gap between raw data and reliable analysis. It transforms, cleans, and reshapes data through a recorded, repeatable sequence of steps — so the process is auditable and can be re-run every time new data arrives.</p>
+    </div>
+    <div class="note-card">
+      <div class="note-card__title">The three-tier model</div>
+      <p><strong style="color:var(--navy)">Raw worksheet range</strong> — capped at ~1 million rows, fragile cell references, not suitable as a Power Query source.</p>
+      <p><strong style="color:var(--navy)">Excel Table (Ctrl+T)</strong> — same row limit, but stable named reference, auto-expanding formulas. Correct source for Power Query.</p>
+      <p><strong style="color:var(--navy)">Power Query + Data Model</strong> — ~2 billion rows, compressed storage, no formula overhead in the grid. Calculations run in the DAX/M engine. The right architecture for any data refreshed regularly or exceeding 100k rows.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 2 — Data quality issues reference table -->
+  <div class="section-label">Data Quality Issues: What Was Wrong and Why It Matters</div>
+
+  <table class="issue-table">
+    <thead>
+      <tr>
+        <th>Issue</th>
+        <th>Severity</th>
+        <th>What goes wrong in analysis</th>
+        <th>How Power Query fixes it</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Dates stored as text</td>
+        <td><span class="sev sev--red">Structural</span></td>
+        <td>Time intelligence completely fails. Year, month, quarter slicers return blank. Any date-based KPI is broken.</td>
+        <td>Change Data Type → Date on the Order Date column after the unpivot.</td>
+      </tr>
+      <tr>
+        <td>Merged cells in headers</td>
+        <td><span class="sev sev--red">Structural</span></td>
+        <td>Power Query cannot read multi-row merged headers as a table. The query fails or produces wrong column names.</td>
+        <td>Remove Top Rows to delete the merged header rows; Use First Row as Headers to promote the correct row.</td>
+      </tr>
+      <tr>
+        <td>Pivot-style layout</td>
+        <td><span class="sev sev--red">Structural</span></td>
+        <td>Ship Mode and Segment do not exist as columns. PivotTable cannot group, filter, or aggregate by either attribute.</td>
+        <td>Unpivot Other Columns converts wide columns into rows, creating Attribute and Value fields.</td>
+      </tr>
+      <tr>
+        <td>Duplicate row</td>
+        <td><span class="sev sev--amber">Wrong numbers</span></td>
+        <td>One transaction counted twice. Revenue figures overstated. No indicator in Excel — the error is invisible.</td>
+        <td>Remove Duplicates (or identify and remove manually). Verify row counts before and after.</td>
+      </tr>
+      <tr>
+        <td>Number with leading space ("&nbsp;&nbsp;605.47")</td>
+        <td><span class="sev sev--amber">Wrong numbers</span></td>
+        <td>Treated as text. SUM ignores it. Sales understated by exactly that amount — again, silently.</td>
+        <td>Transform → Trim removes leading and trailing spaces. Then Change Data Type → Decimal Number.</td>
+      </tr>
+      <tr>
+        <td>Number stored as text with comma ("1,044.44")</td>
+        <td><span class="sev sev--amber">Wrong numbers</span></td>
+        <td>Same outcome. The thousands separator prevents type conversion. SUM returns zero for that cell.</td>
+        <td>Replace Values: replace "," with "" (empty). Then Change Data Type → Decimal Number.</td>
+      </tr>
+      <tr>
+        <td>Blank row</td>
+        <td><span class="sev sev--amber">Wrong numbers</span></td>
+        <td>Row counts overstated. COUNTROWS-based measures give the wrong denominator. Averages are off.</td>
+        <td>Home → Remove Rows → Remove Blank Rows.</td>
+      </tr>
+      <tr>
+        <td>"N/A" as text instead of blank</td>
+        <td><span class="sev sev--blue">Subtle failure</span></td>
+        <td>Creates an extra row in the output after unpivot. Type conversion produces an Error. Row appears in PivotTable with no value.</td>
+        <td>Replace Values: replace "N/A" with blank before changing the data type. Then Remove Errors.</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <!-- SECTION 3 — The 14-step walkthrough -->
+  <div class="section-label">The 14-Step Walkthrough at a Glance</div>
+
+  <div class="note-card note-card--full" style="margin-bottom: var(--space-xl);">
+    <ol class="step-list">
+      <li><span class="step-num">1</span><span class="step-phase">Excel</span>Flash Fill — populate Ship Mode labels explicitly across all 12 columns in row 1.</li>
+      <li><span class="step-num">2</span><span class="step-phase">Excel</span>Enter the formula <code style="font-size:0.8rem; background:var(--warm-white); padding:1px 5px; border-radius:2px;">=B1&amp;"|"&amp;B2</code> in cell B3 to create a combined Ship Mode | Segment label.</li>
+      <li><span class="step-num">3</span><span class="step-phase">Excel</span>Flash Fill to copy the combined label across all 12 columns (B3:M3).</li>
+      <li><span class="step-num">4</span><span class="step-phase">Excel</span>Ctrl+A to select the full data range.</li>
+      <li><span class="step-num">5</span><span class="step-phase">Excel</span>Ctrl+T to convert to an Excel Table. Uncheck "My table has headers." Rename the table Orders_Raw.</li>
+      <li><span class="step-num">6</span><span class="step-phase">Excel</span>Data tab → From Table/Range — launches Power Query Editor.</li>
+      <li><span class="step-num">7</span><span class="step-phase step-phase--pq">Power Query</span>Orient to the interface: Queries Pane (left), Data Preview (centre), Applied Steps (right), Home/Transform/Add Column ribbons (top).</li>
+      <li><span class="step-num">8</span><span class="step-phase step-phase--pq">Power Query</span>Home → Remove Rows → Remove Top Rows → 2. Removes the old Ship Mode and Segment header rows.</li>
+      <li><span class="step-num">9</span><span class="step-phase step-phase--pq">Power Query</span>Home → Use First Row as Headers. Promotes the combined label row as column names.</li>
+      <li><span class="step-num">10</span><span class="step-phase step-phase--pq">Power Query</span>Select Order Date column → Right-click → Unpivot Other Columns. Converts 12 columns into 3 rows (Date, Attribute, Value).</li>
+      <li><span class="step-num">11</span><span class="step-phase step-phase--pq">Power Query</span>Add Column → Extract → Text Before Delimiter → | — extracts Ship Mode. Rename column "Ship Mode".</li>
+      <li><span class="step-num">12</span><span class="step-phase step-phase--pq">Power Query</span>Add Column → Extract → Text After Delimiter → | — extracts Segment. Rename column "Segment".</li>
+      <li><span class="step-num">13</span><span class="step-phase step-phase--pq">Power Query</span>Remove Attribute column. Reorder: Order Date · Ship Mode · Segment · Value. Rename "Value" to "Sales". Fix data types (Date, Decimal). Handle errors. Home → Close &amp; Load.</li>
+      <li><span class="step-num">14</span><span class="step-phase step-phase--pt">PivotTable</span>Insert → PivotTable from clean table. ROWS: Ship Mode · COLUMNS: Segment · VALUES: Sum of Sales. Sort largest to smallest to surface top revenue combinations.</li>
+    </ol>
+  </div>
+
+
+  <!-- SECTION 4 — What to say to reinforce -->
+  <div class="section-label">What to Say to Reinforce the Learning</div>
+
+  <div class="formula-box" style="margin-bottom: var(--space-lg);">
+    <div class="formula-box__label">The central message — use this framing</div>
+    <div class="formula-box__text">"Every number in a report or dashboard is only as trustworthy as the data behind it. Power Query is not about technology — it is about ensuring that the analysis your team produces can be defended."</div>
+    <div class="formula-box__example">Useful when participants return to their desks and colleagues ask what the session was about.</div>
+  </div>
+
+  <div class="info-box" style="margin-bottom: var(--space-lg);">
+    <div class="info-box__label">When someone asks: "We already have a data team — why do I need to know this?"</div>
+    <p>Say: <em>"You do not need to run these steps yourself every day. But you need to understand what clean data looks like and what bad data costs — because when someone hands you a report and the numbers seem off, you now know the questions to ask. Was the source data a flat table or a pivot export? Were the dates typed or formula-driven? Were there blanks? That is a different conversation than 'the numbers look wrong.'"</em></p>
+  </div>
+
+  <div class="info-box" style="margin-bottom: var(--space-lg);">
+    <div class="info-box__label">When someone says: "Our data comes from the core system — it should already be clean."</div>
+    <p>Say: <em>"Core banking systems are designed to record transactions accurately. They are not designed to produce flat, analysis-ready tables. The export format — whether it is a pivot report, a multi-level header file, or a CSV with merged rows — is almost always structured for human reading, not machine analysis. That gap is exactly what Power Query closes."</em></p>
+  </div>
+
+  <div class="info-box" style="margin-bottom: var(--space-lg);">
+    <div class="info-box__label">When someone says: "I just use formulas in Excel — that works fine for me."</div>
+    <p>Say: <em>"Formulas work until the data structure changes — a new column, a shifted row, a merged header — and suddenly your VLOOKUP returns nothing and you do not know why. Power Query connects to the table by name, not by cell address. When new data arrives, you refresh and the same steps run. You spend zero time re-doing manual fixes."</em></p>
+  </div>
+
+  <div class="info-box">
+    <div class="info-box__label">To connect this to Modules 4B, 4C, and 4D</div>
+    <p>Say: <em>"Everything we do in the next three modules — the formulas, the PivotTables, the Power BI visuals — is built on the clean table we just produced. If that foundation is wrong, everything sitting on top of it is wrong too. This is why we cleaned first."</em></p>
+  </div>
+
+
+  <!-- SECTION 5 — Reinforcement discussion prompts -->
+  <div class="section-label" style="margin-top: var(--space-xl);">Discussion Prompts to Use With Your Team</div>
+
+  <p style="font-family: var(--font-sans); font-size: 0.875rem; color: var(--slate); margin-bottom: var(--space-lg); line-height: 1.65;">Use these in team meetings, huddles, or one-on-ones in the week after the programme. Each prompt is designed to surface data quality awareness without requiring any tool knowledge.</p>
+
+  <div class="prompt-grid">
+    <div class="prompt-card">
+      <div class="prompt-card__q">"Think of a report our team uses regularly. If someone told you one row was duplicated, how would you find it?"</div>
+      <div class="prompt-card__hint">Surfaces awareness of duplicate risk and the absence of validation steps in typical reporting workflows.</div>
+    </div>
+    <div class="prompt-card">
+      <div class="prompt-card__q">"When did you last question whether the data source for a decision was actually clean?"</div>
+      <div class="prompt-card__hint">Opens a conversation about where data quality is assumed rather than verified.</div>
+    </div>
+    <div class="prompt-card">
+      <div class="prompt-card__q">"If the monthly sales report had a number that was off by 10%, would we catch it before it reached the committee?"</div>
+      <div class="prompt-card__hint">Tests whether any validation or reconciliation step currently exists in the reporting chain.</div>
+    </div>
+    <div class="prompt-card">
+      <div class="prompt-card__q">"Which of our regular data exports come to us as pivot-style reports rather than flat tables?"</div>
+      <div class="prompt-card__hint">Practical inventory of where Power Query would add the most immediate value.</div>
+    </div>
+    <div class="prompt-card">
+      <div class="prompt-card__q">"How long does it currently take to prepare data before analysis can start? What would half that time be worth?"</div>
+      <div class="prompt-card__hint">Frames Power Query as a capacity and efficiency investment, not just a technical skill.</div>
+    </div>
+    <div class="prompt-card">
+      <div class="prompt-card__q">"If a regulator asked us to show our working on a data-driven decision, could we?"</div>
+      <div class="prompt-card__hint">Connects data quality and auditability to compliance — highly relevant for banking participants.</div>
+    </div>
+  </div>
+
+
+  <!-- SECTION 6 — Key concepts to remember -->
+  <div class="section-label">Key Concepts to Carry Forward</div>
+
+  <div class="three-col" style="margin-bottom: var(--space-xl);">
+    <div class="note-card">
+      <div class="note-card__title">Applied Steps = the audit trail</div>
+      <p>Every transformation in Power Query is recorded as a named step. That list IS the documentation. Anyone can open the query and read exactly what was done to the data and in what order. This is the answer to "how did you get this number?"</p>
+    </div>
+    <div class="note-card">
+      <div class="note-card__title">Unpivot is the most important command</div>
+      <p>Most raw data arrives in pivot format — values spread across many columns. Unpivot Other Columns converts this into a flat table in one click. Without it, attributes like Ship Mode and Segment cannot be used as filters or groupings in any analysis tool.</p>
+    </div>
+    <div class="note-card">
+      <div class="note-card__title">Silent errors are the most dangerous</div>
+      <p>A text-formatted number does not produce an error — it just gets excluded from SUM. A duplicate row does not trigger a warning — it just inflates the total. The analysis runs, a number appears, and no one knows it is wrong. Data quality checks exist precisely because the errors do not announce themselves.</p>
+    </div>
+    <div class="note-card">
+      <div class="note-card__title">Clean data has three properties</div>
+      <p>It is <strong style="color:var(--navy)">flat</strong> — one row per observation, one column per attribute. It has <strong style="color:var(--navy)">correct types</strong> — dates are dates, numbers are numbers, not text. And it is <strong style="color:var(--navy)">free of structural noise</strong> — no merged headers, blank rows, or duplicates.</p>
+    </div>
+    <div class="note-card">
+      <div class="note-card__title">Refresh, not redo</div>
+      <p>Once a Power Query is built, it never needs to be rebuilt. When new data arrives next month, open the workbook and click Refresh. The same steps run automatically. This is the compounding return on the time invested in building the query correctly once.</p>
+    </div>
+    <div class="note-card">
+      <div class="note-card__title">The delimiter technique</div>
+      <p>When multiple attributes need to travel as one column (as in the Ship Mode | Segment label), choose a delimiter that cannot appear in the data — a pipe character is ideal. This allows clean splitting later without ambiguity. A simple pattern with broad applicability in data preparation work.</p>
+    </div>
+  </div>
+
+
+  <!-- SECTION 7 — What to practise next -->
+  <div class="section-label">What to Practise Before the Next Session</div>
+
+  <div class="two-col" style="margin-bottom: var(--space-xl);">
+    <div class="note-card">
+      <div class="note-card__title">Suggested practice tasks</div>
+      <ul class="checklist">
+        <li>Open the CLEAN_Orders file distributed at the end of Day 1 and inspect the Applied Steps list — read each step and match it to the issue it fixed.</li>
+        <li>Find one export or report from your own work that has at least two of the data quality issues from this module. Note which issues and which Power Query steps would address them.</li>
+        <li>Try converting a range in any Excel file to a Table (Ctrl+T). Observe how the column references change in formulas.</li>
+        <li>In Power Query, try changing a column's data type and then deleting that step from Applied Steps — observe how the data reverts.</li>
+        <li>Build the PivotTable from Step 14 on the CLEAN_Orders data and add a slicer for Order Date. Notice that the date slicer works only because Order Date was correctly typed.</li>
+      </ul>
+    </div>
+    <div class="note-card">
+      <div class="note-card__title">Questions to bring to Module 4B</div>
+      <ul class="checklist">
+        <li>What data sources in your organisation would benefit most from a Power Query pipeline?</li>
+        <li>Who currently owns the data preparation step in your team's reporting cycle? Is that process documented?</li>
+        <li>How would you explain the difference between a flat table and a pivot table to a colleague who has never used either?</li>
+        <li>If the Sales column had contained five different currency formats, how would you approach standardising them in Power Query?</li>
+        <li>What is the risk of loading a query directly to the data model rather than to a worksheet? When would you choose each?</li>
+      </ul>
+    </div>
+  </div>
+
+</div><!-- /note-body -->
+
+<!-- ── TAKEAWAY STRIP ──────────────────────────────────────────────────── -->
+<div class="takeaway-strip">
+  <div class="takeaway-strip__label">The one thing to remember from this module</div>
+  <p class="takeaway-strip__text">A report is only as trustworthy as the data it was built on. Power Query makes the preparation step transparent, repeatable, and auditable — turning a recurring manual task into a one-time investment. Clean first. Analyse second. Every time.</p>
+</div>
+
+<!-- ── FOOTER ──────────────────────────────────────────────────────────── -->
+<footer>
+  <span class="footer__brand">SMBC Group · Learning &amp; Development · APAC</span>
+  <span class="footer__note">Module 4A Reference · Data-Driven Decision Making Programme · Confidential</span>
+</footer>
+
+</body>
+</html>
