@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 7 Capstone — SMBC L&D</title>
+  <link rel="stylesheet" href="smbc.css">
+  <style>
+    /* ── Comparison table ── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      margin: var(--space-md) 0 var(--space-lg);
+    }
+    .data-table thead tr {
+      background: var(--navy);
+      color: #fff;
+    }
+    .data-table thead th {
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+    }
+    .data-table thead th:first-child { border-left: 3px solid var(--gold); }
+    .data-table tbody tr { border-bottom: 1px solid var(--rule-light); }
+    .data-table tbody tr:nth-child(even) { background: var(--warm-white); }
+    .data-table tbody td {
+      padding: 10px 14px;
+      color: var(--slate);
+      vertical-align: top;
+    }
+    .data-table tbody td:first-child {
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 0.8rem;
+    }
+    .data-table .flag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-family: var(--font-sans);
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 3px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .flag--est   { background: #fff3cd; color: #7a5c00; }
+    .flag--conf  { background: #d4edda; color: #155724; }
+    .flag--spec  { background: #f8d7da; color: #721c24; }
+
+    /* ── Role cards ── */
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-md);
+      margin: var(--space-md) 0 var(--space-lg);
+    }
+    .role-card {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-top: 4px solid var(--navy-mid);
+      border-radius: 4px;
+      padding: var(--space-lg) var(--space-md);
+    }
+    .role-card--gold { border-top-color: var(--gold); }
+    .role-card--risk { border-top-color: #8b2e2e; }
+    .role-card__title {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 0 0 var(--space-sm);
+    }
+    .role-card__sub {
+      font-size: 0.78rem;
+      font-family: var(--font-sans);
+      color: var(--slate-light);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: var(--space-md);
+    }
+    .role-card__questions {
+      list-style: none;
+      padding: 0; margin: 0;
+    }
+    .role-card__questions li {
+      font-size: 0.85rem;
+      color: var(--slate);
+      padding: 7px 0;
+      border-bottom: 1px solid var(--rule-light);
+      line-height: 1.5;
+    }
+    .role-card__questions li:last-child { border-bottom: none; }
+    .role-card__questions li::before {
+      content: "→ ";
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    /* ── Task steps ── */
+    .task-list { list-style: none; padding: 0; margin: var(--space-md) 0; }
+    .task-list li {
+      display: flex;
+      gap: var(--space-md);
+      padding: var(--space-md) 0;
+      border-bottom: 1px solid var(--rule-light);
+      align-items: flex-start;
+    }
+    .task-list li:last-child { border-bottom: none; }
+    .task-num {
+      flex-shrink: 0;
+      width: 32px; height: 32px;
+      background: var(--navy);
+      color: var(--gold-pale);
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      font-weight: 700;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .task-body { flex: 1; }
+    .task-title {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+    .task-desc {
+      font-size: 0.85rem;
+      color: var(--slate);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ── Issuer header chips ── */
+    .issuer-chips {
+      display: flex; gap: var(--space-sm); flex-wrap: wrap;
+      margin: var(--space-sm) 0 var(--space-lg);
+    }
+    .issuer-chip {
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 3px;
+      border: 1px solid var(--rule);
+      color: var(--navy);
+      background: var(--white);
+    }
+    .issuer-chip--a { border-left: 4px solid #2a6496; }
+    .issuer-chip--o { border-left: 4px solid #5a9e6f; }
+    .issuer-chip--s { border-left: 4px solid #8b4513; }
+
+    /* ── Debrief callout ── */
+    .debrief-box {
+      background: var(--navy);
+      border-left: 4px solid var(--gold);
+      border-radius: 4px;
+      padding: var(--space-lg);
+      margin: var(--space-lg) 0;
+    }
+    .debrief-box .label--light { display: block; margin-bottom: var(--space-sm); }
+    .debrief-box p {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      margin: 0;
+      font-family: var(--font-sans);
+    }
+    .debrief-box strong { color: var(--gold-pale); }
+
+    /* ── Timing bar ── */
+    .timing-bar {
+      display: flex; gap: 0;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: var(--space-md) 0 var(--space-lg);
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+    }
+    .timing-seg {
+      flex: 1;
+      padding: 10px 12px;
+      border-right: 1px solid var(--rule);
+      background: var(--white);
+    }
+    .timing-seg:last-child { border-right: none; }
+    .timing-seg__min {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 0.9rem;
+      display: block;
+    }
+    .timing-seg__label { color: var(--slate-light); }
+    .timing-seg--active { background: var(--navy); }
+    .timing-seg--active .timing-seg__min { color: var(--gold-pale); }
+    .timing-seg--active .timing-seg__label { color: rgba(255,255,255,0.5); }
+
+    /* ── Scoring rubric ── */
+    .rubric-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      margin: var(--space-md) 0;
+    }
+    .rubric-table th {
+      background: var(--navy-mid);
+      color: #fff;
+      padding: 8px 12px;
+      text-align: left;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .rubric-table td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--rule-light);
+      color: var(--slate);
+      vertical-align: top;
+    }
+    .rubric-table tr:nth-child(even) td { background: var(--warm-white); }
+
+    /* print */
+    @media print {
+      .topbar, .tab-bar { display: none; }
+      .panel { display: block !important; }
+      .hero { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .formula-box, .debrief-box, .data-table thead tr { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__brand">
+    <svg class="topbar__mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="4" fill="#b8902a"/>
+      <path d="M8 24V8l8 8 8-8v16" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div class="topbar__text">
+      <span class="topbar__name">SMBC Group</span>
+      <span class="topbar__sub">Learning &amp; Development · APAC</span>
+    </div>
+  </div>
+  <nav class="topbar__nav">
+    <a href="#" class="active" onclick="showPanel('brief');return false;">Briefing</a>
+    <a href="#" onclick="showPanel('data');return false;">Data Pack</a>
+    <a href="#" onclick="showPanel('tasks');return false;">Tasks</a>
+    <a href="#" onclick="showPanel('debrief');return false;">Debrief</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero__rule"></div>
+  <div class="hero__inner">
+    <div class="hero__eyebrow">
+      <div class="hero__eyebrow-line"></div>
+      <span class="label">Module 7 · Capstone Exercise</span>
+    </div>
+    <h1 class="hero__title">The AI Investment<br><em>Committee Decision</em></h1>
+    <p class="hero__desc">You are a member of SMBC's internal investment steering committee. Three of the largest AI companies in the world are approaching the public markets. Your committee must form a position before the board presentation. The data is in front of you. The decision is yours.</p>
+    <div class="hero__meta">
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Duration</span>
+        <span class="hero__meta-value">30 min</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Format</span>
+        <span class="hero__meta-value">Group · 3 Roles</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Issuers</span>
+        <span class="hero__meta-value">Anthropic · OpenAI · Starlink X</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Deliverable</span>
+        <span class="hero__meta-value">Committee Position</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="tab-bar">
+  <button class="tab-bar__btn active" onclick="showPanel('brief')">Briefing</button>
+  <button class="tab-bar__btn" onclick="showPanel('data')">Data Pack</button>
+  <button class="tab-bar__btn" onclick="showPanel('tasks')">Tasks</button>
+  <button class="tab-bar__btn" onclick="showPanel('debrief')">Debrief Guide</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ PANEL: BRIEF -->
+<div id="panel-brief" class="panel active">
+  <div class="section-header">
+    <span class="pill">Act 1 of 2</span>
+    <span class="section-header__title">Exercise Briefing</span>
+  </div>
+  <div class="page-layout">
+    <main>
+
+      <div class="info-box">
+        <div class="info-box__label">Context</div>
+        <p>AI companies have attracted more capital in the last three years than any sector in history. Three of them are now moving toward public markets. SMBC — as a major institutional bank — will be asked to take a view: as an equity participant, as a lender, and as a risk manager. This exercise puts you in that seat.</p>
+      </div>
+
+      <h2 style="font-family:var(--font-serif);color:var(--navy);font-size:1.15rem;margin:var(--space-lg) 0 var(--space-sm);">The Three Issuers</h2>
+
+      <div class="issuer-chips">
+        <span class="issuer-chip issuer-chip--a">Anthropic</span>
+        <span class="issuer-chip issuer-chip--o">OpenAI</span>
+        <span class="issuer-chip issuer-chip--s">Starlink X (SpaceX + xAI)</span>
+      </div>
+
+      <div class="card fade-up">
+        <div class="card__header">
+          <div class="card__num" style="border-left:4px solid #2a6496;">A</div>
+          <div class="card__meta">
+            <div class="card__tag">Issuer 1</div>
+            <div class="card__title">Anthropic</div>
+            <div class="card__topics">
+              <div class="card__topic">2026 IPO candidate · Series F at $183B post-money valuation</div>
+              <div class="card__topic">Revenue run rate: est. $10–20B annualised · Gross margin: ~40%</div>
+              <div class="card__topic">Core risk: rising inference costs, burn rate "much higher than expected"</div>
+              <div class="card__topic">Notable: most capable model ("Claude Mythos") withheld from market on safety grounds</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card fade-up">
+        <div class="card__header">
+          <div class="card__num" style="border-left:4px solid #5a9e6f;">O</div>
+          <div class="card__meta">
+            <div class="card__tag">Issuer 2</div>
+            <div class="card__title">OpenAI</div>
+            <div class="card__topics">
+              <div class="card__topic">March 2026 round at $852B valuation · Revenue: $13.1B (2025)</div>
+              <div class="card__topic">Projected cumulative losses to 2028: ~$44B</div>
+              <div class="card__topic">Critical dependency: Microsoft (Azure compute + Copilot distribution)</div>
+              <div class="card__topic">CEO (Sam Altman) explicitly named as a risk factor in investor documents</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card fade-up">
+        <div class="card__header">
+          <div class="card__num" style="border-left:4px solid #8b4513;">S</div>
+          <div class="card__meta">
+            <div class="card__tag">Issuer 3</div>
+            <div class="card__title">Starlink X (SpaceX + xAI)</div>
+            <div class="card__topics">
+              <div class="card__topic">Proposed combination of satellite broadband + frontier AI · Late 2026 IPO described as "blockbuster"</div>
+              <div class="card__topic">SpaceX reported ~$5B loss (est.) · AI spend characterised as "outpacing returns"</div>
+              <div class="card__topic">2026: Starlink updated privacy policy to allow customer data used for AI training by default</div>
+              <div class="card__topic">Structure not yet finalised — "Starlink X" is a proposed entity, not a completed corporate vehicle</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula-box" style="margin-top:var(--space-lg);">
+        <div class="formula-box__label">The Central Question</div>
+        <div class="formula-box__text">Given this data, what is SMBC's position on each issuer — and how do you defend it with numbers?</div>
+        <div class="formula-box__example">Your answer must reference at least two data points per issuer. Assertion without evidence is not a committee position.</div>
+      </div>
+
+      <h2 style="font-family:var(--font-serif);color:var(--navy);font-size:1.15rem;margin:var(--space-lg) 0 var(--space-sm);">Learning Objectives</h2>
+      <div class="objectives">
+        <div class="objective">
+          <div class="objective__marker">1</div>
+          <p class="objective__text">Distinguish between confirmed financial data, analyst estimates, and speculative projections in an investment briefing pack.</p>
+        </div>
+        <div class="objective">
+          <div class="objective__marker">2</div>
+          <p class="objective__text">Apply EV/Revenue and burn-rate analysis to evaluate valuation credibility under different scenarios.</p>
+        </div>
+        <div class="objective">
+          <div class="objective__marker">3</div>
+          <p class="objective__text">Articulate a risk-adjusted position — equity, credit, or pass — using structured analytical reasoning rather than intuition.</p>
+        </div>
+        <div class="objective">
+          <div class="objective__marker">4</div>
+          <p class="objective__text">Recognise that the same data supports multiple defensible conclusions, and that the quality of reasoning matters more than the conclusion reached.</p>
+        </div>
+      </div>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Exercise Format</div>
+          <div class="sidebar-card__title">3 Roles Per Group</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Role A</span>
+            <span class="sidebar-row__val">Equity Desk</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Role B</span>
+            <span class="sidebar-row__val">Credit Desk</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Role C</span>
+            <span class="sidebar-row__val">Risk &amp; Compliance</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Breakout</span>
+            <span class="sidebar-row__val">20 min</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Plenary</span>
+            <span class="sidebar-row__val">10 min</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-card" style="margin-top:var(--space-md);">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Data Flags</div>
+          <div class="sidebar-card__title">How to Read the Pack</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label" style="background:#d4edda;color:#155724;padding:1px 6px;border-radius:2px;font-size:0.7rem;">CONF</span>
+            <span class="sidebar-row__val">Verified / reported in filings</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label" style="background:#fff3cd;color:#7a5c00;padding:1px 6px;border-radius:2px;font-size:0.7rem;">EST</span>
+            <span class="sidebar-row__val">Analyst estimate, unaudited</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label" style="background:#f8d7da;color:#721c24;padding:1px 6px;border-radius:2px;font-size:0.7rem;">SPEC</span>
+            <span class="sidebar-row__val">Speculative / secondary market</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ PANEL: DATA -->
+<div id="panel-data" class="panel" style="display:none;">
+  <div class="section-header">
+    <span class="pill">Reference</span>
+    <span class="section-header__title">Participant Data Pack</span>
+  </div>
+  <div class="page-layout">
+    <main>
+
+      <div class="info-box">
+        <div class="info-box__label">Facilitator Note</div>
+        <p>All figures below are drawn from reported sources as of mid-2026. Data quality flags are provided for each figure — part of the exercise is determining how much weight to give each data point. Flagged data is not wrong; it is data you should interrogate before relying on.</p>
+      </div>
+
+      <h2 style="font-family:var(--font-serif);color:var(--navy);font-size:1.1rem;margin:var(--space-lg) 0 var(--space-sm);">Table 1 — Valuation &amp; Revenue Comparison</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Anthropic</th>
+            <th>OpenAI</th>
+            <th>Starlink X</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Primary round valuation</td>
+            <td>$183B post-money <span class="flag flag--conf">CONF</span></td>
+            <td>$852B (Mar 2026) <span class="flag flag--conf">CONF</span></td>
+            <td>Not yet priced <span class="flag flag--spec">SPEC</span></td>
+          </tr>
+          <tr>
+            <td>Secondary market valuation</td>
+            <td>Up to ~$1T <span class="flag flag--spec">SPEC</span></td>
+            <td>$1T+ mooted <span class="flag flag--spec">SPEC</span></td>
+            <td>"Blockbuster" IPO <span class="flag flag--spec">SPEC</span></td>
+          </tr>
+          <tr>
+            <td>Revenue (2025)</td>
+            <td>$10–20B run rate <span class="flag flag--est">EST</span></td>
+            <td>$13.1B <span class="flag flag--conf">CONF</span></td>
+            <td>Not disclosed <span class="flag flag--spec">SPEC</span></td>
+          </tr>
+          <tr>
+            <td>Implied EV / Revenue</td>
+            <td>~9–18× <span class="flag flag--est">EST</span></td>
+            <td>~65× <span class="flag flag--est">EST</span></td>
+            <td>Undeterminable</td>
+          </tr>
+          <tr>
+            <td>Gross margin</td>
+            <td>~40% <span class="flag flag--est">EST</span></td>
+            <td>Not disclosed <span class="flag flag--est">EST</span></td>
+            <td>Not disclosed</td>
+          </tr>
+          <tr>
+            <td>Profitability</td>
+            <td>Pre-profit <span class="flag flag--conf">CONF</span></td>
+            <td>Pre-profit <span class="flag flag--conf">CONF</span></td>
+            <td>Pre-profit <span class="flag flag--conf">CONF</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 style="font-family:var(--font-serif);color:var(--navy);font-size:1.1rem;margin:var(--space-lg) 0 var(--space-sm);">Table 2 — Capital &amp; Loss Profile</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Anthropic</th>
+            <th>OpenAI</th>
+            <th>Starlink X</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cumulative projected losses</td>
+            <td>Not disclosed</td>
+            <td>~$44B to 2028 <span class="flag flag--est">EST</span></td>
+            <td>SpaceX ~$5B loss (recent) <span class="flag flag--est">EST</span></td>
+          </tr>
+          <tr>
+            <td>Compute dependency</td>
+            <td>NVIDIA + cloud partners</td>
+            <td>Microsoft Azure (exclusive) <span class="flag flag--conf">CONF</span></td>
+            <td>In-house + third-party</td>
+          </tr>
+          <tr>
+            <td>Inference cost trend</td>
+            <td>+23% in 2025 <span class="flag flag--est">EST</span></td>
+            <td>Not disclosed</td>
+            <td>Not disclosed</td>
+          </tr>
+          <tr>
+            <td>Burn rate signal</td>
+            <td>"Much more than expected" (CEO) <span class="flag flag--conf">CONF</span></td>
+            <td>Ongoing multi-billion annual <span class="flag flag--est">EST</span></td>
+            <td>AI spend "outpacing returns" <span class="flag flag--est">EST</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 style="font-family:var(--font-serif);color:var(--navy);font-size:1.1rem;margin:var(--space-lg) 0 var(--space-sm);">Table 3 — Key Risk Vectors</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Risk Category</th>
+            <th>Anthropic</th>
+            <th>OpenAI</th>
+            <th>Starlink X</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Concentration / dependency</td>
+            <td>Compute: NVIDIA / cloud</td>
+            <td>Microsoft (Azure + distribution) <span class="flag flag--conf">CONF</span></td>
+            <td>Elon Musk as sole decision-maker across both entities</td>
+          </tr>
+          <tr>
+            <td>Governance</td>
+            <td>Safety mission may conflict with revenue maximisation</td>
+            <td>Non-profit foundation controls capped-profit entity <span class="flag flag--conf">CONF</span></td>
+            <td>Minority shareholder rights unclear in proposed combination</td>
+          </tr>
+          <tr>
+            <td>Key-man risk</td>
+            <td>Dario Amodei (safety-first mandate)</td>
+            <td>Sam Altman — named as material risk factor <span class="flag flag--conf">CONF</span></td>
+            <td>Elon Musk — central to both SpaceX and xAI</td>
+          </tr>
+          <tr>
+            <td>Regulatory / legal</td>
+            <td>Potential US "supply-chain risk" designation; safety overhang from withheld model</td>
+            <td>Extensive litigation: copyright, privacy, IP, employment <span class="flag flag--conf">CONF</span></td>
+            <td>Antitrust; national security; TSMC / Taiwan geopolitical risk</td>
+          </tr>
+          <tr>
+            <td>Data / privacy</td>
+            <td>Model safety concerns cited publicly</td>
+            <td>Hallucination and reliability risk in enterprise deployments</td>
+            <td>Starlink privacy policy: customer data used for AI training by default (2026) <span class="flag flag--conf">CONF</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 style="font-family:var(--font-serif);color:var(--navy);font-size:1.1rem;margin:var(--space-lg) 0 var(--space-sm);">Table 4 — Benchmark Anchors (for EV/Revenue calibration)</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>Revenue (approx. 2025)</th>
+            <th>Profitability</th>
+            <th>EV / Revenue (approx.)</th>
+            <th>Forward P/E</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Nvidia</td>
+            <td>~$130B</td>
+            <td>Highly profitable</td>
+            <td>~20–25×</td>
+            <td>~35–45× <span class="flag flag--est">EST</span></td>
+          </tr>
+          <tr>
+            <td>Microsoft</td>
+            <td>~$270B</td>
+            <td>Highly profitable</td>
+            <td>~12–14×</td>
+            <td>~30–35× <span class="flag flag--est">EST</span></td>
+          </tr>
+          <tr>
+            <td>Salesforce</td>
+            <td>~$37B</td>
+            <td>Profitable</td>
+            <td>~7–9×</td>
+            <td>~28× <span class="flag flag--est">EST</span></td>
+          </tr>
+          <tr>
+            <td>OpenAI (implied)</td>
+            <td>~$13B</td>
+            <td>Pre-profit</td>
+            <td><strong>~65×</strong></td>
+            <td>N/A (losses)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="formula-box">
+        <div class="formula-box__label">Key Calculation</div>
+        <div class="formula-box__text">EV / Revenue = Valuation ÷ Annual Revenue</div>
+        <div class="formula-box__example">OpenAI example: $852B ÷ $13.1B = 65×. Compare to Microsoft at 12–14×. Ask: what has to be true for that premium to be justified?</div>
+      </div>
+
+      <h2 style="font-family:var(--font-serif);color:var(--navy);font-size:1.1rem;margin:var(--space-lg) 0 var(--space-sm);">Table 5 — AI Market Context</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Data Point</th>
+            <th>Figure</th>
+            <th>Source / Flag</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Global AI private investment (cumulative, 2019–2025)</td>
+            <td>$300B+</td>
+            <td><span class="flag flag--conf">CONF</span> Stanford AI Index</td>
+          </tr>
+          <tr>
+            <td>Hyperscaler capex commitments (announced, 2025)</td>
+            <td>~$630B</td>
+            <td><span class="flag flag--est">EST</span> Aggregated announced figures</td>
+          </tr>
+          <tr>
+            <td>Enterprises reporting 10%+ ROI on AI</td>
+            <td>3%</td>
+            <td><span class="flag flag--est">EST</span> McKinsey / BCG surveys 2024</td>
+          </tr>
+          <tr>
+            <td>Jobs exposed to AI disruption (IMF estimate)</td>
+            <td>~40% globally / ~60% advanced economies</td>
+            <td><span class="flag flag--conf">CONF</span> IMF, Jan 2024</td>
+          </tr>
+          <tr>
+            <td>GPT-4 training cost (final run)</td>
+            <td>~$100M</td>
+            <td><span class="flag flag--est">EST</span> Widely reported; unconfirmed by OpenAI</td>
+          </tr>
+          <tr>
+            <td>DeepSeek-V3 training cost (final run only)</td>
+            <td>~$5.6M</td>
+            <td><span class="flag flag--conf">CONF</span> DeepSeek paper, Jan 2025 — excludes prior R&amp;D</td>
+          </tr>
+          <tr>
+            <td>Nvidia single-day market cap loss (post-DeepSeek)</td>
+            <td>~$600B</td>
+            <td><span class="flag flag--conf">CONF</span> Jan 27, 2025</td>
+          </tr>
+          <tr>
+            <td>AI economic impact projection (Goldman Sachs, 10-yr)</td>
+            <td>$19T GDP uplift</td>
+            <td><span class="flag flag--spec">SPEC</span> Forecast, not a measurement</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Critical Numbers</div>
+          <div class="sidebar-card__title">Three to Anchor On</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">OpenAI EV/Rev</span>
+            <span class="sidebar-row__val">~65×</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Microsoft EV/Rev</span>
+            <span class="sidebar-row__val">~13×</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Enterprises w/ ROI</span>
+            <span class="sidebar-row__val">3%</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">OpenAI losses (to '28)</span>
+            <span class="sidebar-row__val">~$44B</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Anthropic margin</span>
+            <span class="sidebar-row__val">~40%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-card" style="margin-top:var(--space-md);">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Questions to Ask</div>
+          <div class="sidebar-card__title">About Any Data Point</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">Source</span><span class="sidebar-row__val">Filed or reported?</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Scope</span><span class="sidebar-row__val">What does it exclude?</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Direction</span><span class="sidebar-row__val">Trend or point-in-time?</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Incentive</span><span class="sidebar-row__val">Who published it and why?</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ PANEL: TASKS -->
+<div id="panel-tasks" class="panel" style="display:none;">
+  <div class="section-header">
+    <span class="pill">30 Minutes</span>
+    <span class="section-header__title">Committee Tasks</span>
+  </div>
+  <div class="page-layout">
+    <main>
+
+      <p style="font-family:var(--font-sans);color:var(--slate);font-size:0.9rem;line-height:1.7;margin-bottom:var(--space-lg);">Your breakout group plays three roles simultaneously. Each role approaches the same issuers from a different risk and return mandate. Complete Task 1 together, then split into roles for Tasks 2 and 3, then reconvene to form a single committee position.</p>
+
+      <div class="timing-bar">
+        <div class="timing-seg timing-seg--active">
+          <span class="timing-seg__min">5 min</span>
+          <span class="timing-seg__label">Task 1: Data triage</span>
+        </div>
+        <div class="timing-seg">
+          <span class="timing-seg__min">10 min</span>
+          <span class="timing-seg__label">Task 2: Valuation</span>
+        </div>
+        <div class="timing-seg">
+          <span class="timing-seg__min">10 min</span>
+          <span class="timing-seg__label">Task 3: Role positions</span>
+        </div>
+        <div class="timing-seg">
+          <span class="timing-seg__min">5 min</span>
+          <span class="timing-seg__label">Debrief prep</span>
+        </div>
+      </div>
+
+      <!-- Task 1 -->
+      <div class="card card--highlighted" style="margin-bottom:var(--space-md);">
+        <div class="card__header">
+          <div class="card__num">01</div>
+          <div class="card__meta">
+            <div class="card__tag">All Roles · 5 min</div>
+            <div class="card__title">Data Triage — Classify Before You Conclude</div>
+          </div>
+        </div>
+        <div style="padding:0 var(--space-md) var(--space-md);">
+          <p style="font-family:var(--font-sans);font-size:0.87rem;color:var(--slate);line-height:1.6;margin-bottom:var(--space-md);">Before any analysis, the committee must agree on what the data actually says. Review the Data Pack and for each issuer, classify the <strong>two most important figures</strong> you would rely on — and flag the one number you are most sceptical about.</p>
+          <ul class="task-list">
+            <li>
+              <div class="task-num">A</div>
+              <div class="task-body">
+                <div class="task-title">Identify two figures per issuer you would rely on</div>
+                <p class="task-desc">What has a credible source — a formal filing, a confirmed funding round, a named company statement? These are your anchor points.</p>
+              </div>
+            </li>
+            <li>
+              <div class="task-num">B</div>
+              <div class="task-body">
+                <div class="task-title">Flag one number you would not use without further diligence</div>
+                <p class="task-desc">Look for secondary market valuations, analyst projections, or figures sourced from unnamed investor analyses. Label them accordingly.</p>
+              </div>
+            </li>
+            <li>
+              <div class="task-num">C</div>
+              <div class="task-body">
+                <div class="task-title">Note: Starlink X is a proposed entity, not a completed corporate structure</div>
+                <p class="task-desc">The term "Starlink X" appears in analyst notes and press reports. There is no formal filing or agreed governance structure as of mid-2026. What does that mean for any analysis you do on it?</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Task 2 -->
+      <div class="card" style="margin-bottom:var(--space-md);">
+        <div class="card__header">
+          <div class="card__num">02</div>
+          <div class="card__meta">
+            <div class="card__tag">All Roles · 10 min</div>
+            <div class="card__title">Valuation Sanity Check</div>
+          </div>
+        </div>
+        <div style="padding:0 var(--space-md) var(--space-md);">
+          <p style="font-family:var(--font-sans);font-size:0.87rem;color:var(--slate);line-height:1.6;margin-bottom:var(--space-md);">Use Table 1 and Table 4 from the Data Pack to work through these calculations as a group.</p>
+          <ul class="task-list">
+            <li>
+              <div class="task-num">A</div>
+              <div class="task-body">
+                <div class="task-title">Calculate EV/Revenue for Anthropic and OpenAI</div>
+                <p class="task-desc">Use the primary round valuations (not secondary market figures) and the revenue figures in Table 1. Compare your results to the Microsoft and Nvidia benchmarks in Table 4. What premium are investors paying, and why might that be justified — or not?</p>
+              </div>
+            </li>
+            <li>
+              <div class="task-num">B</div>
+              <div class="task-body">
+                <div class="task-title">Stress-test OpenAI under two scenarios</div>
+                <p class="task-desc"><strong>Scenario A:</strong> Microsoft reprices its compute arrangement, raising OpenAI's cost of revenue by 20%. If gross margin falls accordingly, what does the P&amp;L look like?<br><strong>Scenario B:</strong> Revenue growth stalls at $13B for two years while losses continue at the current run rate. How much additional capital is required before 2028?</p>
+              </div>
+            </li>
+            <li>
+              <div class="task-num">C</div>
+              <div class="task-body">
+                <div class="task-title">Consider the 3% ROI figure from Table 5</div>
+                <p class="task-desc">Only 3% of enterprises report 10%+ ROI on AI deployments. If this is the current state of enterprise AI adoption, what does it imply for the revenue trajectory assumptions baked into a $852B valuation?</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Task 3: Role Cards -->
+      <div class="card card--highlighted" style="margin-bottom:var(--space-md);">
+        <div class="card__header">
+          <div class="card__num">03</div>
+          <div class="card__meta">
+            <div class="card__tag">By Role · 10 min</div>
+            <div class="card__title">Form Your Committee Position</div>
+          </div>
+        </div>
+        <div style="padding:0 var(--space-md) var(--space-md);">
+          <p style="font-family:var(--font-sans);font-size:0.87rem;color:var(--slate);line-height:1.6;margin-bottom:var(--space-md);">Each role takes a different lens. Answer your role questions, then come back together and present a single unified committee recommendation per issuer: <strong>Back / Conditional / Pass.</strong></p>
+        </div>
+      </div>
+
+      <div class="role-grid fade-up">
+        <div class="role-card role-card--gold">
+          <div class="role-card__sub">Role A</div>
+          <div class="role-card__title">Equity Syndicate Desk</div>
+          <ul class="role-card__questions">
+            <li>Would you participate in this IPO? At what maximum EV/Revenue multiple?</li>
+            <li>Which issuer has the strongest revenue growth story relative to its valuation?</li>
+            <li>What single condition would need to change for you to upgrade or downgrade your view?</li>
+          </ul>
+        </div>
+        <div class="role-card">
+          <div class="role-card__sub">Role B</div>
+          <div class="role-card__title">Credit &amp; Lending Desk</div>
+          <ul class="role-card__questions">
+            <li>Would you extend a term loan to any of these issuers? Under what covenants?</li>
+            <li>Which issuer poses the highest debt-service risk given burn rate and margins?</li>
+            <li>What collateral or structural protection would you require?</li>
+          </ul>
+        </div>
+        <div class="role-card role-card--risk">
+          <div class="role-card__sub">Role C</div>
+          <div class="role-card__title">Risk &amp; Compliance</div>
+          <ul class="role-card__questions">
+            <li>Which issuer carries the highest reputational risk for SMBC as a backer?</li>
+            <li>Starlink's privacy policy change and OpenAI's litigation exposure: how do you price these?</li>
+            <li>What conditions or exclusions would you attach before SMBC takes any exposure?</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="formula-box" style="margin-top:var(--space-lg);">
+        <div class="formula-box__label">Deliverable</div>
+        <div class="formula-box__text">One committee position per issuer: Back / Conditional / Pass — with a one-sentence rationale supported by at least two data points.</div>
+        <div class="formula-box__example">Example: "Conditional on Anthropic — 9× EV/Revenue is defensible at 40% gross margin, but inference cost trajectory (+23%) and burn rate signal require a margin covenant in any debt structure."</div>
+      </div>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Quick Reference</div>
+          <div class="sidebar-card__title">Key Metrics</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">Anthropic val.</span><span class="sidebar-row__val">$183B</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Anthropic rev.</span><span class="sidebar-row__val">$10–20B (est)</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Anthropic margin</span><span class="sidebar-row__val">~40%</span></div>
+          <div class="sidebar-row" style="border-top:1px solid var(--rule);margin-top:4px;padding-top:8px;"><span class="sidebar-row__label">OpenAI val.</span><span class="sidebar-row__val">$852B</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">OpenAI rev. '25</span><span class="sidebar-row__val">$13.1B</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">OpenAI losses</span><span class="sidebar-row__val">~$44B to '28</span></div>
+          <div class="sidebar-row" style="border-top:1px solid var(--rule);margin-top:4px;padding-top:8px;"><span class="sidebar-row__label">SpaceX loss (est)</span><span class="sidebar-row__val">~$5B</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Starlink X status</span><span class="sidebar-row__val">Proposed only</span></div>
+        </div>
+      </div>
+
+      <div class="sidebar-card" style="margin-top:var(--space-md);">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Benchmark</div>
+          <div class="sidebar-card__title">EV / Revenue Comparators</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">Microsoft</span><span class="sidebar-row__val">~13×</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Nvidia</span><span class="sidebar-row__val">~20–25×</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Salesforce</span><span class="sidebar-row__val">~7–9×</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">OpenAI (implied)</span><span class="sidebar-row__val">~65×</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ PANEL: DEBRIEF -->
+<div id="panel-debrief" class="panel" style="display:none;">
+  <div class="section-header">
+    <span class="pill">Facilitator</span>
+    <span class="section-header__title">Debrief Guide</span>
+  </div>
+  <div class="page-layout">
+    <main>
+
+      <div class="info-box">
+        <div class="info-box__label">Facilitator Note</div>
+        <p>This panel is for facilitator use during the 10-minute plenary debrief. The goal is not to reach a consensus answer — it is to surface the quality of reasoning and to make the data literacy lesson explicit. Different groups will reach different positions; that is the intended outcome.</p>
+      </div>
+
+      <h2 style="font-family:var(--font-serif);color:var(--navy);font-size:1.1rem;margin:var(--space-lg) 0 var(--space-sm);">What to Surface in Debrief</h2>
+
+      <ul class="task-list">
+        <li>
+          <div class="task-num">1</div>
+          <div class="task-body">
+            <div class="task-title">Did groups use data flags correctly?</div>
+            <p class="task-desc">Ask: "Which numbers did you rely on most heavily? Were they confirmed, estimated, or speculative?" If groups relied on secondary market valuations or the $19T GDP projection without flagging them, use this to make the data literacy point: the quality of a decision is bounded by the quality of the data inputs.</p>
+          </div>
+        </li>
+        <li>
+          <div class="task-num">2</div>
+          <div class="task-body">
+            <div class="task-title">Did different groups reach different conclusions from the same data?</div>
+            <p class="task-desc">If they did — excellent. Ask why. The answer will be: different weights assigned to different data points; different assumptions about future revenue growth; different risk mandates by role. This is the central lesson. Data informs decisions; it does not make them.</p>
+          </div>
+        </li>
+        <li>
+          <div class="task-num">3</div>
+          <div class="task-body">
+            <div class="task-title">Probe the OpenAI EV/Revenue calculation</div>
+            <p class="task-desc">65× EV/Revenue against a pre-profit company with $44B of projected losses. Ask: "What has to be true for that valuation to be right?" The answer requires an assumption about future revenue trajectory. That assumption is not in the data — it is a judgement call. Where does that judgement come from, and how do you test it?</p>
+          </div>
+        </li>
+        <li>
+          <div class="task-num">4</div>
+          <div class="task-body">
+            <div class="task-title">Connect to their actual roles</div>
+            <p class="task-desc">Close with: "You will see AI companies approaching SMBC for debt facilities, custody arrangements, and investment banking mandates in the next 24 months. The skills used in this exercise — classifying data quality, calculating valuation ratios, stress-testing under scenarios, and forming a risk-adjusted position — are the same skills you will need in that conversation."</p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="debrief-box">
+        <span class="label--light">The Core Learning</span>
+        <p>The exercise has no correct answer. <strong>A well-reasoned Pass is as valuable as a well-reasoned Back.</strong> What the exercise tests is whether participants can distinguish between data that is confirmed, estimated, and speculative — and whether they can form a structured analytical position rather than an instinctive one. That is what data-driven decision making looks like at the VP and ED level.</p>
+      </div>
+
+      <h2 style="font-family:var(--font-serif);color:var(--navy);font-size:1.1rem;margin:var(--space-lg) 0 var(--space-sm);">Scoring Rubric (Optional)</h2>
+      <p style="font-family:var(--font-sans);font-size:0.87rem;color:var(--slate);line-height:1.6;margin-bottom:var(--space-md);">If you wish to provide structured feedback to groups, use this rubric. It is not competitive — it is a framework for self-assessment.</p>
+
+      <table class="rubric-table">
+        <thead>
+          <tr>
+            <th>Dimension</th>
+            <th>Strong</th>
+            <th>Developing</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Data classification</td>
+            <td>Distinguishes confirmed from estimated from speculative; flags Starlink X as unformed entity</td>
+            <td>Treats all figures at face value; does not interrogate source or scope</td>
+          </tr>
+          <tr>
+            <td>Quantitative reasoning</td>
+            <td>Calculates EV/Revenue correctly; uses benchmark comparators; runs at least one scenario</td>
+            <td>Relies on qualitative description of figures without calculation</td>
+          </tr>
+          <tr>
+            <td>Role differentiation</td>
+            <td>Equity, credit, and risk positions are distinct and reflect different mandates</td>
+            <td>All three roles reach the same conclusion by the same logic</td>
+          </tr>
+          <tr>
+            <td>Structured position</td>
+            <td>Back/Conditional/Pass is supported by explicit data references and a stated assumption</td>
+            <td>Position is stated without evidence or relies on a single data point</td>
+          </tr>
+          <tr>
+            <td>Data literacy</td>
+            <td>Identifies at least one figure they would not use without further diligence, and explains why</td>
+            <td>Does not distinguish between high- and low-confidence data</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Debrief Structure</div>
+          <div class="sidebar-card__title">10 min Plenary</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">0–3 min</span><span class="sidebar-row__val">Group positions — Back / Cond / Pass per issuer</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">3–7 min</span><span class="sidebar-row__val">Probe reasoning — what data, what assumptions?</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">7–10 min</span><span class="sidebar-row__val">Close with data literacy lesson</span></div>
+        </div>
+      </div>
+
+      <div class="sidebar-card" style="margin-top:var(--space-md);">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Key Provocations</div>
+          <div class="sidebar-card__title">Questions to Ask</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">Q1</span><span class="sidebar-row__val">What number did you trust most — and why?</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Q2</span><span class="sidebar-row__val">Did your group disagree? On data or on judgement?</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Q3</span><span class="sidebar-row__val">What would change your mind?</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Q4</span><span class="sidebar-row__val">Where does this decision show up in your real work?</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<footer>
+  <span class="footer__brand">SMBC Group · Learning &amp; Development · APAC</span>
+  <span class="footer__note">Confidential · Module 7 Capstone</span>
+</footer>
+
+<script>
+  const tabs = document.querySelectorAll('.tab-bar__btn');
+  function showPanel(id) {
+    document.querySelectorAll('.panel').forEach(p => {
+      p.style.display = 'none';
+      p.classList.remove('active');
+    });
+    const panel = document.getElementById('panel-' + id);
+    panel.style.display = 'block';
+    panel.classList.add('active');
+
+    // retrigger fade-up animations
+    panel.querySelectorAll('.fade-up').forEach(el => {
+      el.style.animation = 'none';
+      el.offsetHeight;
+      el.style.animation = '';
+    });
+
+    tabs.forEach(t => t.classList.remove('active'));
+    const map = {brief:0, data:1, tasks:2, debrief:3};
+    if (map[id] !== undefined) tabs[map[id]].classList.add('active');
+  }
+
+  tabs.forEach((btn, i) => {
+    const ids = ['brief','data','tasks','debrief'];
+    btn.onclick = () => showPanel(ids[i]);
+  });
+</script>
+
+</body>
+</html>
