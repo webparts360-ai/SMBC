@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 7 — AI in Banking · SMBC L&D</title>
+  <link rel="stylesheet" href="smbc.css">
+  <style>
+    /* ── Quote block ── */
+    .quote-block {
+      background: var(--navy);
+      border-left: 4px solid var(--gold);
+      border-radius: 4px;
+      padding: var(--space-lg) var(--space-lg) var(--space-md);
+      margin: var(--space-lg) 0;
+    }
+    .quote-block__text {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      color: var(--white);
+      font-style: italic;
+      line-height: 1.6;
+      margin: 0 0 var(--space-sm);
+    }
+    .quote-block__attr {
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      color: var(--gold-pale);
+      letter-spacing: 0.02em;
+    }
+    .quote-block__source {
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      color: var(--slate-light);
+      font-style: italic;
+      margin-top: 2px;
+    }
+
+    /* ── Stat row ── */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--space-md);
+      margin: var(--space-lg) 0;
+    }
+    .stat-item {
+      background: var(--navy);
+      border-left: 4px solid var(--gold);
+      border-radius: 4px;
+      padding: var(--space-md);
+    }
+    .stat-item__num {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--gold-pale);
+      line-height: 1.1;
+      display: block;
+    }
+    .stat-item__label {
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.7);
+      margin-top: 4px;
+      display: block;
+      line-height: 1.4;
+    }
+    .stat-item__note {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      color: var(--slate-light);
+      font-style: italic;
+      margin-top: 3px;
+      display: block;
+    }
+
+    /* ── Case study cards ── */
+    .case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: var(--space-md);
+      margin: var(--space-md) 0 var(--space-lg);
+    }
+    .case-card {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: var(--space-md);
+      position: relative;
+    }
+    .case-card__accent {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 4px;
+      border-radius: 4px 4px 0 0;
+    }
+    .case-card__org {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--slate-light);
+      margin: var(--space-xs) 0 2px;
+    }
+    .case-card__title {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 0 0 var(--space-sm);
+    }
+    .case-card__lesson {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--slate);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    /* ── Blast radius callout ── */
+    .blast-box {
+      background: var(--navy-deep);
+      border: 1px solid var(--gold);
+      border-radius: 4px;
+      padding: var(--space-lg);
+      margin: var(--space-lg) 0;
+    }
+    .blast-box__label {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      margin-bottom: var(--space-sm);
+    }
+    .blast-box__def {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      color: var(--white);
+      line-height: 1.65;
+      margin: 0 0 var(--space-md);
+    }
+    .blast-box__questions {
+      list-style: none;
+      padding: 0; margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+    .blast-box__questions li {
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.75);
+      padding-left: 1.2em;
+      position: relative;
+      line-height: 1.5;
+    }
+    .blast-box__questions li::before {
+      content: "→";
+      color: var(--gold);
+      position: absolute;
+      left: 0;
+    }
+
+    /* ── Three tensions ── */
+    .tension-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      margin: var(--space-md) 0 var(--space-lg);
+    }
+    .tension-item {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-left: 4px solid var(--navy-mid);
+      border-radius: 4px;
+      padding: var(--space-md) var(--space-lg);
+    }
+    .tension-item__title {
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 0 0 4px;
+    }
+    .tension-item__body {
+      font-family: var(--font-sans);
+      font-size: 0.87rem;
+      color: var(--slate);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ── Direction items ── */
+    .direction-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: var(--space-md);
+      margin: var(--space-md) 0 var(--space-lg);
+    }
+    .direction-item {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: var(--space-md);
+    }
+    .direction-item__num {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--navy-mid);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .direction-item__title {
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 0 0 var(--space-sm);
+    }
+    .direction-item__body {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--slate);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    /* ── Capstone CTA ── */
+    .capstone-cta {
+      background: var(--navy);
+      border-radius: 4px;
+      padding: var(--space-xl) var(--space-lg);
+      text-align: center;
+      margin: var(--space-xl) 0 var(--space-lg);
+    }
+    .capstone-cta .label--light {
+      display: block;
+      margin-bottom: var(--space-sm);
+    }
+    .capstone-cta__title {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--white);
+      margin: 0 0 var(--space-sm);
+    }
+    .capstone-cta__title em {
+      color: var(--gold-pale);
+      font-style: italic;
+    }
+    .capstone-cta__desc {
+      font-family: var(--font-sans);
+      font-size: 0.92rem;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.65;
+      max-width: 520px;
+      margin: 0 auto var(--space-lg);
+    }
+
+    /* ── Section prose ── */
+    .prose {
+      font-family: var(--font-sans);
+      font-size: 0.92rem;
+      color: var(--slate);
+      line-height: 1.75;
+      margin: var(--space-md) 0;
+    }
+    .prose strong { color: var(--navy); }
+
+    /* ── Section h2 ── */
+    .section-h2 {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin: var(--space-xl) 0 var(--space-sm);
+      padding-bottom: var(--space-xs);
+      border-bottom: 2px solid var(--gold);
+      display: inline-block;
+    }
+
+    /* ── Pattern conclusion ── */
+    .pattern-box {
+      background: var(--warm-white);
+      border: 1px solid var(--rule);
+      border-left: 4px solid var(--gold);
+      border-radius: 4px;
+      padding: var(--space-lg);
+      margin: var(--space-lg) 0;
+    }
+    .pattern-box__label {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      margin-bottom: var(--space-sm);
+    }
+    .pattern-box__text {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      color: var(--navy);
+      line-height: 1.65;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__brand">
+    <svg class="topbar__mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="4" fill="#b8902a"/>
+      <path d="M8 24V8l8 8 8-8v16" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div class="topbar__text">
+      <span class="topbar__name">SMBC Group</span>
+      <span class="topbar__sub">Learning &amp; Development · APAC</span>
+    </div>
+  </div>
+  <nav class="topbar__nav">
+    <a href="#signal">The Signal</a>
+    <a href="#scale">The Scale</a>
+    <a href="#evidence">The Evidence</a>
+    <a href="#tensions">The Tensions</a>
+    <a href="#direction">The Direction</a>
+    <a href="module7-capstone.html" class="active">Capstone Exercise</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero__rule"></div>
+  <div class="hero__inner">
+    <div class="hero__eyebrow">
+      <div class="hero__eyebrow-line"></div>
+      <span class="label">Module 7 · Day 2 · Data-Driven Decision Making</span>
+    </div>
+    <h1 class="hero__title">AI in Banking<br><em>From Disruption to Direction</em></h1>
+    <p class="hero__desc">A data-driven perspective for senior banking leaders. Every organisation in your competitive set is making decisions about AI right now. This module gives you the analytical framework to make those decisions with rigour — not instinct.</p>
+    <div class="hero__meta">
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Duration</span>
+        <span class="hero__meta-value">90 minutes</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Format</span>
+        <span class="hero__meta-value">Presentation + Capstone</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Delivery</span>
+        <span class="hero__meta-value">Webex · Day 2 Close</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Blocks</span>
+        <span class="hero__meta-value">6</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<div id="panel-main" class="panel active">
+
+  <!-- ── BLOCK 1: THE SIGNAL ── -->
+  <div class="section-header" id="signal">
+    <span class="pill">Block 1</span>
+    <span class="section-header__title">The Signal</span>
+  </div>
+
+  <div class="page-layout">
+    <main>
+
+      <div class="quote-block fade-up">
+        <p class="quote-block__text">"DBS will no longer hire for positions likely to be automated."</p>
+        <p class="quote-block__attr">Tan Su Shan, CEO, DBS Group &middot; November 2025</p>
+        <p class="quote-block__source">Source: Bloomberg, reported by Fintech Singapore</p>
+      </div>
+
+      <p class="prose">Singapore's largest bank has made a public, CEO-level commitment that changes the terms of the conversation about AI in banking. This is not a vendor announcement or a technology roadmap. It is a workforce strategy, stated plainly, by the leader of a major regional institution.</p>
+
+      <p class="prose">The headline is the hiring freeze. The story is what comes with it.</p>
+
+      <div class="stat-row fade-up">
+        <div class="stat-item">
+          <span class="stat-item__num">13,000</span>
+          <span class="stat-item__label">Employees identified for AI &amp; data upskilling</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-item__num">10,000+</span>
+          <span class="stat-item__label">Already trained as of late 2025</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-item__num">35,000</span>
+          <span class="stat-item__label">Workers being retrained across Singapore's three major banks</span>
+          <span class="stat-item__note">combined</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-item__num">4,000</span>
+          <span class="stat-item__label">Contract roles to be reduced over three years</span>
+          <span class="stat-item__note">part of broader digital transformation</span>
+        </div>
+      </div>
+
+      <p class="prose">DBS is not cutting 13,000 jobs. It is redefining 13,000 roles — tellers becoming relationship managers, analysts becoming AI supervisors. Singapore's MAS Deputy Chairman Chee Hong Tat has publicly endorsed this reskilling approach as deliberate sector policy. JPMorgan CEO Jamie Dimon has called AI one of the most transformative forces in the history of banking.</p>
+
+      <div class="info-box">
+        <div class="info-box__label">The Reframe</div>
+        <p><strong>This is not a replacement story. It is a redefinition story.</strong> The question DBS answered at the CEO level is the same question every manager in this programme will need to answer at the departmental level: which roles in my team are being redefined, and am I ahead of that or behind it?</p>
+      </div>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Module Structure</div>
+          <div class="sidebar-card__title">Six Blocks · 90 min</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">Block 1</span><span class="sidebar-row__val">The Signal</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Block 2</span><span class="sidebar-row__val">The Scale</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Block 3</span><span class="sidebar-row__val">The Evidence</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Block 4</span><span class="sidebar-row__val">The Tensions</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Block 5</span><span class="sidebar-row__val">The Direction</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Block 6</span><span class="sidebar-row__val">The Decision</span></div>
+        </div>
+      </div>
+
+      <div class="sidebar-card" style="margin-top: var(--space-md);">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Learning Objectives</div>
+          <div class="sidebar-card__title">What You Will Be Able to Do</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__val">Evaluate AI proposals using a consistent analytical framework</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__val">Distinguish confirmed data from estimates and speculation</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__val">Assess AI readiness in your department</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__val">Form a risk-adjusted position on AI investment decisions</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ── BLOCK 2: THE SCALE ── -->
+  <div class="section-header" id="scale">
+    <span class="pill">Block 2</span>
+    <span class="section-header__title">The Scale</span>
+  </div>
+
+  <div class="page-layout">
+    <main>
+
+      <p class="prose">DBS's decision was not made in a vacuum. It was made in the context of the largest capital allocation event in the history of the technology sector. Understanding the financial reality behind the AI headlines is not optional for senior banking leaders — it is part of the job.</p>
+
+      <h2 class="section-h2">The Investment Reality</h2>
+
+      <div class="stat-row fade-up">
+        <div class="stat-item">
+          <span class="stat-item__num">$300B+</span>
+          <span class="stat-item__label">Private AI capital invested globally since 2019</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-item__num">$630B</span>
+          <span class="stat-item__label">Hyperscaler capex committed for 2025 alone</span>
+          <span class="stat-item__note">announced/projected figures</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-item__num">3%</span>
+          <span class="stat-item__label">Enterprises reporting 10%+ ROI on AI deployments</span>
+          <span class="stat-item__note">McKinsey / BCG survey data, 2024</span>
+        </div>
+      </div>
+
+      <p class="prose">OpenAI's March 2026 funding round valued the company at $852B on revenues of approximately $13.1B — an implied EV/Revenue multiple of roughly 65×. Microsoft, a profitable, growing, AI-enabled business, trades at approximately 13×. That gap represents a market assumption about future revenue growth that the current 3% enterprise ROI figure does not yet support. Understanding what has to be true for that valuation to be justified is a core analytical skill for anyone who will encounter AI companies as counterparties, clients, or investment targets.</p>
+
+      <h2 class="section-h2">Labour &amp; The Competitive Divide</h2>
+
+      <p class="prose">The IMF estimates that 40% of global jobs are exposed to AI disruption — rising to 60% in advanced economies, where white-collar and knowledge-work roles face the greatest exposure. That is the context in which DBS's retraining commitment should be read.</p>
+
+      <p class="prose">The US–China cost divide adds a further dimension. DeepSeek-V3's published training cost of approximately $5.6M, compared to GPT-4's estimated $100M, triggered the largest single-day market cap loss in US stock market history when it was disclosed in January 2025 — approximately $600B erased from Nvidia's valuation in a single session. The data literacy lesson: the $5.6M figure covers the final training run only, excluding prior R&amp;D, hardware amortisation, and earlier model iterations. Always ask what a number excludes.</p>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Key Comparators</div>
+          <div class="sidebar-card__title">EV / Revenue</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">OpenAI</span><span class="sidebar-row__val">~65×</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Nvidia</span><span class="sidebar-row__val">~20–25×</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Microsoft</span><span class="sidebar-row__val">~13×</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Salesforce</span><span class="sidebar-row__val">~7–9×</span></div>
+        </div>
+      </div>
+
+      <div class="sidebar-card" style="margin-top: var(--space-md);">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Data Literacy Note</div>
+          <div class="sidebar-card__title">Ask What It Excludes</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__val">Every data point in this module carries a quality flag: confirmed, estimated, or speculative. The capstone exercise tests your ability to use them accordingly.</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ── BLOCK 3: THE EVIDENCE ── -->
+  <div class="section-header" id="evidence">
+    <span class="pill">Block 3</span>
+    <span class="section-header__title">The Evidence</span>
+  </div>
+
+  <div class="page-layout">
+    <main>
+
+      <p class="prose">Four case studies from institutions operating at scale. As you read each one, identify the single variable that determined success. You will find the same variable in every case.</p>
+
+      <div class="case-grid fade-up">
+
+        <div class="case-card">
+          <div class="case-card__accent" style="background: #163359;"></div>
+          <p class="case-card__org">JPMorgan</p>
+          <h3 class="case-card__title">COiN — Contract Intelligence</h3>
+          <p class="case-card__lesson">360,000 hours of annual legal review processed by machine learning — extracting covenant terms, repayment conditions, and governing law clauses from loan agreements in seconds. Worked because the input data was structured, the problem was narrowly defined, and the output was verifiable by a human reviewer. <strong>Did not replace lawyers. Redirected their attention from extraction to judgement.</strong></p>
+        </div>
+
+        <div class="case-card">
+          <div class="case-card__accent" style="background: #1a5276;"></div>
+          <p class="case-card__org">Bank of America</p>
+          <h3 class="case-card__title">Erica — Conversational AI</h3>
+          <p class="case-card__lesson">Over 1 billion client interactions and 10 million active users by 2024. Worked because it was designed for high-frequency, low-complexity interactions only — with clean escalation paths to human agents when queries exceeded its scope. The customer data infrastructure was built before the AI was deployed. <strong>Scope determined success.</strong></p>
+        </div>
+
+        <div class="case-card">
+          <div class="case-card__accent" style="background: #2e6b4f;"></div>
+          <p class="case-card__org">DBS</p>
+          <h3 class="case-card__title">digibank — AI-First Expansion</h3>
+          <p class="case-card__lesson">Mobile-only retail banking in India and Indonesia — AI-powered onboarding, credit scoring, and customer service with no physical branches. Worked because DBS spent approximately three years rebuilding its core data infrastructure before deploying AI. <strong>The 13,000 employee retraining programme is the organisational equivalent of what digibank was technically.</strong></p>
+        </div>
+
+        <div class="case-card">
+          <div class="case-card__accent" style="background: #8b2e2e;"></div>
+          <p class="case-card__org">Mastercard</p>
+          <h3 class="case-card__title">Decision Intelligence — Fraud Detection</h3>
+          <p class="case-card__lesson">Binary approve/decline decisions across 150 billion+ annual transactions in under 100 milliseconds. 80% reduction in false positive rates reported. Worked because Mastercard's network-level position provides training data breadth no single bank can replicate. <strong>Strategic question: which AI capabilities do you build, which do you access — and what governance applies to AI you use but do not control?</strong></p>
+        </div>
+
+      </div>
+
+      <div class="pattern-box fade-up">
+        <div class="pattern-box__label">The Pattern</div>
+        <p class="pattern-box__text">Every case that worked had three conditions: <strong>clean, structured input data; a specific and narrowly defined problem; and a measurable, verifiable output.</strong> Every case that has failed in this sector — including well-resourced, high-profile deployments — failed on the same three variables. This is not a technology insight. It is a data management insight, and it is the direct application of what this programme has covered in Modules 1–6.</p>
+      </div>
+
+      <div class="formula-box">
+        <div class="formula-box__label">AI Readiness — Three Questions for Any Proposal</div>
+        <div class="formula-box__text">Is the input data clean, consistent, and accessible? Is the problem specific enough to define a measurable output? Is there a way to verify whether the output is correct?</div>
+        <div class="formula-box__example">If the answer to any of these is no, the project is not ready — and the timeline and cost have just doubled before it has started.</div>
+      </div>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Case Study Summary</div>
+          <div class="sidebar-card__title">The Single Variable</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">COiN</span><span class="sidebar-row__val">Structured data + narrow scope</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Erica</span><span class="sidebar-row__val">Infrastructure before AI</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">digibank</span><span class="sidebar-row__val">3 years data foundation first</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Mastercard</span><span class="sidebar-row__val">Network-level data advantage</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ── BLOCK 4: THE TENSIONS ── -->
+  <div class="section-header" id="tensions">
+    <span class="pill">Block 4</span>
+    <span class="section-header__title">The Tensions</span>
+  </div>
+
+  <div class="page-layout">
+    <main>
+
+      <p class="prose">Understanding what AI can do is necessary but not sufficient. The more consequential question for managers is: what happens when it goes wrong, and who is responsible when it does?</p>
+
+      <div class="blast-box fade-up">
+        <div class="blast-box__label">Concept — Blast Radius</div>
+        <p class="blast-box__def">Most AI deployments in banking are, functionally, experiments. The question is not whether something will go wrong. It is: when it does, how much damage occurs before a human intervenes? That is the blast radius — and it should determine the scope of every initial deployment.</p>
+        <ul class="blast-box__questions">
+          <li>What is the worst-case output this model can produce?</li>
+          <li>How long before we know it has produced it?</li>
+          <li>How many customers are affected before a human sees the error?</li>
+        </ul>
+      </div>
+
+      <p class="prose">JPMorgan COiN misreads a covenant term: one lawyer catches it. Blast radius is narrow. An AI fraud model with elevated false positives blocks thousands of legitimate customers simultaneously: complaints, regulatory scrutiny, compensation claims, and reputational damage — all before the error is identified. Same technology category. Completely different risk profile. The difference is not the AI — it is the scope of deployment and the speed at which errors propagate.</p>
+
+      <p class="prose"><strong>Narrow scope is not timidity. It is blast radius management.</strong> Every successful deployment reviewed in this module started small and expanded only after errors were understood and contained.</p>
+
+      <h2 class="section-h2">Three Tensions Every Senior Banker Navigates</h2>
+
+      <div class="tension-list fade-up">
+
+        <div class="tension-item">
+          <h3 class="tension-item__title">01 &nbsp; Human-in-the-Loop: Necessary Cost, Not Optional Overhead</h3>
+          <p class="tension-item__body">Human oversight is the primary mechanism for containing blast radius — but it changes the efficiency calculation that was presented in the business case. If an AI processes 10,000 transactions per hour and a human can review 200, the human-in-the-loop is not a safety net — it is a sampling exercise. The practical question to ask of any proposal: at the intended deployment scale, what percentage of AI outputs will a human actually review, and is that percentage specified in the risk framework or merely implied?</p>
+        </div>
+
+        <div class="tension-item" style="border-left-color: #1a5276;">
+          <h3 class="tension-item__title">02 &nbsp; Explainability vs. Efficiency: The Regulatory Floor</h3>
+          <p class="tension-item__body">MAS FEAT principles — Fairness, Ethics, Accountability, Transparency — are current obligations, not future ones. Any AI-driven decision affecting a customer must be explainable. The EU AI Act classifies credit decisions, AML screening, and employment screening as high-risk AI requiring mandatory human oversight, audit trails, and conformity assessments. Compliance-grade AI is significantly more expensive than proof-of-concept AI. That cost must be visible before the deployment decision is made, not discovered six months into implementation. Regulatory non-compliance is itself a blast radius event — one that creates conduct, regulatory, and reputational risk simultaneously.</p>
+        </div>
+
+        <div class="tension-item" style="border-left-color: #8b2e2e;">
+          <h3 class="tension-item__title">03 &nbsp; Automation and Accountability: Responsibility Does Not Transfer</h3>
+          <p class="tension-item__body">When an AI model produces a wrong decision, accountability does not resolve to the vendor or the model. It resolves to the manager who approved the deployment and the institution that operated it. Automation concentrates accountability: systematic AI errors affect more customers, faster, than individual human errors would. The test: if a model your team deployed tomorrow produced the wrong output for 10,000 customers over 48 hours — is it immediately clear who is responsible, how it happened, and what the response protocol is? If not, that gap requires attention before deployment, not after.</p>
+        </div>
+
+      </div>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Approval Checklist</div>
+          <div class="sidebar-card__title">Before Any AI Deployment</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__val">Where does the training data come from and how clean is it?</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__val">Who can explain a specific decision this model made?</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__val">What is the fallback if the model fails or the vendor changes terms?</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__val">What percentage of outputs will a human actually review at scale?</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__val">What is the blast radius if it produces systematic errors?</span></div>
+        </div>
+      </div>
+
+      <div class="sidebar-card" style="margin-top: var(--space-md);">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Regulatory Reference</div>
+          <div class="sidebar-card__title">Applicable Frameworks</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">MAS</span><span class="sidebar-row__val">FEAT Principles</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">EU</span><span class="sidebar-row__val">AI Act — high-risk classification</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">HKMA</span><span class="sidebar-row__val">AI guidance on credit decisions</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Basel</span><span class="sidebar-row__val">Committee input on AI in credit risk</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ── BLOCK 5: THE DIRECTION ── -->
+  <div class="section-header" id="direction">
+    <span class="pill">Block 5</span>
+    <span class="section-header__title">The Direction</span>
+  </div>
+
+  <div class="page-layout">
+    <main>
+
+      <p class="prose">These are not ten-year forecasts. They are deployments already underway at institutions in your competitive set. Each one arrives with familiar questions about data quality, blast radius, and accountability.</p>
+
+      <div class="direction-grid fade-up">
+
+        <div class="direction-item">
+          <div class="direction-item__num">01</div>
+          <h3 class="direction-item__title">Generative AI for Advisory</h3>
+          <p class="direction-item__body">Morgan Stanley's OpenAI co-pilot for wealth advisors is live in production — generating personalised briefing notes, recommended portfolio adjustments, and client communication drafts. Hyper-personalised financial planning at scale. For SMBC the open question is not whether to deploy this capability but under what compliance and explainability framework. MAS suitability obligations do not disappear because the recommendation was generated by AI.</p>
+        </div>
+
+        <div class="direction-item">
+          <div class="direction-item__num">02</div>
+          <h3 class="direction-item__title">AI-Native Compliance</h3>
+          <p class="direction-item__body">LLMs monitoring regulatory change in real-time across multiple jurisdictions simultaneously. For a pan-APAC institution managing MAS, HKMA, OJK, RBI, and Bank of Thailand at the same time, regulatory change management is a significant and growing manual overhead. Earliest deployments cover horizon scanning, impact assessment, and policy gap analysis — structured tasks with verifiable outputs and manageable blast radius.</p>
+        </div>
+
+        <div class="direction-item">
+          <div class="direction-item__num">03</div>
+          <h3 class="direction-item__title">Agentic AI</h3>
+          <p class="direction-item__body">Systems that execute multi-step workflows autonomously — not just answer questions or generate drafts. Earliest banking deployments are in trade operations and settlements. This changes the blast radius calculation significantly: autonomous multi-step execution can propagate errors further and faster than any prior AI deployment model. Governance frameworks for agentic AI are still being written by regulators worldwide.</p>
+        </div>
+
+      </div>
+
+      <div class="info-box">
+        <div class="info-box__label">Closing the Loop</div>
+        <p>Tan Su Shan's hiring decision in November 2025 will look prescient rather than premature by the time these three shifts are fully deployed. DBS has been building toward this for nearly a decade — the public statement was the visible tip of a long internal transformation. The question for every manager in this programme is: where is your institution on that timeline, and what is your role in moving it forward?</p>
+      </div>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Timeline</div>
+          <div class="sidebar-card__title">Next 24 Months</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">GenAI Advisory</span><span class="sidebar-row__val">Deployments active now</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">AI Compliance</span><span class="sidebar-row__val">Early production deployments</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Agentic AI</span><span class="sidebar-row__val">Piloting in trade &amp; ops</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Governance</span><span class="sidebar-row__val">Frameworks still being written</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ── CAPSTONE CTA ── -->
+  <div style="max-width: var(--max-width); margin: 0 auto; padding: 0 var(--page-pad);">
+    <div class="capstone-cta">
+      <span class="label--light">Block 6 · Capstone Exercise</span>
+      <h2 class="capstone-cta__title">The AI Investment<br><em>Committee Decision</em></h2>
+      <p class="capstone-cta__desc">Three mega AI IPOs — Anthropic, OpenAI, Starlink X. Three roles — Equity Desk, Credit &amp; Lending, Risk &amp; Compliance. One committee position per issuer: Back, Conditional, or Pass. Supported by data, not instinct.</p>
+      <a href="module7-capstone.html" class="btn btn--gold">Open Capstone Exercise</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span class="footer__brand">SMBC Group · Learning &amp; Development · APAC</span>
+  <span class="footer__note">Confidential · Module 7</span>
+</footer>
+
+</body>
+</html>
