@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 3 — Strategic Importance of Data Analytics</title>
+<link rel="stylesheet" href="smbc.css">
+<style>
+  /* ── Page-level only ── */
+  body { font-size: 17px; }
+  p    { font-size: 16px; }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ── CONTENT SECTIONS ── */
+  .content-wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: var(--space-xl) var(--page-pad);
+  }
+
+  .section-block { margin-bottom: 52px; }
+
+  .section-block h2 {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .section-block p {
+    font-size: 16px;
+    color: var(--slate);
+    line-height: 1.75;
+    margin-bottom: 14px;
+  }
+
+  .section-block p strong {
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  /* ── TIMELINE (evolution) ── */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 28px 0;
+  }
+
+  .timeline-item {
+    display: flex;
+    gap: 24px;
+    position: relative;
+  }
+
+  .timeline-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 38px;
+    bottom: -1px;
+    width: 2px;
+    background: var(--rule);
+  }
+
+  .timeline-marker {
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .timeline-marker span {
+    font-family: var(--font-serif);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .timeline-marker.now { background: var(--gold); }
+  .timeline-marker.now span { color: var(--navy); }
+
+  .timeline-content {
+    background: var(--white);
+    border-left: 3px solid var(--rule);
+    padding: 16px 20px;
+    margin-bottom: 4px;
+    flex: 1;
+  }
+
+  .timeline-content.now { border-left-color: var(--gold); background: var(--warm-white); }
+
+  .timeline-decade {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  .timeline-era {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+
+  .timeline-desc {
+    font-size: 14px;
+    color: var(--slate);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* ── STAT CALLOUTS ── */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin: 28px 0;
+  }
+
+  .stat-cell {
+    background: var(--navy);
+    padding: 28px 22px;
+    text-align: center;
+  }
+
+  .stat-cell__num {
+    font-family: var(--font-serif);
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-cell__label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .stat-cell__src {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.4;
+  }
+
+  /* ── MATURITY STAIRCASE ── */
+  .maturity-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin: 28px 0;
+  }
+
+  .maturity-cell {
+    padding: 22px 18px;
+    background: var(--white);
+  }
+
+  .maturity-cell:nth-child(3) { background: var(--navy-mid, #163359); }
+  .maturity-cell:nth-child(4) { background: var(--navy); }
+
+  .maturity-cell__num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .maturity-cell__name {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .maturity-cell:nth-child(1) .maturity-cell__name,
+  .maturity-cell:nth-child(2) .maturity-cell__name { color: var(--navy); }
+  .maturity-cell:nth-child(3) .maturity-cell__name,
+  .maturity-cell:nth-child(4) .maturity-cell__name { color: var(--white); }
+
+  .maturity-cell__q {
+    font-size: 13px;
+    font-style: italic;
+    color: var(--slate);
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+
+  .maturity-cell:nth-child(3) .maturity-cell__q,
+  .maturity-cell:nth-child(4) .maturity-cell__q { color: rgba(255,255,255,0.65); }
+
+  .maturity-cell__tools {
+    font-size: 12.5px;
+    color: var(--slateLight, #8899aa);
+    line-height: 1.55;
+  }
+
+  .maturity-cell:nth-child(3) .maturity-cell__tools,
+  .maturity-cell:nth-child(4) .maturity-cell__tools { color: rgba(255,255,255,0.45); }
+
+  .maturity-you {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    margin-bottom: 10px;
+  }
+
+  /* ── THREE LENSES ── */
+  .lenses-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin: 28px 0;
+  }
+
+  .lens-cell {
+    background: var(--navy);
+    padding: 24px 20px;
+    border-top: 4px solid var(--rule);
+  }
+
+  .lens-cell:nth-child(1) { border-top-color: var(--gold); }
+  .lens-cell:nth-child(2) { border-top-color: var(--gold-light, #d4a843); }
+  .lens-cell:nth-child(3) { border-top-color: var(--slate); }
+
+  .lens-cell__num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .lens-cell__title {
+    font-family: var(--font-serif);
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 14px;
+    line-height: 1.2;
+  }
+
+  .lens-cell ul {
+    list-style: none;
+    margin: 0 0 14px;
+    padding: 0;
+  }
+
+  .lens-cell ul li {
+    font-size: 13.5px;
+    color: rgba(163,186,204,0.9);
+    padding: 6px 0;
+    padding-left: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .lens-cell ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 13px;
+    width: 5px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .lens-signal {
+    background: rgba(7,20,41,0.6);
+    border-left: 3px solid var(--gold);
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--gold-pale, #f0d98a);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  /* ── TOOLKIT ROWS ── */
+  .toolkit {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 28px 0;
+  }
+
+  .toolkit-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: var(--white);
+    padding: 18px 20px;
+  }
+
+  .toolkit-row__name {
+    flex-shrink: 0;
+    width: 100px;
+    background: var(--navy);
+    padding: 8px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gold-light, #d4a843);
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .toolkit-row__badge {
+    flex-shrink: 0;
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    height: fit-content;
+    margin-top: 3px;
+  }
+
+  .toolkit-row__badge.it { background: var(--slate); color: var(--white); }
+
+  .toolkit-row__desc {
+    flex: 1;
+    font-size: 15px;
+    color: var(--slate);
+    line-height: 1.65;
+  }
+
+  /* ── OBSERVATION TRAP ── */
+  .trap-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin: 28px 0;
+  }
+
+  .trap-cell {
+    background: var(--navy);
+    padding: 24px 22px;
+  }
+
+  .trap-cell__badge {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    margin-bottom: 14px;
+  }
+
+  .trap-cell__badge.obs   { background: #E06030; color: var(--white); }
+  .trap-cell__badge.rec   { background: #00C4A7; color: var(--navy); }
+
+  .trap-cell__heading {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 14px;
+  }
+
+  .trap-cell ul {
+    list-style: none;
+    margin: 0 0 16px;
+    padding: 0;
+  }
+
+  .trap-cell ul li {
+    font-size: 14px;
+    color: rgba(163,186,204,0.9);
+    padding: 6px 0 6px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .trap-cell ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 13px;
+    width: 5px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .trap-cell__foot {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    font-style: italic;
+    line-height: 1.6;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  /* ── ANATOMY ROWS ── */
+  .anatomy {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 28px 0;
+  }
+
+  .anatomy-row {
+    display: grid;
+    grid-template-columns: 36px 160px 1fr;
+    gap: 0;
+    background: var(--rule);
+  }
+
+  .anatomy-num {
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-serif);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .anatomy-formula {
+    background: var(--navy-mid, #163359);
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .anatomy-formula__name {
+    font-family: var(--font-serif);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.2;
+  }
+
+  .anatomy-formula__tag {
+    font-size: 11px;
+    color: var(--gold-pale, #f0d98a);
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  .anatomy-formula__rule {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.4;
+    margin-top: 4px;
+  }
+
+  .anatomy-examples {
+    background: var(--white);
+    padding: 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .anatomy-eg {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .anatomy-eg__badge {
+    flex-shrink: 0;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    margin-top: 1px;
+  }
+
+  .anatomy-eg__badge.good { background: #00C4A7; color: var(--navy); }
+  .anatomy-eg__badge.weak { background: #E06030; color: var(--white); }
+
+  .anatomy-eg__text {
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+
+  .anatomy-eg__text.good { color: var(--navy); }
+  .anatomy-eg__text.weak { color: var(--slate-light, #8899aa); }
+
+  .anatomy-eg__why {
+    font-size: 12px;
+    color: var(--slate-light, #8899aa);
+    font-style: italic;
+    margin-top: 4px;
+    line-height: 1.5;
+    padding-left: 58px;
+  }
+
+  /* ── VERB TABLE ── */
+  .verb-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 28px 0;
+    font-size: 15px;
+  }
+
+  .verb-table thead tr {
+    background: var(--navy);
+  }
+
+  .verb-table thead th {
+    padding: 12px 18px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .verb-table thead th:nth-child(1) { color: #E06030; }
+  .verb-table thead th:nth-child(2) { color: #00C4A7; }
+  .verb-table thead th:nth-child(3) { color: var(--gold-pale, #f0d98a); }
+
+  .verb-table tbody tr {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .verb-table tbody tr:nth-child(even) { background: var(--warm-white); }
+  .verb-table tbody tr:nth-child(odd)  { background: var(--white); }
+
+  .verb-table td {
+    padding: 12px 18px;
+    line-height: 1.5;
+    vertical-align: top;
+  }
+
+  .verb-table td:nth-child(1) { color: #E06030; font-size: 15px; }
+  .verb-table td:nth-child(2) { color: var(--navy); font-size: 15px; font-weight: 600; }
+  .verb-table td:nth-child(3) { color: var(--slate); font-size: 13.5px; }
+
+  /* ── WORKED EXAMPLE ── */
+  .worked-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 2px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin: 28px 0;
+    align-items: start;
+  }
+
+  .worked-data {
+    background: var(--white);
+    padding: 24px 22px;
+  }
+
+  .worked-data h3 {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 14px;
+  }
+
+  .worked-data ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .worked-data ul li {
+    font-size: 14px;
+    color: var(--slate);
+    padding: 7px 0 7px 14px;
+    border-bottom: 1px solid var(--rule-light, #ede8de);
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .worked-data ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 5px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .worked-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .worked-step {
+    background: var(--warm-white);
+    border-left: 3px solid var(--rule);
+    padding: 16px 18px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .worked-step.complete {
+    background: var(--navy);
+    border-left-color: var(--gold);
+  }
+
+  .worked-step__num {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--navy);
+    color: var(--gold);
+    font-family: var(--font-serif);
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .worked-step.complete .worked-step__num {
+    background: var(--gold);
+    color: var(--navy);
+  }
+
+  .worked-step__body { flex: 1; }
+
+  .worked-step__label {
+    font-family: var(--font-serif);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+
+  .worked-step.complete .worked-step__label { color: var(--gold-pale, #f0d98a); }
+
+  .worked-step__text {
+    font-size: 13.5px;
+    color: var(--slate);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .worked-step.complete .worked-step__text { color: rgba(255,255,255,0.85); }
+
+  /* ── EXERCISE SECTION (reuses dpv-* from smbc.css) ── */
+  /* Only the wrapper and layout are page-level */
+  .exercise-section {
+    background: var(--navy);
+    padding: var(--space-xl) var(--page-pad);
+  }
+
+  .exercise-inner {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  /* ── QUICK REFERENCE BOX ── */
+  .qr-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 28px 0;
+  }
+
+  .qr-box {
+    background: var(--white);
+    border-top: 3px solid var(--navy);
+    padding: 18px 20px;
+  }
+
+  .qr-box--gold { border-top-color: var(--gold); }
+
+  .qr-box__label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .qr-box__title {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 10px;
+  }
+
+  .qr-box p {
+    font-size: 14px;
+    color: var(--slate);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  /* ── MENTI BADGE ── */
+  .menti-bar {
+    background: #1E2760;
+    border: 1.5px solid #00C4A7;
+    padding: 14px 18px;
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .menti-bar__icon {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .menti-bar__label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #00C4A7;
+    margin-bottom: 3px;
+  }
+
+  .menti-bar__q {
+    font-family: var(--font-serif);
+    font-size: 14px;
+    font-style: italic;
+    color: var(--white);
+  }
+
+  /* ── BACK NAV ── */
+  .back-nav {
+    background: var(--navy-deep, #071429);
+    padding: 14px var(--page-pad);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(184,144,42,0.2);
+  }
+
+  .back-nav a {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .back-nav a:hover { color: var(--gold-light, #d4a843); }
+
+  .back-nav__sep { color: rgba(255,255,255,0.2); font-size: 12px; }
+  .back-nav__current { font-size: 12px; color: var(--gold); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  @media (max-width: 860px) {
+    .stat-row, .maturity-grid { grid-template-columns: 1fr 1fr; }
+    .lenses-grid, .trap-grid, .qr-grid { grid-template-columns: 1fr; }
+    .anatomy-row { grid-template-columns: 36px 1fr; }
+    .anatomy-examples { grid-column: 1 / -1; }
+    .worked-grid { grid-template-columns: 1fr; }
+    .dpv-sc-grid { grid-template-columns: 1fr !important; }
+    .content-wrap { padding: 28px 20px; }
+    .exercise-section { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar__brand">
+    <img src="https://www.smbc.co.jp/asia/SMBC/media/SMBC/SMBC-logo.png"
+         alt="SMBC" height="28" style="display:block;height:28px;width:auto;">
+  </div>
+  <nav class="topbar__nav">
+    <a href="index.html" id="nav-home">Programme</a>
+    <a href="index.html" class="active">Day 1</a>
+  </nav>
+</header>
+
+<!-- BREADCRUMB -->
+<div class="back-nav">
+  <a href="index.html">Programme</a>
+  <span class="back-nav__sep">›</span>
+  <a href="index.html">Day 1</a>
+  <span class="back-nav__sep">›</span>
+  <span class="back-nav__current">Module 3</span>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero__rule"></div>
+  <div class="hero__inner">
+    <div class="hero__eyebrow">
+      <div class="hero__eyebrow-line"></div>
+      <span class="label">Day 1 · Module 3 · Participant Takeaway</span>
+    </div>
+    <h1 class="hero__title">Strategic Importance<br><em>of Data Analytics</em></h1>
+    <p class="hero__desc">How data analytics supports strategic planning, what to look for in the market, and a framework for turning data into decisions — the DataPOV.</p>
+    <div class="hero__meta">
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Module</span>
+        <span class="hero__meta-value">3 of 7</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Day</span>
+        <span class="hero__meta-value">1 · Close</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Practical exercise</span>
+        <span class="hero__meta-value">DataPOV Activity</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Duration</span>
+        <span class="hero__meta-value">~90 min + 20 min exercise</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <button class="tab-bar__btn active" id="tab-content" onclick="showTab('content')">Module Content</button>
+  <button class="tab-bar__btn" id="tab-datapov" onclick="showTab('datapov')">DataPOV Framework</button>
+  <button class="tab-bar__btn" id="tab-exercise" onclick="showTab('exercise')">Exercise</button>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════
+     TAB 1 — MODULE CONTENT
+══════════════════════════════════════════════════════ -->
+<div id="panel-content" class="panel active">
+<div class="content-wrap">
+
+  <!-- 1. Evolution -->
+  <div class="section-block fade-up">
+    <h2>The Evolution of Decision Making</h2>
+    <p>Every generation of analytical tools improved the information available to managers — but the gap between having data and making a decision remained. Understanding where we are now explains why the frameworks in this module matter.</p>
+
+    <div class="menti-bar">
+      <span class="menti-bar__icon">📊</span>
+      <div>
+        <div class="menti-bar__label">Mentimeter · Word Cloud</div>
+        <div class="menti-bar__q">"In one word — how does your team currently make its most important decisions?"</div>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-marker"><span>1</span></div>
+        <div class="timeline-content">
+          <div class="timeline-decade">1950s – 70s</div>
+          <div class="timeline-era">Expert Systems</div>
+          <p class="timeline-desc">Rules-based logic and codified human expertise. Decisions were only as good as the rules programmed into the system.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-marker"><span>2</span></div>
+        <div class="timeline-content">
+          <div class="timeline-decade">1980s – 90s</div>
+          <div class="timeline-era">Econometrics & Statistics</div>
+          <p class="timeline-desc">Regression models, forecasting, and spreadsheet-based scenario planning. The first era where structured data routinely informed strategic choices.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-marker"><span>3</span></div>
+        <div class="timeline-content">
+          <div class="timeline-decade">2000s</div>
+          <div class="timeline-era">Business Intelligence</div>
+          <p class="timeline-desc">Dashboards, data warehouses, and OLAP reporting. Data became visible across organisations — but mostly in arrears.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-marker"><span>4</span></div>
+        <div class="timeline-content">
+          <div class="timeline-decade">2010s</div>
+          <div class="timeline-era">Big Data & Advanced Analytics</div>
+          <p class="timeline-desc">Machine learning, predictive models, and unstructured data at scale. Analysis moved from describing the past to anticipating the future.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-marker now"><span>★</span></div>
+        <div class="timeline-content now">
+          <div class="timeline-decade">Now</div>
+          <div class="timeline-era">Generative AI & Copilot</div>
+          <p class="timeline-desc">Natural language queries against your own data. AI-assisted insight and action. The gap between asking a question and getting an answer is collapsing — but the quality of the answer still depends on the quality of the question.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- 2. Strategic Imperative -->
+  <div class="section-block fade-up">
+    <h2>Why This Is Now a Strategic Imperative</h2>
+    <p>The performance gap between data-led and intuition-led organisations is not marginal — it is structural. As a VP or ED, your role is not to build analytical models. It is to ensure your organisation uses this capability and that your decisions are informed by it.</p>
+
+    <div class="menti-bar">
+      <span class="menti-bar__icon">📊</span>
+      <div>
+        <div class="menti-bar__label">Mentimeter · Rating Scale</div>
+        <div class="menti-bar__q">"How data-driven is decision making in your function today?" (1 = gut feel only · 5 = fully data-led)</div>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-cell">
+        <div class="stat-cell__num">5×</div>
+        <div class="stat-cell__label">Faster decisions</div>
+        <div class="stat-cell__src">Data-driven firms make material decisions five times faster than peers<br>McKinsey Global Survey</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-cell__num">23×</div>
+        <div class="stat-cell__label">More likely to acquire customers</div>
+        <div class="stat-cell__src">Data-led organisations are 23× more likely to acquire new customers<br>Forbes / McKinsey</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-cell__num">19×</div>
+        <div class="stat-cell__label">More likely to be profitable</div>
+        <div class="stat-cell__src">And 19× more likely to be profitable above industry median<br>Harvard Business Review</div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <div class="info-box__label">Key Principle</div>
+      <p>Data analytics is no longer a support function. It is a source of competitive advantage. The question is not whether to use it — it is whether you are using it faster and more effectively than your competitors.</p>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- 3. Maturity Journey -->
+  <div class="section-block fade-up">
+    <h2>The Data Maturity Journey</h2>
+    <p>Your organisation's data maturity determines what decisions are actually possible. Understanding where you sit tells you what questions you can currently ask of your analytics team — and where the gaps are.</p>
+
+    <div class="menti-bar">
+      <span class="menti-bar__icon">📊</span>
+      <div>
+        <div class="menti-bar__label">Mentimeter · Multiple Choice</div>
+        <div class="menti-bar__q">"Which maturity level best describes your organisation right now?" A) Descriptive &nbsp; B) Diagnostic &nbsp; C) Predictive &nbsp; D) Prescriptive</div>
+      </div>
+    </div>
+
+    <div class="maturity-grid">
+      <div class="maturity-cell">
+        <div class="maturity-cell__num">01</div>
+        <div class="maturity-cell__name">Descriptive</div>
+        <div class="maturity-cell__q">What happened?</div>
+        <div class="maturity-cell__tools">Reports, dashboards, Excel</div>
+      </div>
+      <div class="maturity-cell">
+        <div class="maturity-cell__num">02</div>
+        <div class="maturity-cell__name">Diagnostic</div>
+        <div class="maturity-cell__q">Why did it happen?</div>
+        <div class="maturity-cell__tools">Drill-down, root-cause, pivot analysis</div>
+      </div>
+      <div class="maturity-cell">
+        <div class="maturity-cell__num">03</div>
+        <div class="maturity-cell__name">Predictive</div>
+        <div class="maturity-cell__q">What will happen?</div>
+        <div class="maturity-cell__tools">Forecasting, regression, ML models</div>
+      </div>
+      <div class="maturity-cell">
+        <div class="maturity-you">Your primary domain</div>
+        <div class="maturity-cell__num">04</div>
+        <div class="maturity-cell__name">Prescriptive</div>
+        <div class="maturity-cell__q">What should we do?</div>
+        <div class="maturity-cell__tools">Optimisation, AI recommendations, scenario planning</div>
+      </div>
+    </div>
+
+    <p>The tools on Day 2 — Excel and Power BI — primarily operate at Levels 1 and 2. But the decisions you make as VP and ED sit at <strong>Levels 3 and 4</strong>. Your job is to commission and interpret analysis, not build it yourself.</p>
+  </div>
+
+  <hr class="rule">
+
+  <!-- 4. Analytics & Strategic Planning -->
+  <div class="section-block fade-up">
+    <h2>How Analytics Supports Strategic Planning</h2>
+    <p>Analytics is not a separate process that happens in the data team. It should run through every phase of the strategic planning cycle. The question is not "should we use data?" — it is "what data do we need at each stage, and do we have it?"</p>
+
+    <div class="qr-grid">
+      <div class="qr-box qr-box--gold">
+        <div class="qr-box__label">Set Direction</div>
+        <div class="qr-box__title">◈ Annual Planning</div>
+        <p>Analyse market size, growth rates, and segment profitability. Benchmark performance against competitors. Identify underserved customer segments through transaction data.</p>
+      </div>
+      <div class="qr-box">
+        <div class="qr-box__label">Allocate Resources</div>
+        <div class="qr-box__title">◉ Budgeting</div>
+        <p>Model ROI scenarios across product lines, markets, or channels. Track resource utilisation against planned targets. Identify where investment is generating versus destroying value.</p>
+      </div>
+      <div class="qr-box">
+        <div class="qr-box__label">Monitor & Adapt</div>
+        <div class="qr-box__title">◎ Performance Reviews</div>
+        <p>Build leading indicators that signal performance shifts early. Track strategic KPIs — not just operational metrics. Close the loop: compare actual outcomes to planned assumptions.</p>
+      </div>
+      <div class="qr-box qr-box--gold">
+        <div class="qr-box__label">Key Principle</div>
+        <div class="qr-box__title">The Boundary</div>
+        <p>Analytics does not replace strategic judgement. It reduces the uncertainty around it. The DataPOV framework — covered next — is the bridge between the data and the decision.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- 5. Reading the Market -->
+  <div class="section-block fade-up">
+    <h2>Reading the Market Through Data</h2>
+    <p>Most banks are good at tracking lagging indicators — what happened last quarter. Competitive advantage lies in building <strong>leading indicators</strong> — signals that tell you what is about to happen.</p>
+
+    <div class="menti-bar">
+      <span class="menti-bar__icon">📊</span>
+      <div>
+        <div class="menti-bar__label">Mentimeter · Open Text</div>
+        <div class="menti-bar__q">"What is the one leading indicator you wish you had better visibility on in your current role?"</div>
+      </div>
+    </div>
+
+    <div class="lenses-grid">
+      <div class="lens-cell">
+        <div class="lens-cell__num">01</div>
+        <div class="lens-cell__title">Market Trends</div>
+        <ul>
+          <li>Loan demand shifts by product and segment</li>
+          <li>Interest rate sensitivity across the portfolio</li>
+          <li>Digital adoption rates by customer cohort</li>
+          <li>Regulatory change impact modelling</li>
+        </ul>
+        <div class="lens-signal">Leading signal: deposit-to-loan ratio trends 6 months ahead of volume shifts</div>
+      </div>
+      <div class="lens-cell">
+        <div class="lens-cell__num">02</div>
+        <div class="lens-cell__title">Customer Behaviour</div>
+        <ul>
+          <li>Transaction pattern analysis for early churn signals</li>
+          <li>Product uptake by segment, channel, and geography</li>
+          <li>Lifetime value modelling for resource allocation</li>
+          <li>NPS drivers — what actually moves satisfaction</li>
+        </ul>
+        <div class="lens-signal">Leading signal: digital engagement frequency predicts 90-day cross-sell probability</div>
+      </div>
+      <div class="lens-cell">
+        <div class="lens-cell__num">03</div>
+        <div class="lens-cell__title">Competitive Landscape</div>
+        <ul>
+          <li>Share of wallet analysis using sector benchmarks</li>
+          <li>Competitor product launch monitoring via public data</li>
+          <li>Pricing gap analysis by product category</li>
+          <li>Talent signals from competitor hiring data</li>
+        </ul>
+        <div class="lens-signal">Leading signal: competitor digital feature launches precede fee compression by 2–3 quarters</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- 6. Analytical Toolkit -->
+  <div class="section-block fade-up">
+    <h2>The Analytical Toolkit</h2>
+    <p>The tools below represent the current analytical stack available to managers at SMBC. Day 2 covers Excel and Power BI hands-on.</p>
+
+    <div class="toolkit">
+      <div class="toolkit-row">
+        <div class="toolkit-row__name">Excel</div>
+        <div class="toolkit-row__badge">Day 2 hands-on</div>
+        <div class="toolkit-row__desc">Pivot tables, advanced formulas, scenario modelling, data visualisation. The universal tool for structured data analysis at management level.</div>
+      </div>
+      <div class="toolkit-row">
+        <div class="toolkit-row__name">Power BI</div>
+        <div class="toolkit-row__badge">Day 2 hands-on</div>
+        <div class="toolkit-row__desc">Interactive dashboards, cross-filter analysis, real-time data connections. Converts raw data into executive-ready visual narratives.</div>
+      </div>
+      <div class="toolkit-row">
+        <div class="toolkit-row__name">Azure & SQL</div>
+        <div class="toolkit-row__badge it">IT / Data team</div>
+        <div class="toolkit-row__desc">Data storage, processing and governance infrastructure. As a manager you commission from this layer — you define the question, specify the data needed, and evaluate the output.</div>
+      </div>
+      <div class="toolkit-row">
+        <div class="toolkit-row__name">M365 Copilot</div>
+        <div class="toolkit-row__badge">Now available</div>
+        <div class="toolkit-row__desc">AI-embedded in Word, Excel, PowerPoint, and Teams. Natural language queries against your own data. <strong>Critical caveat:</strong> Copilot reflects the quality of your data. Confident-sounding answers from poor data are still wrong answers. The DataPOV framework is the critical thinking skill that validates what Copilot produces.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content-wrap -->
+</div><!-- /panel-content -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     TAB 2 — DATAPOV FRAMEWORK
+══════════════════════════════════════════════════════ -->
+<div id="panel-datapov" class="panel">
+<div class="content-wrap">
+
+  <!-- The Observation Trap -->
+  <div class="section-block fade-up">
+    <h2>The Observation Trap</h2>
+    <p>Most data presentations fail to drive decisions — not because the data is wrong, but because they stop at observation. An observation tells you what happened. A recommendation tells you what to do about it.</p>
+
+    <div class="menti-bar">
+      <span class="menti-bar__icon">📊</span>
+      <div>
+        <div class="menti-bar__label">Mentimeter · Multiple Choice</div>
+        <div class="menti-bar__q">"How is data typically presented to you?" A) Summary of what happened &nbsp; B) Recommendation with evidence &nbsp; C) A dashboard I interpret myself &nbsp; D) Rarely — mostly verbal</div>
+      </div>
+    </div>
+
+    <div class="trap-grid">
+      <div class="trap-cell">
+        <div class="trap-cell__badge obs">Observation</div>
+        <div class="trap-cell__heading">What most people produce</div>
+        <ul>
+          <li>Loan uptake has declined 18% over 3 quarters</li>
+          <li>Deposit balances in the same segment have grown 12%</li>
+          <li>A competitor launched a digital application 8 weeks ago</li>
+          <li>Our application process takes 14 minutes vs. competitor's 4</li>
+        </ul>
+        <div class="trap-cell__foot">This is a summary of evidence. It is useful — but it is not a recommendation. Nothing in this list tells anyone what to do.</div>
+      </div>
+      <div class="trap-cell">
+        <div class="trap-cell__badge rec">Recommendation</div>
+        <div class="trap-cell__heading">What decisions require</div>
+        <ul>
+          <li>A clear point of view — not just the data</li>
+          <li>A specific action — a verb that commits to a direction</li>
+          <li>The stakes — what is gained or lost either way</li>
+          <li>Confidence to own it — even with incomplete data</li>
+        </ul>
+        <div class="trap-cell__foot">This is what a DataPOV produces. The same evidence, but interpreted — with a recommended course of action and the consequences named explicitly.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- Anatomy -->
+  <div class="section-block fade-up">
+    <h2>The Anatomy of a DataPOV</h2>
+    <p>A DataPOV is a single, complete sentence with three components. All three are required. Without the specific action it is an observation. Without the stakes it is a weak recommendation.</p>
+
+    <div class="anatomy">
+      <div class="anatomy-row">
+        <div class="anatomy-num">01</div>
+        <div class="anatomy-formula">
+          <div class="anatomy-formula__name">The Data Observation</div>
+          <div class="anatomy-formula__tag">[What the data shows]</div>
+          <div class="anatomy-formula__rule">State the evidence — not your interpretation of it</div>
+        </div>
+        <div class="anatomy-examples">
+          <div class="anatomy-eg">
+            <span class="anatomy-eg__badge good">Good</span>
+            <p class="anatomy-eg__text good">Loan uptake in the 35–50 segment has declined 18% over 3 consecutive quarters despite deposit balance growth of 12% in the same cohort.</p>
+          </div>
+          <div class="anatomy-eg">
+            <span class="anatomy-eg__badge weak">Weak</span>
+            <p class="anatomy-eg__text weak">Our loan product is underperforming.</p>
+          </div>
+          <p class="anatomy-eg__why">The good version states measurable facts. The weak version states a conclusion masquerading as evidence.</p>
+        </div>
+      </div>
+
+      <div class="anatomy-row">
+        <div class="anatomy-num">02</div>
+        <div class="anatomy-formula">
+          <div class="anatomy-formula__name">The Specific Action</div>
+          <div class="anatomy-formula__tag">means we must [verb + direction]</div>
+          <div class="anatomy-formula__rule">A strong verb that commits to a course of action</div>
+        </div>
+        <div class="anatomy-examples">
+          <div class="anatomy-eg">
+            <span class="anatomy-eg__badge good">Good</span>
+            <p class="anatomy-eg__text good">…means we must immediately audit our digital application journey against competitor benchmarks and present a remediation roadmap to the product committee within 30 days…</p>
+          </div>
+          <div class="anatomy-eg">
+            <span class="anatomy-eg__badge weak">Weak</span>
+            <p class="anatomy-eg__text weak">…means we must review our loan product strategy.</p>
+          </div>
+          <p class="anatomy-eg__why">"Audit and present within 30 days" is an action. "Review strategy" is a meeting agenda item.</p>
+        </div>
+      </div>
+
+      <div class="anatomy-row">
+        <div class="anatomy-num">03</div>
+        <div class="anatomy-formula">
+          <div class="anatomy-formula__name">The Stakes</div>
+          <div class="anatomy-formula__tag">otherwise [what is gained or lost]</div>
+          <div class="anatomy-formula__rule">Name what changes — in either direction</div>
+        </div>
+        <div class="anatomy-examples">
+          <div class="anatomy-eg">
+            <span class="anatomy-eg__badge good">Good</span>
+            <p class="anatomy-eg__text good">…or risk permanently losing deposit-relationship customers to a competitor who has already removed the friction we have not addressed.</p>
+          </div>
+          <div class="anatomy-eg">
+            <span class="anatomy-eg__badge weak">Weak</span>
+            <p class="anatomy-eg__text weak">…or our performance may continue to decline.</p>
+          </div>
+          <p class="anatomy-eg__why">The good version names a specific, irreversible consequence. The weak version is a truism that adds no urgency.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="formula-box">
+      <div class="formula-box__label">The DataPOV Formula</div>
+      <div class="formula-box__text">[What the data shows] means we must [specific action], otherwise [what is at stake].</div>
+      <div class="formula-box__example">"Loan uptake in the 35–50 segment has declined 18% despite deposit growth, and service data rules out quality as the cause — means we must benchmark and remediate our digital application process within 30 days, or risk permanently losing our highest-value deposit relationships to a faster competitor."</div>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- Verb table -->
+  <div class="section-block fade-up">
+    <h2>The Verb Is the Decision</h2>
+    <p>The action verb is the most important word in a DataPOV sentence. Weak verbs do not protect you from being wrong — they delay the decision. Strong verbs make the recommendation visible, which is what good leadership requires.</p>
+
+    <table class="verb-table">
+      <thead>
+        <tr>
+          <th>Weak Verb</th>
+          <th>Strong Verb</th>
+          <th>Why It Matters</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Review</td><td>→ Audit</td><td>Implies investigation is needed — not that it has happened</td></tr>
+        <tr><td>Consider</td><td>→ Prioritise</td><td>Names the trade-off explicitly</td></tr>
+        <tr><td>Explore</td><td>→ Pilot</td><td>Commits to a bounded test with a timeline</td></tr>
+        <tr><td>Monitor</td><td>→ Escalate</td><td>Signals the threshold for action has been reached</td></tr>
+        <tr><td>Assess</td><td>→ Recommend</td><td>Takes ownership of the conclusion</td></tr>
+        <tr><td>Look into</td><td>→ Commission</td><td>Assigns accountability and resources</td></tr>
+        <tr><td>Discuss</td><td>→ Decide by [date]</td><td>Closes the loop on the conversation</td></tr>
+        <tr><td>Improve</td><td>→ Reduce X by Y%</td><td>Makes the outcome measurable</td></tr>
+      </tbody>
+    </table>
+
+    <div class="info-box">
+      <div class="info-box__label">A Note on Context</div>
+      <p>Banking organisations tend toward cautious language in written communication. This is appropriate for board papers and external communication. The DataPOV is an internal thinking discipline — the strong verb gives you the clarity you need before you soften the language for your audience.</p>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- Worked Example -->
+  <div class="section-block fade-up">
+    <h2>Building a DataPOV — Step by Step</h2>
+    <p>Here is how the three components are assembled from the same set of raw data points. Notice that the observation uses two contrasting data points — the decline and the absence of service complaints — to rule out an alternative explanation before stating the conclusion.</p>
+
+    <div class="worked-grid">
+      <div class="worked-data">
+        <h3>The Raw Data</h3>
+        <ul>
+          <li>Loan applications, 35–50 segment: ↓18% over 3 quarters</li>
+          <li>Deposit balance, same segment: ↑12% same period</li>
+          <li>Loan complaint volume: flat — not service-related</li>
+          <li>Competitor digital app launched: 8 weeks ago</li>
+          <li>Our application time vs. competitor: 14 min vs. ~4 min</li>
+        </ul>
+      </div>
+      <div class="worked-steps">
+        <div class="worked-step">
+          <div class="worked-step__num">01</div>
+          <div class="worked-step__body">
+            <div class="worked-step__label">Start with the observation</div>
+            <p class="worked-step__text">Loan uptake in the 35–50 segment has declined 18% over 3 quarters despite deposit balance growth in the same cohort — and complaint data rules out service quality as the cause.</p>
+          </div>
+        </div>
+        <div class="worked-step">
+          <div class="worked-step__num">02</div>
+          <div class="worked-step__body">
+            <div class="worked-step__label">Add the specific action</div>
+            <p class="worked-step__text">…means we must immediately benchmark our digital application journey against the competitor's process and present a remediation roadmap to the product committee within 30 days…</p>
+          </div>
+        </div>
+        <div class="worked-step">
+          <div class="worked-step__num">03</div>
+          <div class="worked-step__body">
+            <div class="worked-step__label">Add the stakes</div>
+            <p class="worked-step__text">…or risk permanently losing our most valuable deposit-relationship segment to a competitor who has already removed the friction we have not addressed.</p>
+          </div>
+        </div>
+        <div class="worked-step complete">
+          <div class="worked-step__num">✓</div>
+          <div class="worked-step__body">
+            <div class="worked-step__label">The complete DataPOV</div>
+            <p class="worked-step__text">Loan uptake in the 35–50 segment has declined 18% despite deposit growth, and service data rules out quality as the cause — means we must benchmark and remediate our digital application process within 30 days, or risk permanently losing our highest-value deposit relationships to a faster competitor.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content-wrap -->
+</div><!-- /panel-datapov -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     TAB 3 — EXERCISE
+══════════════════════════════════════════════════════ -->
+<div id="panel-exercise" class="panel">
+
+  <!-- Dark header for exercise -->
+  <div class="exercise-section">
+    <div class="exercise-inner">
+      <span class="label">Module 3 · Practical Exercise · 20 minutes</span>
+      <h2 style="font-family:var(--font-serif);font-size:32px;font-weight:700;color:var(--white);margin:12px 0 10px;">The DataPOV Exercise</h2>
+      <p style="font-size:16px;color:rgba(255,255,255,0.65);max-width:600px;line-height:1.7;margin-bottom:28px;">Choose the scenario closest to your function. Read the situation and data points, then write one DataPOV sentence using the formula below.</p>
+
+      <div class="formula-box" style="margin-bottom:28px;">
+        <div class="formula-box__label">The DataPOV Formula</div>
+        <div class="formula-box__text">[What the data shows] means we must [specific action], otherwise [what is at stake].</div>
+      </div>
+
+      <div class="dpv-timing">
+        <div class="dpv-tseg"><div class="dpv-tmins">5</div><div class="dpv-tlabel">Facilitator setup</div></div>
+        <div class="dpv-tseg"><div class="dpv-tmins">5</div><div class="dpv-tlabel">Individual writing</div></div>
+        <div class="dpv-tseg"><div class="dpv-tmins">10</div><div class="dpv-tlabel">Group debrief</div></div>
+        <div class="dpv-tseg"><div class="dpv-tmins">20</div><div class="dpv-tlabel">Total</div></div>
+      </div>
+
+      <div class="menti-bar" style="border-color:#00C4A7;margin-top:4px;">
+        <span class="menti-bar__icon">📊</span>
+        <div>
+          <div class="menti-bar__label">Mentimeter #6 · Open Text — Submit your sentence here during the session</div>
+          <div class="menti-bar__q">"Write your DataPOV sentence." Responses revealed simultaneously for group debrief.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scenario Cards -->
+  <div class="content-wrap">
+    <p style="font-size:15px;color:var(--slate);margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--rule);">Choose the scenario closest to your function and complete the DataPOV sentence below it.</p>
+
+    <div class="dpv-sc-grid" style="margin-bottom:48px;">
+
+      <!-- Scenario A -->
+      <div class="dpv-sc">
+        <div class="dpv-sc-hd">
+          <div class="dpv-sc-fn">Retail Banking / Product</div>
+          <div class="dpv-sc-t">Personal Loan Uptake — Southeast Asia Portfolio</div>
+        </div>
+        <div class="dpv-sc-bd">
+          <p class="dpv-sc-sit">Your SEA retail portfolio shows sustained decline in personal loan uptake among the 35–50 segment over three consecutive quarters — your highest average deposit balance cohort. Competitor activity has increased in the same period.</p>
+          <div class="dpv-dp-lbl">Data Points</div>
+          <div class="dpv-dp"><svg class="dpv-dp-icon" viewBox="0 0 16 16" fill="none"><path d="M8 13L2 7l1.2-1.2 4.8 4.8 4.8-4.8L14 7z" fill="#b8902a"/></svg><span>Loan applications 35–50 segment: <b>↓18% over 3 quarters</b></span></div>
+          <div class="dpv-dp"><svg class="dpv-dp-icon" viewBox="0 0 16 16" fill="none"><path d="M8 3l6 6-1.2 1.2L8 5.2l-4.8 4.8L2 9z" fill="#0b1f3a"/></svg><span>Average deposit balance, same segment: <b>↑12% same period</b></span></div>
+          <div class="dpv-dp"><svg class="dpv-dp-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#5a6a7e" stroke-width="1.2" fill="none"/><path d="M8 5.5v3l1.5 1.5" stroke="#5a6a7e" stroke-width="1.2" stroke-linecap="round"/></svg><span>Loan complaint volume: <b>flat — not a service issue</b></span></div>
+          <div class="dpv-dp"><svg class="dpv-dp-icon" viewBox="0 0 16 16" fill="none"><path d="M8 13L2 7l1.2-1.2 4.8 4.8 4.8-4.8L14 7z" fill="#b8902a"/></svg><span>Competitor digital loan app launched: <b>8 weeks ago</b></span></div>
+          <div class="dpv-dp"><svg class="dpv-dp-icon" viewBox="0 0 16 16" fill="none"><path d="M8 13L2 7l1.2-1.2 4.8 4.8 4.8-4.8L14 7z" fill="#b8902a"/></svg><span>Our application time vs. competitor: <b>14 min vs. ~4 min</b></span></div>
+          <div class="dpv-prompt">What does this data mean you must do — and what is at stake?</div>
+          <div class="dpv-ans"><div class="dpv-ans-lbl">Your DataPOV</div><textarea placeholder="The data shows that... means we must... otherwise..."></textarea></div>
+        </div>
+      </div>
+
+      <!-- Scenario B -->
+      <div class="dpv-sc">
+        <div class="dpv-sc-hd">
+          <div class="dpv-sc-fn">Credit Risk / Portfolio Management</div>
+          <div class="dpv-sc-t">SME Loan Portfolio — Early Arrears Signal</div>
+        </div>
+        <div class="dpv-sc-bd">
+          <p class="dpv-sc-sit">Your SME lending portfolio shows an early-stage arrears increase in hospitality and logistics simultaneously across three APAC markets. Macro conditions are stable; no single credit event explains the pattern.</p>
+          <div class="dpv-dp-lbl">Data Points</div>
+          <div class="dpv-dp"><svg class="dpv-dp-icon" viewBox="0 0 16 16" fill="none"><path d="M8 13L2 7l1.2-1.2 4.8 4.8 4.8-4.8L14 7z" fill="#b8902a"/></svg><span>30-day arrears, hospitality &amp; logistics: <b>↑22% QoQ</b></span></div>
+          <div class="dpv-dp"><svg class="dpv-dp-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#5a6a7e" stroke-width="1.2" fill="none"/><path d="M8 5.5v3l1.5 1.5" stroke="#5a6a7e" stroke-width="1.2" stroke-linecap="round"/></svg><span>90-day arrears: <b>within normal range</b></span></div>
+          <div class="dpv-dp"><svg class="dpv-dp-icon" viewBox="0 0 16 16" fill="none"><path d="M8 13L2 7l1.2-1.2 4.8 4.8 4.8-4.8L14 7z" fill="#b8902a"/></svg><span>Markets affected: <b>Singapore, Bangkok, Manila simultaneously</b></span></div>
+          <div class="dpv-dp"><svg class="dpv-dp-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#5a6a7e" stroke-width="1.2" fill="none"/><path d="M8 5.5v3l1.5 1.5" stroke="#5a6a7e" stroke-width="1.2" stroke-linecap="round"/></svg><span>Macro indicators: <b>stable across all three markets</b></span></div>
+          <div class="dpv-dp"><svg class="dpv-dp-icon" viewBox="0 0 16 16" fill="none"><path d="M8 13L2 7l1.2-1.2 4.8 4.8 4.8-4.8L14 7z" fill="#b8902a"/></svg><span>Portfolio concentration, two subsectors: <b>31% of SME book</b></span></div>
+          <div class="dpv-prompt">What does this data mean you must do — and what is at stake?</div>
+          <div class="dpv-ans"><div class="dpv-ans-lbl">Your DataPOV</div><textarea placeholder="The data shows that... means we must... otherwise..."></textarea></div>
+        </div>
+      </div>
+
+      <!-- Scenario C -->
+      <div class="dpv-sc">
+        <div class="dpv-sc-hd">
+          <div class="dpv-sc-fn">Operations / Service Quality</div>
+          <div class="dpv-sc-t">Branch Network — Digital Migration vs. Staffing Cost</div>
+        </div>
+        <div class="dpv-sc-bd">
+          <p class="dpv-sc-sit">Your branch network shows strong digital adoption over 18 months, but foot traffic has not declined proportionally. Branches are becoming more expensive per transaction while handling a shrinking share of volume.</p>
+          <div class="dpv-dp-lbl">Data Points</div>
+          <div class="dpv-dp"><svg class="dpv-dp-icon" viewBox="0 0 16 16" fill="none"><path d="M8 3l6 6-1.2 1.2L8 5.2l-4.8 4.8L2 9z" fill="#0b1f3a"/></svg><span>Digital transactions as % of total: <b>41% → 67% (18 months)</b></span></div>
+          <div class="dpv-dp"><svg class="dpv-dp-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#5a6a7e" stroke-width="1.2" fill="none"/><path d="M8 5.5v3l1.5 1.5" stroke="#5a6a7e" stroke-width="1.2" stroke-linecap="round"/></svg><span>Branch foot traffic reduction: <b>only ↓9% same period</b></span></div>
+          <div class="dpv-dp"><svg class="dpv-dp-icon" viewBox="0 0 16 16" fill="none"><path d="M8 13L2 7l1.2-1.2 4.8 4.8 4.8-4.8L14 7z" fill="#b8902a"/></svg><span>Cost per branch transaction: <b>↑34% year-on-year</b></span></div>
+          <div class="dpv-dp"><svg class="dpv-dp-icon" viewBox="0 0 16 16" fill="none"><path d="M8 13L2 7l1.2-1.2 4.8 4.8 4.8-4.8L14 7z" fill="#b8902a"/></svg><span>Staff utilisation: <b>54% avg vs. 78% target</b></span></div>
+          <div class="dpv-dp"><svg class="dpv-dp-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#5a6a7e" stroke-width="1.2" fill="none"/><path d="M8 5.5v3l1.5 1.5" stroke="#5a6a7e" stroke-width="1.2" stroke-linecap="round"/></svg><span>Customer satisfaction (branch): <b>stable at 4.1 / 5.0</b></span></div>
+          <div class="dpv-prompt">What does this data mean you must do — and what is at stake?</div>
+          <div class="dpv-ans"><div class="dpv-ans-lbl">Your DataPOV</div><textarea placeholder="The data shows that... means we must... otherwise..."></textarea></div>
+        </div>
+      </div>
+
+    </div><!-- /dpv-sc-grid -->
+
+    <!-- Debrief guide -->
+    <div class="info-box" style="margin-bottom:48px;">
+      <div class="info-box__label">Debrief Guide</div>
+      <p style="margin-bottom:10px;">After writing, responses are revealed simultaneously in Mentimeter. Use these questions to guide 10 minutes of discussion:</p>
+      <ul class="dpv-qs" style="padding-left:0;">
+        <li>Find two sentences that recommend the same action — did they use the same data to get there?</li>
+        <li>Find two sentences that recommend opposite actions — what drove the difference?</li>
+        <li>Which sentences have the strongest stakes? What makes them feel urgent?</li>
+        <li>Where do you see weak verbs? What would you replace them with?</li>
+      </ul>
+      <p style="margin-top:14px;font-style:italic;color:var(--slate);">Close with: "The tools you will use tomorrow exist to build the evidence base for the sentence you just wrote. The DataPOV comes first — the tool helps you prove it."</p>
+    </div>
+
+  </div><!-- /content-wrap -->
+</div><!-- /panel-exercise -->
+
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer__brand">SMBC Group · Learning &amp; Development · APAC Region</span>
+  <span class="footer__note">Module 3 · Data-Driven Decision Making · 9–10 June 2025 · Confidential</span>
+</footer>
+
+<script>
+  function showTab(name) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-bar__btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+    document.querySelectorAll('#panel-' + name + ' .fade-up').forEach((el, i) => {
+      el.style.animation = 'none';
+      el.offsetHeight;
+      el.style.animation = '';
+      el.style.animationDelay = (0.05 + i * 0.07) + 's';
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
