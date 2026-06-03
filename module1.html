@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 1: Introduction to Data Analytics — SMBC L&D</title>
+  <link rel="stylesheet" href="smbc.css">
+  <style>
+    /* ── Back link ── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      padding: 10px 0 10px 0;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--gold-light); }
+    .back-link svg { flex-shrink: 0; }
+    .back-wrap {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 16px var(--page-pad) 0;
+    }
+
+    /* ── Segment timeline ── */
+    .segments {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: var(--space-lg) 0;
+      border-left: 3px solid var(--rule);
+      padding-left: var(--space-lg);
+    }
+    .segment {
+      position: relative;
+      padding-bottom: var(--space-lg);
+    }
+    .segment:last-child { padding-bottom: 0; }
+    .segment::before {
+      content: '';
+      position: absolute;
+      left: calc(-1 * var(--space-lg) - 6px);
+      top: 4px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 2px solid var(--cream);
+    }
+    .segment__time {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .segment__title {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .segment__desc {
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+      color: var(--slate);
+      line-height: 1.55;
+    }
+
+    /* ── Four types grid ── */
+    .types-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--space-md);
+      margin: var(--space-md) 0;
+    }
+    .type-card {
+      background: var(--white);
+      border: 1px solid var(--rule-light);
+      border-top: 4px solid var(--navy-mid);
+      border-radius: 4px;
+      padding: var(--space-md);
+    }
+    .type-card:nth-child(2) { border-top-color: var(--gold); }
+    .type-card:nth-child(3) { border-top-color: #375623; }
+    .type-card:nth-child(4) { border-top-color: #6b2d8b; }
+    .type-card__q {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate-light);
+      margin-bottom: 6px;
+    }
+    .type-card__label {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .type-card__example {
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      color: var(--slate);
+      line-height: 1.5;
+    }
+
+    /* ── Mentimeter poll summary ── */
+    .polls {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      margin: var(--space-md) 0;
+    }
+    .poll {
+      background: var(--white);
+      border: 1px solid var(--rule-light);
+      border-radius: 4px;
+      padding: var(--space-md);
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 0 var(--space-md);
+      align-items: start;
+    }
+    .poll__num {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+      padding-top: 2px;
+    }
+    .poll__type {
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--slate-light);
+      margin-bottom: 4px;
+    }
+    .poll__question {
+      font-family: var(--font-serif);
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+    .poll__purpose {
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      color: var(--slate);
+      line-height: 1.5;
+    }
+
+    /* ── Quiz questions ── */
+    .quiz-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      margin: var(--space-md) 0;
+    }
+    .quiz-item {
+      background: var(--white);
+      border: 1px solid var(--rule-light);
+      border-radius: 4px;
+      padding: var(--space-md);
+    }
+    .quiz-item__q {
+      font-family: var(--font-serif);
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: var(--space-sm);
+      line-height: 1.45;
+    }
+    .quiz-item__options {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .quiz-item__options li {
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      color: var(--slate);
+      padding: 4px 8px;
+      border-radius: 3px;
+    }
+    .quiz-item__options li.correct {
+      background: #ebf5e3;
+      color: #375623;
+      font-weight: 600;
+    }
+    .quiz-item__options li.correct::after {
+      content: ' ✓';
+      color: #375623;
+    }
+
+    /* ── Key takeaway strip ── */
+    .takeaways {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      margin: var(--space-md) 0;
+    }
+    .takeaway {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-md);
+      background: var(--white);
+      border: 1px solid var(--rule-light);
+      border-left: 4px solid var(--gold);
+      border-radius: 4px;
+      padding: var(--space-md);
+    }
+    .takeaway__n {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+    .takeaway__body {
+      flex: 1;
+    }
+    .takeaway__title {
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 3px;
+    }
+    .takeaway__text {
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      color: var(--slate);
+      line-height: 1.5;
+    }
+
+    /* ── Next module strip ── */
+    .next-module {
+      background: var(--navy);
+      border-radius: 4px;
+      padding: var(--space-lg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      margin-top: var(--space-xl);
+    }
+    .next-module__label {
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 4px;
+    }
+    .next-module__title {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .next-module__sub {
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.55);
+      margin-top: 2px;
+    }
+
+    /* ── Section subheadings inside main ── */
+    .section-label {
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin: var(--space-xl) 0 var(--space-sm);
+    }
+    .section-label:first-child { margin-top: 0; }
+
+    h2.content-h2 {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 0 0 var(--space-md);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── TOPBAR ── -->
+  <header class="topbar">
+    <div class="topbar__brand">
+      <svg class="topbar__mark" width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect width="28" height="28" rx="4" fill="#b8902a"/>
+        <text x="14" y="19" font-family="serif" font-size="14" font-weight="700" fill="#071429" text-anchor="middle">S</text>
+      </svg>
+      <div class="topbar__text">
+        <span class="topbar__name">SMBC Group</span>
+        <span class="topbar__sub">Learning &amp; Development · APAC</span>
+      </div>
+    </div>
+    <nav class="topbar__nav">
+      <a href="index.html">Programme Home</a>
+      <a href="#" class="active">Module 1</a>
+    </nav>
+  </header>
+
+  <!-- ── BACK LINK ── -->
+  <div class="back-wrap">
+    <a href="index.html" class="back-link">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Back to Programme Overview
+    </a>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero__rule"></div>
+    <div class="hero__inner">
+      <div class="hero__eyebrow">
+        <div class="hero__eyebrow-line"></div>
+        <span class="label">Day 1 · Module 1</span>
+      </div>
+      <h1 class="hero__title">Introduction to<br><em>Data Analytics</em></h1>
+      <p class="hero__desc">What data analytics is, why it matters at the leadership level, and the manager's framework for interrogating any analysis placed in front of you.</p>
+      <div class="hero__meta">
+        <div class="hero__meta-item">
+          <span class="hero__meta-label">Duration</span>
+          <span class="hero__meta-value">60 minutes</span>
+        </div>
+        <div class="hero__meta-item">
+          <span class="hero__meta-label">Format</span>
+          <span class="hero__meta-value">Virtual · Webex</span>
+        </div>
+        <div class="hero__meta-item">
+          <span class="hero__meta-label">Engagement</span>
+          <span class="hero__meta-value">5 Mentimeter polls</span>
+        </div>
+        <div class="hero__meta-item">
+          <span class="hero__meta-label">Assessment</span>
+          <span class="hero__meta-value">5-question quiz</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION HEADER ── -->
+  <div class="section-header">
+    <span class="pill">Day 1</span>
+    <span class="section-header__title">Understanding the Importance of Data Analytics</span>
+  </div>
+
+  <!-- ── MAIN CONTENT ── -->
+  <div class="page-layout">
+    <main>
+
+      <!-- LEARNING OUTCOMES -->
+      <p class="section-label">Learning Outcomes</p>
+      <div class="objectives fade-up">
+        <div class="objective">
+          <div class="objective__marker">1</div>
+          <p class="objective__text">Articulate what data analytics is and why it matters at the managerial level — not the technical level.</p>
+        </div>
+        <div class="objective">
+          <div class="objective__marker">2</div>
+          <p class="objective__text">Distinguish between descriptive, diagnostic, predictive, and prescriptive analytics using banking examples.</p>
+        </div>
+        <div class="objective">
+          <div class="objective__marker">3</div>
+          <p class="objective__text">Apply the three-question manager's framework to any model output or report.</p>
+        </div>
+        <div class="objective">
+          <div class="objective__marker">4</div>
+          <p class="objective__text">Recognise analytics-literate leadership as a competitive and regulatory imperative in APAC banking.</p>
+        </div>
+      </div>
+
+      <hr class="rule">
+
+      <!-- SESSION FLOW -->
+      <p class="section-label">Session Flow</p>
+      <div class="segments">
+        <div class="segment">
+          <div class="segment__time">0:00 – 0:10</div>
+          <div class="segment__title">Opening &amp; Context Setting</div>
+          <div class="segment__desc">Mentimeter word cloud surfaces how participants currently use data. The Waze story introduces data as an upstream decision resource. Frame: you already have data — the question is whether you are using it well.</div>
+        </div>
+        <div class="segment">
+          <div class="segment__time">0:10 – 0:25</div>
+          <div class="segment__title">The Four Types of Analytics</div>
+          <div class="segment__desc">Descriptive → Diagnostic → Predictive → Prescriptive. Each type explained with a banking use case. Webex breakout: which type does your team rely on most, and which do you wish you had more of?</div>
+        </div>
+        <div class="segment">
+          <div class="segment__time">0:25 – 0:40</div>
+          <div class="segment__title">The Manager's Three-Question Framework</div>
+          <div class="segment__desc">Before acting on any analysis: (1) What data went in? (2) What assumptions does the model make? (3) What decision does the output support? Mentimeter scale poll on how consistently participants apply this.</div>
+        </div>
+        <div class="segment">
+          <div class="segment__time">0:40 – 0:50</div>
+          <div class="segment__title">Analytics-Literate Leadership — The TD Bank Case</div>
+          <div class="segment__desc">TD Bank's CEO required senior managers to understand the assumptions behind every financial product the bank depended on. The result: TD identified and exited the riskiest structured products before the 2008 crisis. The contrast with a bank that lost billions because a quant's warning was not understood.</div>
+        </div>
+        <div class="segment">
+          <div class="segment__time">0:50 – 0:60</div>
+          <div class="segment__title">Reflection &amp; Quiz</div>
+          <div class="segment__desc">Mentimeter closing prompt: "If a new analyst joined your team tomorrow, what would they find?" Five-question Microsoft Forms consolidation quiz before the break.</div>
+        </div>
+      </div>
+
+      <hr class="rule">
+
+      <!-- FOUR TYPES -->
+      <p class="section-label">The Four Types of Analytics</p>
+      <div class="types-grid fade-up">
+        <div class="type-card">
+          <div class="type-card__q">What happened?</div>
+          <div class="type-card__label">Descriptive</div>
+          <div class="type-card__example">Portfolio NPL dashboard. Monthly P&amp;L by segment. Branch performance KPIs. The foundation — most organisations are strong here.</div>
+        </div>
+        <div class="type-card">
+          <div class="type-card__q">Why did it happen?</div>
+          <div class="type-card__label">Diagnostic</div>
+          <div class="type-card__example">Attribution analysis on NPL deterioration: is it vintage, product, geography, or RMs? This is where most organisations have the largest gap.</div>
+        </div>
+        <div class="type-card">
+          <div class="type-card__q">What is likely to happen?</div>
+          <div class="type-card__label">Predictive</div>
+          <div class="type-card__example">Credit scoring. Probability of default models. Customer churn prediction. You are already consuming predictive outputs — the question is whether you interrogate the assumptions behind them.</div>
+        </div>
+        <div class="type-card">
+          <div class="type-card__q">What should we do?</div>
+          <div class="type-card__label">Prescriptive</div>
+          <div class="type-card__example">Models that not only predict which customers are likely to churn but recommend the intervention most likely to retain them. Where AI and machine learning play an increasing role.</div>
+        </div>
+      </div>
+
+      <hr class="rule">
+
+      <!-- THREE QUESTION FRAMEWORK -->
+      <p class="section-label">The Manager's Framework</p>
+      <div class="formula-box">
+        <div class="formula-box__label">Three Questions — Before Acting on Any Analysis</div>
+        <div class="formula-box__text">1. What data went in? &nbsp;·&nbsp; 2. What assumptions does the model make? &nbsp;·&nbsp; 3. What decision does this output support?</div>
+        <div class="formula-box__example">Apply these whether you are reviewing a credit model, a customer attrition dashboard, or a regulatory capital calculation. If your team cannot answer all three in under two minutes, the analysis is not ready for a decision.</div>
+      </div>
+
+      <div class="info-box" style="margin-top:var(--space-md)">
+        <div class="info-box__label">Why Question 2 is the hardest</div>
+        <p>Most managers ask questions 1 and 3 — they check the source and focus on the output. Question 2 requires pushing back on the methodology. It is the question that separates analytics-literate leadership from analytics-consuming leadership. And it is the question most likely to catch a problem before it becomes a decision.</p>
+      </div>
+
+      <hr class="rule">
+
+      <!-- MENTIMETER POLLS -->
+      <p class="section-label">Mentimeter Polls — Five Touchpoints</p>
+      <div class="polls">
+        <div class="poll">
+          <div class="poll__num">1</div>
+          <div>
+            <div class="poll__type">Word Cloud · 0:02</div>
+            <div class="poll__question">"In one or two words — how does your team currently use data to make decisions?"</div>
+            <div class="poll__purpose">Opens the room. Surfaces existing reality before any content is delivered. Results become the opening observation.</div>
+          </div>
+        </div>
+        <div class="poll">
+          <div class="poll__num">2</div>
+          <div>
+            <div class="poll__type">Multiple Choice · 0:08</div>
+            <div class="poll__question">"Which best describes how data is typically used in your most important decisions?"</div>
+            <div class="poll__purpose">Plants the upstream vs downstream mirror. Seeds the Module 2 theme without the confrontation. Options: data arrives before / alongside / after the decision, or it depends on who is in the room.</div>
+          </div>
+        </div>
+        <div class="poll">
+          <div class="poll__num">3</div>
+          <div>
+            <div class="poll__type">Multiple Select · 0:20</div>
+            <div class="poll__question">"Which types of analytics does your team currently rely on? Select all that apply."</div>
+            <div class="poll__purpose">Capability map across the four types. Results almost always show descriptive as dominant. Provides visual proof of the diagnostic and predictive gap.</div>
+          </div>
+        </div>
+        <div class="poll">
+          <div class="poll__num">4</div>
+          <div>
+            <div class="poll__type">Anchored Scale 1–5 · 0:35</div>
+            <div class="poll__question">"In a situation like [NPL scenario] — how many of the three questions do you typically ask before responding?"</div>
+            <div class="poll__purpose">Personal accountability. Preceded by a scenario slide (NPL rises 40bps, recommendation to tighten criteria). Scale anchored with behavioural descriptions at each level. Anonymous. Creates a personal baseline score to revisit at Day 2 close.</div>
+          </div>
+        </div>
+        <div class="poll">
+          <div class="poll__num">5</div>
+          <div>
+            <div class="poll__type">Open Text · 0:50</div>
+            <div class="poll__question">"In my team, data could be used more effectively to… (complete the sentence)"</div>
+            <div class="poll__purpose">Shifts register from diagnosis to aspiration. Generates material the facilitator can reference throughout the day. Bridges into the TD Bank case and the module close.</div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="rule">
+
+      <!-- QUIZ -->
+      <p class="section-label">Consolidation Quiz — Microsoft Forms</p>
+      <div class="quiz-list">
+        <div class="quiz-item">
+          <div class="quiz-item__q">Q1 · NPL ratios are reported by segment and vintage — but no one explains what caused the rise. Which analytics type is missing?</div>
+          <ul class="quiz-item__options">
+            <li>A. Descriptive analytics</li>
+            <li class="correct">B. Diagnostic analytics</li>
+            <li>C. Predictive analytics</li>
+            <li>D. Prescriptive analytics</li>
+          </ul>
+        </div>
+        <div class="quiz-item">
+          <div class="quiz-item__q">Q2 · A model shows 8.3% default probability for a new segment. Which question is most commonly skipped before acting on it?</div>
+          <ul class="quiz-item__options">
+            <li>A. What does 8.3% mean for expected loss?</li>
+            <li>B. How does 8.3% compare to our portfolio average?</li>
+            <li class="correct">C. What assumptions does this model make about the segment?</li>
+            <li>D. What data went in and how recent is it?</li>
+          </ul>
+        </div>
+        <div class="quiz-item">
+          <div class="quiz-item__q">Q3 · What does the Waze story illustrate about how banks should use data?</div>
+          <ul class="quiz-item__options">
+            <li>A. Banks need real-time systems like Waze.</li>
+            <li class="correct">B. Data should shape decisions before they are made — not confirm them after.</li>
+            <li>C. Banks have more data than Waze and a structural advantage.</li>
+            <li>D. AI can replace human judgment in high-stakes decisions.</li>
+          </ul>
+        </div>
+        <div class="quiz-item">
+          <div class="quiz-item__q">Q4 · A new analyst asks: "How do we decide what data to use before making a recommendation?" What is the most mature answer?</div>
+          <ul class="quiz-item__options">
+            <li>A. We use the standard monthly dashboard.</li>
+            <li class="correct">B. We start with three questions: what data exists, what assumptions, what decision.</li>
+            <li>C. That is a question for the analytics team.</li>
+            <li>D. We look at the most recent report and go from there.</li>
+          </ul>
+        </div>
+        <div class="quiz-item">
+          <div class="quiz-item__q">Q5 · TD Bank's advantage in 2008 came primarily from:</div>
+          <ul class="quiz-item__options">
+            <li>A. More sophisticated modelling tools than competitors.</li>
+            <li class="correct">B. Senior managers who understood product assumptions and could act on the data.</li>
+            <li>C. Its risk team correctly predicting the housing price decline.</li>
+            <li>D. Higher investment in its analytics function than peers.</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="rule">
+
+      <!-- KEY TAKEAWAYS -->
+      <p class="section-label">Key Takeaways</p>
+      <div class="takeaways">
+        <div class="takeaway">
+          <div class="takeaway__n">1</div>
+          <div class="takeaway__body">
+            <div class="takeaway__title">Analytics has four types — and most organisations are strong in only two</div>
+            <div class="takeaway__text">Descriptive and diagnostic are table stakes. The value gap is predictive and prescriptive. Know where your team sits.</div>
+          </div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway__n">2</div>
+          <div class="takeaway__body">
+            <div class="takeaway__title">Your role is intelligent consumer — not builder</div>
+            <div class="takeaway__text">The three-question framework is your tool. It applies whether you are reviewing a credit model, a compliance dashboard, or a regulatory capital submission.</div>
+          </div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway__n">3</div>
+          <div class="takeaway__body">
+            <div class="takeaway__title">Data upstream of the decision is the Waze principle</div>
+            <div class="takeaway__text">Most banks use data to report on decisions already made. The competitive advantage is in using it before the decision, not after.</div>
+          </div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway__n">4</div>
+          <div class="takeaway__body">
+            <div class="takeaway__title">Analytics literacy at the leadership level is a regulatory imperative</div>
+            <div class="takeaway__text">MAS, HKMA, and BSP are increasing scrutiny of model risk governance. If your team presents a model to a regulator and you cannot speak to its assumptions, that is an institutional risk — not just a technical one.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEXT MODULE -->
+      <div class="next-module">
+        <div>
+          <div class="next-module__label">Coming Next</div>
+          <div class="next-module__title">Module 2 — Benefits of Data-Driven Decision Making</div>
+          <div class="next-module__sub">The drunk driver analogy · HIPPO vs data-driven decisions · Seven data stewardship practices</div>
+        </div>
+        <a href="module2.html" class="btn btn--gold">Go to Module 2 →</a>
+      </div>
+
+    </main>
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Module At a Glance</div>
+          <div class="sidebar-card__title">Introduction to Data Analytics</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Duration</span>
+            <span class="sidebar-row__val">60 min</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Day</span>
+            <span class="sidebar-row__val">Day 1</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Delivery</span>
+            <span class="sidebar-row__val">Webex</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Polls</span>
+            <span class="sidebar-row__val">5 × Mentimeter</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Quiz</span>
+            <span class="sidebar-row__val">5Q Microsoft Forms</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Audience</span>
+            <span class="sidebar-row__val">26 VP / ED · APAC</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Anchor Story</div>
+          <div class="sidebar-card__title">Waze</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Principle</span>
+            <span class="sidebar-row__val">Data upstream of the decision</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Used at</span>
+            <span class="sidebar-row__val">0:05 — before four types</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Returns in</span>
+            <span class="sidebar-row__val">Module 2 · Waze bridge</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Leadership Case</div>
+          <div class="sidebar-card__title">TD Bank 2008</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Source</span>
+            <span class="sidebar-row__val">HBR — Davenport, Ch.1</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Teaching point</span>
+            <span class="sidebar-row__val">Literacy at leadership level — not technical depth</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Segment</span>
+            <span class="sidebar-row__val">0:40 — module close</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Facilitator Notes</div>
+          <div class="sidebar-card__title">Key Cautions</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Poll 4</span>
+            <span class="sidebar-row__val">Show scenario slide before launching scale — anchors the self-assessment</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Breakout</span>
+            <span class="sidebar-row__val">4 min max — bring back 2–3 pairs, not a full debrief</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Quiz</span>
+            <span class="sidebar-row__val">Call it "5-minute consolidation" — not a quiz</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Close</span>
+            <span class="sidebar-row__val">Read 3–4 Poll 5 responses aloud before the TD Bank story</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Programme Navigation</div>
+          <div class="sidebar-card__title">All Modules</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label" style="color:var(--gold);font-weight:600">→ Module 1</span>
+            <span class="sidebar-row__val">Introduction to Data Analytics</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Module 2</span>
+            <span class="sidebar-row__val"><a href="module2.html" style="color:var(--slate);text-decoration:none">Benefits of DDM</a></span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Module 3</span>
+            <span class="sidebar-row__val">Strategic Importance</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Module 4</span>
+            <span class="sidebar-row__val">Tools &amp; Techniques</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Module 5</span>
+            <span class="sidebar-row__val">Case Studies</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Module 6</span>
+            <span class="sidebar-row__val">Managerial Practice</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Module 7</span>
+            <span class="sidebar-row__val">AI in Banking</span>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <span class="footer__brand">SMBC Group · Learning &amp; Development · APAC</span>
+    <span class="footer__note">Confidential</span>
+  </footer>
+
+</body>
+</html>
