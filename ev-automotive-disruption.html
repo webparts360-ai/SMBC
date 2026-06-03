@@ -488,6 +488,148 @@
   .re-event { padding: 20px 20px 20px 20px; }
   .re-event__year { position: static; width: auto; margin-bottom: 6px; }
 }
+
+/* ── Deng Xiaoping photo + quote block ── */
+.deng-block {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: var(--space-lg);
+  margin: var(--space-lg) 0;
+  align-items: start;
+}
+.deng-photo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.deng-photo img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid var(--rule);
+}
+.deng-photo figcaption {
+  font-size: 11px;
+  color: var(--slate-light);
+  line-height: 1.5;
+  font-style: italic;
+}
+.deng-photo__fallback {
+  width: 100%;
+  aspect-ratio: 3/4;
+  background: var(--navy);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--slate-light);
+  font-size: 12px;
+}
+.deng-quote-box { margin: 0 !important; height: 100%; }
+
+/* ── BBC BYD Testimony Block ── */
+.bbc-testimony {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-top: 4px solid #BB1919;
+  margin: var(--space-xl) 0 var(--space-lg);
+}
+.bbc-testimony__header {
+  padding: 20px 28px 16px;
+  border-bottom: 1px solid var(--rule-light);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.bbc-testimony__source {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.bbc-testimony__date {
+  font-size: 11px;
+  color: var(--slate-light);
+  letter-spacing: 0.08em;
+}
+.bbc-testimony__headline {
+  font-family: var(--font-serif);
+  font-size: clamp(16px, 1.8vw, 22px);
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.3;
+}
+.bbc-testimony__body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+  padding: 24px 28px;
+}
+.bbc-testimony__col p {
+  font-size: 14px;
+  color: var(--slate);
+  line-height: 1.75;
+  margin-bottom: 12px;
+}
+.bbc-testimony__col p:last-child { margin-bottom: 0; }
+.bbc-testimony__col strong { color: var(--navy); }
+.bbc-testimony__col em { color: var(--slate); font-style: italic; }
+.bbc-testimony__stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  background: var(--rule);
+  border-top: 1px solid var(--rule);
+}
+.bbc-stat {
+  background: var(--cream);
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.bbc-stat__num {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1;
+}
+.bbc-stat__label {
+  font-size: 11px;
+  color: var(--slate-light);
+  line-height: 1.4;
+}
+.bbc-stat__delta {
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+.bbc-stat__delta--up { color: #1a5c2a; }
+.bbc-stat__delta--down { color: #8b1a1a; }
+.bbc-testimony__link {
+  display: block;
+  padding: 12px 28px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #BB1919;
+  border-top: 1px solid var(--rule-light);
+  text-decoration: none;
+  transition: background var(--ease);
+}
+.bbc-testimony__link:hover {
+  background: var(--warm-white);
+  color: #9a0000;
+}
+
+@media (max-width: 768px) {
+  .deng-block { grid-template-columns: 1fr; }
+  .bbc-testimony__body { grid-template-columns: 1fr; }
+  .bbc-testimony__stats { grid-template-columns: 1fr 1fr; }
+}
+
 </style>
 </head>
 
@@ -629,10 +771,27 @@
     Before one single EV motor can spin, before one magnet can generate torque, there is a substance deep underground that makes it all possible. China identified this substance as its strategic trump card decades before the rest of the world understood EVs existed. It then spent forty years systematically cornering every link in the supply chain — from the mine, to the chemistry lab, to the factory floor — so that today, no nation on earth can build a world-class electric motor without China's permission.
   </p>
 
-  <div class="formula-box" style="margin-bottom: var(--space-lg);">
-    <div class="formula-box__label">Deng Xiaoping, January 1992 — Southern Tour Speech</div>
-    <div class="formula-box__text">"The Middle East has its oil. China has rare earths."</div>
-    <div class="formula-box__example">中东有石油，中国有稀土 — Carved in stone at an industrial park in Baotou, Inner Mongolia. Said three decades before the EV era. He was right.</div>
+  <div class="deng-block">
+    <figure class="deng-photo">
+      <img
+        src="https://substack-post-media.s3.amazonaws.com/public/images/9bd84e15-0f3a-4880-9329-4bc68debe39f_800x1067.jpeg"
+        alt="The Deng Xiaoping rare earth quote carved in stone: 'The Middle East has its oil, China has rare earths' — displayed at Baotou, Inner Mongolia"
+        width="800" height="1067"
+        loading="lazy"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+      >
+      <div class="deng-photo__fallback" style="display:none;" aria-label="Deng Xiaoping rare earth quote">
+        <svg viewBox="0 0 80 80" width="48" height="48" fill="none"><rect width="80" height="80" fill="#0b1f3a"/><text x="40" y="44" text-anchor="middle" font-size="28" fill="#b8902a">稀土</text></svg>
+        <span>Image unavailable</span>
+      </div>
+      <figcaption>The Deng Xiaoping rare earth declaration, inscribed at a rare earth industrial park in Baotou, Inner Mongolia — China's rare earth capital.</figcaption>
+    </figure>
+    <div class="formula-box deng-quote-box">
+      <div class="formula-box__label">Deng Xiaoping, January 1992 — Southern Tour Speech</div>
+      <div class="formula-box__text">"The Middle East has its oil. China has rare earths."</div>
+      <div class="formula-box__example">中东有石油，中国有稀土 — Carved in stone at an industrial park in Baotou, Inner Mongolia. Said three decades before the EV era. The rest of the world was not paying attention. China was building the future.</div>
+      <div class="formula-box__example" style="margin-top:16px; color: var(--gold-pale); font-style: normal; font-size: 12px; line-height: 1.6;">Deng made this declaration when rare earths were an obscure industrial footnote and the term "electric vehicle" barely existed in mainstream vocabulary. It was not a boast — it was a strategic roadmap, given to an entire nation as its north star.</div>
+    </div>
   </div>
 
   <div class="two-col">
@@ -1059,6 +1218,56 @@
       <div class="horizon-card__stat">#1</div>
       <div class="horizon-card__stat-label">Top AI priority for OEMs in 2026 (SDV Industry Survey)</div>
     </div>
+  </div>
+
+
+  <!-- ── BBC BYD TESTIMONY ── -->
+  <div class="bbc-testimony">
+    <div class="bbc-testimony__header">
+      <div class="bbc-testimony__source">
+        <svg viewBox="0 0 56 20" width="56" height="20" aria-label="BBC" fill="none">
+          <rect width="56" height="20" fill="#BB1919"/>
+          <text x="28" y="15" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="14" fill="white" letter-spacing="1">BBC</text>
+        </svg>
+        <span class="bbc-testimony__date">2 January 2026</span>
+      </div>
+      <div class="bbc-testimony__headline">China's BYD overtakes Tesla as world's top EV seller — for the first time in history</div>
+    </div>
+    <div class="bbc-testimony__body">
+      <div class="bbc-testimony__col">
+        <p>China's BYD surpassed Elon Musk's Tesla to become the leading seller of electric vehicles globally — a milestone that would have seemed implausible a decade ago. BYD announced a <strong>nearly 28% increase in electric car sales, exceeding 2.25 million units</strong> in 2025. Tesla reported a <strong>9% decline, selling just 1.64 million vehicles</strong> — its second consecutive year of falling deliveries.</p>
+        <p>The gap: <strong>620,000 more EVs sold by BYD than Tesla</strong> in a single year. That margin is larger than the entire annual output of most car manufacturers.</p>
+      </div>
+      <div class="bbc-testimony__col">
+        <p>The irony is historical. In October 2011, Elon Musk was asked on Bloomberg TV about BYD as a competitor. He laughed — visibly, on camera — and said: <em>"I don't think they have a product."</em></p>
+        <p>Fourteen years later, that "product" outsold his own company by over half a million vehicles. Chinese companies — BYD, Geely, MG — have "intensified competition by pricing their offerings lower than established Western brands," the BBC reported, while Tesla scrambled to launch cheaper model variants to stem the decline. The vision that started with Deng's rare earth declaration had arrived at its destination.</p>
+      </div>
+    </div>
+    <div class="bbc-testimony__stats">
+      <div class="bbc-stat">
+        <span class="bbc-stat__num">2.26M</span>
+        <span class="bbc-stat__label">BYD EV Sales 2025</span>
+        <span class="bbc-stat__delta bbc-stat__delta--up">+28%</span>
+      </div>
+      <div class="bbc-stat">
+        <span class="bbc-stat__num">1.64M</span>
+        <span class="bbc-stat__label">Tesla EV Sales 2025</span>
+        <span class="bbc-stat__delta bbc-stat__delta--down">–9%</span>
+      </div>
+      <div class="bbc-stat">
+        <span class="bbc-stat__num">620K</span>
+        <span class="bbc-stat__label">BYD's Lead Over Tesla</span>
+        <span class="bbc-stat__delta" style="color: var(--gold);">Gap</span>
+      </div>
+      <div class="bbc-stat">
+        <span class="bbc-stat__num">2011</span>
+        <span class="bbc-stat__label">Year Musk Laughed at BYD</span>
+        <span class="bbc-stat__delta" style="color: var(--slate-light);">14 yrs later</span>
+      </div>
+    </div>
+    <a href="https://www.bbc.com/news/articles/cj9rjwpvmpzo" target="_blank" rel="noopener noreferrer" class="bbc-testimony__link">
+      Read the BBC report →
+    </a>
   </div>
 
   <div class="pull-quote" style="margin-top: 40px;">
