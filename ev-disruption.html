@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EV & The Automotive Disruption</title>
+<meta name="description" content="How electric vehicles rewrote the rules of the automotive industry — the biggest losers, the sweeping lifecycle changes, the winners, and what's ahead.">
+
+<!-- SMBC shared stylesheet (referenced, not copied) -->
+<link rel="stylesheet" href="smbc.css">
+
+<style>
+/* ── Page-specific overrides & extensions ── */
+
+/* Reading layout for long-form report */
+.report-body {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-xl) var(--page-pad);
+}
+
+/* Section dividers with gold rule */
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 56px 0 32px;
+}
+.section-divider__num {
+  font-family: var(--font-serif);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  white-space: nowrap;
+}
+.section-divider__line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--gold), transparent);
+  opacity: 0.35;
+}
+.section-divider__title {
+  font-family: var(--font-serif);
+  font-size: clamp(20px, 2.2vw, 28px);
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.2;
+  flex: 3;
+}
+
+/* Lead paragraph */
+.lead {
+  font-size: 17px;
+  line-height: 1.8;
+  color: var(--slate);
+  max-width: 72ch;
+  margin-bottom: var(--space-lg);
+}
+
+/* Stat callout row */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 2px;
+  background: var(--rule);
+  margin: var(--space-lg) 0;
+}
+.stat-block {
+  background: var(--white);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.stat-block__num {
+  font-family: var(--font-serif);
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1;
+}
+.stat-block__num--gold { color: var(--gold); }
+.stat-block__num--danger { color: #8b1a1a; }
+.stat-block__label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--slate-light);
+}
+.stat-block__sub {
+  font-size: 12px;
+  color: var(--slate-light);
+  line-height: 1.5;
+  margin-top: 4px;
+}
+
+/* Two-column editorial layout */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+  margin: var(--space-lg) 0;
+  align-items: start;
+}
+.two-col--wide-left {
+  grid-template-columns: 3fr 2fr;
+}
+
+/* Body prose */
+.prose p {
+  font-size: 15px;
+  color: var(--slate);
+  line-height: 1.75;
+  margin-bottom: 16px;
+  max-width: 72ch;
+}
+.prose h3 {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 28px 0 10px;
+}
+.prose ul {
+  margin: 0 0 16px 0;
+  padding: 0;
+  list-style: none;
+}
+.prose ul li {
+  font-size: 14px;
+  color: var(--slate);
+  padding: 6px 0 6px 22px;
+  position: relative;
+  border-bottom: 1px solid var(--rule-light);
+  line-height: 1.6;
+}
+.prose ul li:last-child { border-bottom: none; }
+.prose ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 14px;
+  width: 8px;
+  height: 1px;
+  background: var(--gold);
+}
+
+/* Loser scorecard table */
+.loser-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-lg) 0;
+  font-size: 13px;
+}
+.loser-table thead tr {
+  background: var(--navy);
+  color: var(--gold-light);
+}
+.loser-table thead th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.loser-table tbody tr {
+  background: var(--white);
+  border-bottom: 1px solid var(--rule-light);
+  transition: background var(--ease);
+}
+.loser-table tbody tr:hover { background: var(--warm-white); }
+.loser-table td {
+  padding: 13px 16px;
+  color: var(--slate);
+  vertical-align: top;
+}
+.loser-table td:first-child {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  color: var(--navy);
+}
+.loser-table .loss-amount {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 700;
+  color: #8b1a1a;
+}
+
+/* Lifecycle section — horizontal steps */
+.lifecycle-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2px;
+  background: var(--rule);
+  margin: var(--space-lg) 0;
+}
+.lifecycle-step {
+  background: var(--white);
+  padding: 24px 20px;
+}
+.lifecycle-step__icon {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+.lifecycle-step__phase {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.lifecycle-step__title {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.lifecycle-step__body {
+  font-size: 12.5px;
+  color: var(--slate);
+  line-height: 1.65;
+}
+.lifecycle-step__change {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: var(--cream);
+  font-size: 11px;
+  color: var(--navy);
+  font-weight: 500;
+  border-left: 2px solid var(--gold);
+}
+
+/* Winner cards */
+.winner-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-sm);
+  margin: var(--space-lg) 0;
+}
+.winner-card {
+  background: var(--white);
+  border-top: 3px solid var(--gold);
+  padding: 24px 24px 20px;
+}
+.winner-card__rank {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.winner-card__name {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 12px;
+}
+.winner-card__body {
+  font-size: 13px;
+  color: var(--slate);
+  line-height: 1.7;
+}
+.winner-card__metrics {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.winner-card__metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid var(--rule-light);
+  padding: 5px 0;
+  font-size: 12px;
+}
+.winner-card__metric:last-child { border-bottom: none; }
+.winner-card__metric-label { color: var(--slate-light); }
+.winner-card__metric-val { font-weight: 700; color: var(--navy); }
+
+/* Revenue model comparison */
+.revenue-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-lg) 0;
+  font-size: 13px;
+}
+.revenue-table thead tr { background: var(--navy-mid); }
+.revenue-table thead th {
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+.revenue-table tbody tr { border-bottom: 1px solid var(--rule-light); }
+.revenue-table tbody tr:nth-child(even) { background: var(--warm-white); }
+.revenue-table td { padding: 12px 14px; color: var(--slate); }
+.revenue-table td:first-child { font-weight: 600; color: var(--navy); }
+.revenue-table .old-model { color: #8b1a1a; font-style: italic; }
+.revenue-table .new-model { color: #1a5c2a; font-weight: 500; }
+
+/* Horizon section */
+.horizon-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-sm);
+  margin: var(--space-lg) 0;
+}
+.horizon-card {
+  background: var(--navy);
+  padding: 24px 22px;
+  position: relative;
+  overflow: hidden;
+}
+.horizon-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, rgba(184,144,42,0.12), transparent);
+}
+.horizon-card__label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+.horizon-card__title {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+.horizon-card__body {
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.7;
+}
+.horizon-card__stat {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(184,144,42,0.2);
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gold-pale);
+}
+.horizon-card__stat-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  margin-top: 2px;
+  letter-spacing: 0.08em;
+}
+
+/* Pull quote */
+.pull-quote {
+  border-left: 3px solid var(--gold);
+  padding: 20px 28px;
+  margin: var(--space-lg) 0;
+  background: var(--warm-white);
+}
+.pull-quote p {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-style: italic;
+  color: var(--navy);
+  line-height: 1.6;
+  margin: 0 0 8px;
+}
+.pull-quote cite {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--slate-light);
+  font-style: normal;
+}
+
+/* Root cause cards (2×2 grid) */
+.root-causes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  background: var(--rule);
+  margin: var(--space-lg) 0;
+}
+.root-cause {
+  background: var(--white);
+  padding: 24px 26px;
+}
+.root-cause__num {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--rule);
+  line-height: 1;
+  margin-bottom: 12px;
+}
+.root-cause__title {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+.root-cause__body {
+  font-size: 13px;
+  color: var(--slate);
+  line-height: 1.7;
+}
+
+/* Topbar nav active override for single-page scroll */
+.topbar__nav a.active {
+  color: var(--gold-light);
+  border-bottom-color: var(--gold);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .two-col, .two-col--wide-left { grid-template-columns: 1fr; }
+  .root-causes { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ── TOPBAR ── -->
+<header class="topbar">
+  <div class="topbar__brand">
+    <svg class="topbar__mark" viewBox="0 0 34 34" fill="none" aria-label="EV Disruption Report" xmlns="http://www.w3.org/2000/svg">
+      <rect width="34" height="34" fill="#071429"/>
+      <path d="M7 24 L17 10 L27 24" stroke="#b8902a" stroke-width="2" fill="none" stroke-linejoin="round"/>
+      <circle cx="17" cy="24" r="3" fill="#b8902a"/>
+      <line x1="12" y1="19" x2="22" y2="19" stroke="#b8902a" stroke-width="1" opacity="0.5"/>
+    </svg>
+    <div class="topbar__text">
+      <span class="topbar__name">Industry Analysis</span>
+      <span class="topbar__sub">Automotive &amp; EV Disruption · June 2026</span>
+    </div>
+  </div>
+  <nav class="topbar__nav" aria-label="Report sections">
+    <a href="#overview" class="active">Overview</a>
+    <a href="#losers">Losers</a>
+    <a href="#lifecycle">Lifecycle</a>
+    <a href="#winners">Winners</a>
+    <a href="#ahead">What's Ahead</a>
+  </nav>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero" id="overview">
+  <div class="hero__rule" aria-hidden="true"></div>
+  <div class="hero__inner">
+    <div class="hero__eyebrow">
+      <span class="hero__eyebrow-line" aria-hidden="true"></span>
+      <span class="label label--light">Deep-Dive Report</span>
+    </div>
+    <h1 class="hero__title">
+      How EVs <em>Rewrote the Rules</em><br>of the Automotive Industry
+    </h1>
+    <p class="hero__desc">
+      The electric vehicle revolution is not merely a powertrain swap — it is a fundamental reimagining of how cars are designed, sold, maintained, insured, and monetized. Global EV sales surged 20% in 2025 to 20.7 million vehicles, representing 25% of all automotive sales worldwide. Behind that headline lies a turbulent reckoning of $65 billion in write-downs, a new Chinese-led supply chain order, and a battleground where software, data, and autonomy define competitive advantage.
+    </p>
+    <div class="hero__meta">
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Global EV Share (2025)</span>
+        <span class="hero__meta-value">25% of all new cars</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Total Industry Write-downs</span>
+        <span class="hero__meta-value">$65+ Billion</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Top EV Seller (2025)</span>
+        <span class="hero__meta-value">BYD — 2.26M units</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">SDV Market CAGR</span>
+        <span class="hero__meta-value">28%+ through 2035</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TAB BAR / SECTION NAV ── -->
+<nav class="tab-bar" aria-label="Jump to section">
+  <button class="tab-bar__btn active" onclick="scrollTo('#overview')">01 · Paradigm Shift</button>
+  <button class="tab-bar__btn" onclick="scrollTo('#losers')">02 · The Losers</button>
+  <button class="tab-bar__btn" onclick="scrollTo('#lifecycle')">03 · Customer Lifecycle</button>
+  <button class="tab-bar__btn" onclick="scrollTo('#winners')">04 · The Winners</button>
+  <button class="tab-bar__btn" onclick="scrollTo('#ahead')">05 · What's Ahead</button>
+</nav>
+
+<!-- ── REPORT BODY ── -->
+<main class="report-body">
+
+  <!-- ── PART 1: PARADIGM SHIFT ── -->
+  <div class="section-divider">
+    <span class="section-divider__num">Part 01</span>
+    <div class="section-divider__line"></div>
+    <h2 class="section-divider__title">The Paradigm Shift</h2>
+  </div>
+
+  <p class="lead">
+    For a century, the automotive industry created value through manufacturing and transactional sales — design a vehicle, build it, sell it, service it until it broke down. EVs shattered this model. Revenue pools are migrating away from ICE manufacturing toward the complete vehicle lifecycle: software subscriptions, connected services, energy management, and data monetization.
+  </p>
+
+  <div class="stat-row" aria-label="Key market statistics">
+    <div class="stat-block">
+      <span class="stat-block__num stat-block__num--gold">20.7M</span>
+      <span class="stat-block__label">EV Sales in 2025</span>
+      <span class="stat-block__sub">+20% year-on-year globally</span>
+    </div>
+    <div class="stat-block">
+      <span class="stat-block__num">25%</span>
+      <span class="stat-block__label">Global New Car Share</span>
+      <span class="stat-block__sub">1 in 4 new vehicles sold is now electric</span>
+    </div>
+    <div class="stat-block">
+      <span class="stat-block__num stat-block__num--gold">~60%</span>
+      <span class="stat-block__label">Service Revenue Drop</span>
+      <span class="stat-block__sub">Maintenance &amp; parts value vs. ICE vehicles</span>
+    </div>
+    <div class="stat-block">
+      <span class="stat-block__num">55%</span>
+      <span class="stat-block__label">China NEV Penetration</span>
+      <span class="stat-block__sub">EVs &amp; PHEVs outsold ICE in China for 1st time</span>
+    </div>
+    <div class="stat-block">
+      <span class="stat-block__num stat-block__num--danger">2,000+</span>
+      <span class="stat-block__label">ICE Moving Parts</span>
+      <span class="stat-block__sub">vs. ~20 in an EV — the service model collapses</span>
+    </div>
+  </div>
+
+  <div class="two-col--wide-left two-col">
+    <div class="prose">
+      <h3>From Products to Platforms</h3>
+      <p>The key disruption is architectural. EVs have roughly 20 moving parts versus 2,000+ in an ICE vehicle, collapsing the traditional service-and-parts revenue model that generated 40–50% of dealership profit. Vehicle features can now be added or monetized post-sale via over-the-air (OTA) updates. EVs create a new touchpoint with customers via charging — at home, at work, and via public networks. And connected EVs generate continuous operational data enabling predictive maintenance, behavioral insurance pricing, and fleet optimization.</p>
+      <p>The single most telling statistic: MSX research found ordinary service maintenance and parts revenue falls by around 60% with EVs compared to ICE vehicles. This encapsulates why the transition is existential for traditional dealers and OEM aftermarket divisions — not just a product category shift, but a structural dismantling of the profit engine that sustained the industry for a century.</p>
+    </div>
+    <div>
+      <div class="formula-box">
+        <div class="formula-box__label">The New Value Equation</div>
+        <div class="formula-box__text">Vehicle = Platform Entry Point<br>Software = Recurring Revenue<br>Data = Strategic Moat<br>Energy = New Customer Touchpoint</div>
+        <div class="formula-box__example">The car is no longer the product — it's the subscription delivery mechanism.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PART 2: LOSERS ── -->
+  <div class="section-divider" id="losers">
+    <span class="section-divider__num">Part 02</span>
+    <div class="section-divider__line"></div>
+    <h2 class="section-divider__title">The Biggest Losers — and Why They Couldn't Defend Their Turf</h2>
+  </div>
+
+  <p class="lead">Between 2022 and 2025, major US and European carmakers collectively burned through an estimated $65+ billion on EV ventures that failed to generate returns. This is not a market hiccup — it is a structural reckoning.</p>
+
+  <table class="loser-table" aria-label="Major automaker EV write-downs">
+    <thead>
+      <tr>
+        <th>Automaker</th>
+        <th>EV Write-Down</th>
+        <th>Key Failures</th>
+        <th>Root Cause</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Stellantis</td>
+        <td><span class="loss-amount">$26.5B</span></td>
+        <td>Ram 1500 REV, Dodge Charger Daytona EV, all PHEV Jeep/Chrysler models</td>
+        <td>Rushed product launches; wrong platform strategy</td>
+      </tr>
+      <tr>
+        <td>Ford</td>
+        <td><span class="loss-amount">$19.5B</span></td>
+        <td>Model e division lost $5.1B in 2024 alone; F-150 Lightning underperformed</td>
+        <td>ICE profits vs. EV investment conflict</td>
+      </tr>
+      <tr>
+        <td>General Motors</td>
+        <td><span class="loss-amount">$7.6B</span></td>
+        <td>Ultium platform delays, supplier cancellations, reduced EV commitments</td>
+        <td>Battery cost overruns; dealer channel friction</td>
+      </tr>
+      <tr>
+        <td>Volkswagen</td>
+        <td><span class="loss-amount">$6B</span></td>
+        <td>First quarterly operating loss in Q3 2025; Porsche EV delays</td>
+        <td>Software (Cariad) failure; German union politics</td>
+      </tr>
+      <tr>
+        <td>Honda</td>
+        <td><span class="loss-amount">$4.5B</span></td>
+        <td>Prologue required $17,000+ incentive per unit sold; EV halved in one quarter</td>
+        <td>Borrowed GM platform instead of native EV architecture</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pull-quote">
+    <p>"Everyone got caught up in the euphoria of Tesla's valuations, and they forgot to bring the customers with them."</p>
+    <cite>— Stephen Reitman, Bernstein Analyst</cite>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; color: var(--navy); margin: 32px 0 16px;">Five Root Causes of Incumbent Failure</h3>
+  <div class="root-causes">
+    <div class="root-cause">
+      <div class="root-cause__num">01</div>
+      <div class="root-cause__title">The Innovator's Dilemma</div>
+      <div class="root-cause__body">Legacy automakers are supremely profitable at ICE vehicles. Their supplier networks, factory configurations, dealer incentives, and financial models all reinforce that core business. Every dollar spent on EV platforms was a dollar not improving the product that currently paid the bills.</div>
+    </div>
+    <div class="root-cause">
+      <div class="root-cause__num">02</div>
+      <div class="root-cause__title">Platform Architecture Lock-in</div>
+      <div class="root-cause__body">OEMs attempted to electrify by adapting existing ICE platforms rather than building EV-native architectures. This created heavier, more expensive, less efficient vehicles that couldn't match the economics of Tesla or BYD — both of whom designed from a blank sheet.</div>
+    </div>
+    <div class="root-cause">
+      <div class="root-cause__num">03</div>
+      <div class="root-cause__title">The Battery Cost Trap</div>
+      <div class="root-cause__body">Chinese firms CATL (37.9% global share) and BYD (17.2%) dominate battery production. China produces 75%+ of lithium-ion cells, 70% of cathodes, and 85% of anodes. Western OEMs were building EVs on batteries they couldn't produce competitively — making affordable EVs financially impossible.</div>
+    </div>
+    <div class="root-cause">
+      <div class="root-cause__num">04</div>
+      <div class="root-cause__title">Policy Dependency</div>
+      <div class="root-cause__body">Western EV programs were built around sustained government subsidies. When the Trump administration eliminated the $7,500 federal EV tax credit in late September 2025, U.S. EV sales plummeted over 40% year-on-year in November 2025. The factories remained — the customers evaporated.</div>
+    </div>
+    <div class="root-cause" style="grid-column: span 2;">
+      <div class="root-cause__num">05</div>
+      <div class="root-cause__title">Dealer Channel Conflict</div>
+      <div class="root-cause__body">Traditional automakers sell through franchised dealer networks — a business model built on service revenue, financing, and trade-ins. EVs require far less service, undermine dealer profit pools, and benefit from direct-to-consumer models. Many OEM attempts to launch EV-friendly direct sales were blocked or complicated by dealer franchise agreements, preventing the clean customer experience that pure-play EV brands could offer.</div>
+    </div>
+  </div>
+
+  <!-- ── PART 3: CUSTOMER LIFECYCLE ── -->
+  <div class="section-divider" id="lifecycle">
+    <span class="section-divider__num">Part 03</span>
+    <div class="section-divider__line"></div>
+    <h2 class="section-divider__title">Sweeping Changes Across the Full Customer Lifecycle</h2>
+  </div>
+
+  <p class="lead">EV adoption has not just changed what is under the hood — it has restructured every stage of the customer journey, from digital discovery through purchase, ownership, insurance, and end-of-life battery recovery.</p>
+
+  <div class="lifecycle-steps" aria-label="Customer lifecycle transformation">
+    <div class="lifecycle-step">
+      <div class="lifecycle-step__icon">🔍</div>
+      <div class="lifecycle-step__phase">Stage 1</div>
+      <div class="lifecycle-step__title">Pre-Purchase Discovery</div>
+      <div class="lifecycle-step__body">EV customers research extensively online before any showroom visit. Range anxiety, charging infrastructure, and TCO questions require a fundamentally different sales education approach.</div>
+      <div class="lifecycle-step__change">Shift: Showroom → Digital configurator + owned retail stores</div>
+    </div>
+    <div class="lifecycle-step">
+      <div class="lifecycle-step__icon">📝</div>
+      <div class="lifecycle-step__phase">Stage 2</div>
+      <div class="lifecycle-step__title">Purchase &amp; Financing</div>
+      <div class="lifecycle-step__body">New ownership structures: battery leasing, monthly subscriptions including insurance &amp; maintenance, and software feature unlocks purchased post-sale (e.g., FSD at $99/month).</div>
+      <div class="lifecycle-step__change">Shift: One-time transaction → Recurring subscription model</div>
+    </div>
+    <div class="lifecycle-step">
+      <div class="lifecycle-step__icon">🔧</div>
+      <div class="lifecycle-step__phase">Stage 3</div>
+      <div class="lifecycle-step__title">Ownership &amp; Service</div>
+      <div class="lifecycle-step__body">ICE maintenance revenue (oil, brakes, transmission) drops ~60%. Replacement revenue: battery health checks, tyre/suspension (EVs are heavier), OTA updates, AI-driven predictive maintenance.</div>
+      <div class="lifecycle-step__change">Shift: Reactive repair → Proactive AI-driven service</div>
+    </div>
+    <div class="lifecycle-step">
+      <div class="lifecycle-step__icon">🛡️</div>
+      <div class="lifecycle-step__phase">Stage 4</div>
+      <div class="lifecycle-step__title">Insurance</div>
+      <div class="lifecycle-step__body">EV insurance market projected to surge from $64B (2022) to $687B by 2029. EV repairs cost ~25% more. In China, average EV premium was 81% higher than ICE in 2023 — yet insurers still lost money.</div>
+      <div class="lifecycle-step__change">Shift: Driver-based risk → OEM liability + usage-based AI pricing</div>
+    </div>
+    <div class="lifecycle-step">
+      <div class="lifecycle-step__icon">♻️</div>
+      <div class="lifecycle-step__phase">Stage 5</div>
+      <div class="lifecycle-step__title">End of Life</div>
+      <div class="lifecycle-step__body">EV battery packs retain significant capacity after vehicle retirement — creating battery second-life, cell recycling, and critical mineral recovery economies that ICE vehicles never had.</div>
+      <div class="lifecycle-step__change">Shift: Scrap value → Battery second-life + mineral recovery revenue</div>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <div class="info-box__label">The New Revenue Architecture — Old vs. New</div>
+    <table class="revenue-table" aria-label="Automotive revenue model comparison">
+      <thead>
+        <tr>
+          <th>Revenue Layer</th>
+          <th>Old ICE Model</th>
+          <th>New EV Model</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Vehicle Sale</td>
+          <td class="old-model">Transactional, one-time, high margin</td>
+          <td class="new-model">Platform entry point; lower unit margin</td>
+        </tr>
+        <tr>
+          <td>Service &amp; Maintenance</td>
+          <td class="old-model">Dealer-dependent, ICE-intensive (40–50% of dealer profit)</td>
+          <td class="new-model">AI predictive maintenance; OEM-direct via telemetry</td>
+        </tr>
+        <tr>
+          <td>Software &amp; Features</td>
+          <td class="old-model">None (hardware-locked at sale)</td>
+          <td class="new-model">FSD subscriptions, OTA upgrades, feature unlocks</td>
+        </tr>
+        <tr>
+          <td>Insurance</td>
+          <td class="old-model">Third-party, driver-based risk</td>
+          <td class="new-model">OEM-bundled, usage-based, liability shifting to OEMs</td>
+        </tr>
+        <tr>
+          <td>Energy</td>
+          <td class="old-model">Petrol station (entirely third-party)</td>
+          <td class="new-model">OEM charging networks, home/grid energy integration</td>
+        </tr>
+        <tr>
+          <td>End of Life</td>
+          <td class="old-model">Scrap metal value only</td>
+          <td class="new-model">Battery second-life, cell recycling, mineral recovery</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── PART 4: WINNERS ── -->
+  <div class="section-divider" id="winners">
+    <span class="section-divider__num">Part 04</span>
+    <div class="section-divider__line"></div>
+    <h2 class="section-divider__title">Who Won — and How</h2>
+  </div>
+
+  <p class="lead">The winners share one common thread: they built for the destination, not the journey. They treated the vehicle as a software platform, controlled critical supply chains, engaged customers directly, and invested in recurring revenue before the old revenue disappeared.</p>
+
+  <div class="winner-grid">
+    <div class="winner-card">
+      <div class="winner-card__rank">Winner #1 · Pure EV Leader</div>
+      <div class="winner-card__name">BYD</div>
+      <div class="winner-card__body">Surpassed Tesla in 2025 as the world's top EV seller. Vertically integrated from batteries to semiconductors to software. Sells entry-level EVs under $10,000 in China — a price no Western OEM can match. Tripled EU sales in 2025 and expanding across Southeast Asia, Latin America, and Australia with local manufacturing. Unique PHEV bridge strategy captures buyers not ready for full electrification.</div>
+      <div class="winner-card__metrics">
+        <div class="winner-card__metric">
+          <span class="winner-card__metric-label">2025 EV Sales</span>
+          <span class="winner-card__metric-val">2.26M units (+28%)</span>
+        </div>
+        <div class="winner-card__metric">
+          <span class="winner-card__metric-label">Global EV Market Share</span>
+          <span class="winner-card__metric-val">~17% and rising</span>
+        </div>
+        <div class="winner-card__metric">
+          <span class="winner-card__metric-label">Battery Market Share (CATL+BYD)</span>
+          <span class="winner-card__metric-val">55% combined</span>
+        </div>
+      </div>
+    </div>
+    <div class="winner-card">
+      <div class="winner-card__rank">Winner #2 · AI &amp; Autonomy Platform</div>
+      <div class="winner-card__name">Tesla</div>
+      <div class="winner-card__body">Vehicle sales declined for the second consecutive year — yet Tesla is executing a deliberate pivot from EV manufacturer to autonomous AI company. Over 1.1 million FSD subscriptions active. Robotaxi launched commercially in Austin in June 2025, expanding to Dallas and Houston in 2026. Cybercab purpose-built for robotaxi economics. Vertically integrated model remains architecturally difficult for legacy OEMs to replicate.</div>
+      <div class="winner-card__metrics">
+        <div class="winner-card__metric">
+          <span class="winner-card__metric-label">FSD Subscriptions</span>
+          <span class="winner-card__metric-val">1.1M+ active</span>
+        </div>
+        <div class="winner-card__metric">
+          <span class="winner-card__metric-label">Robotaxi Target (2026)</span>
+          <span class="winner-card__metric-val">1M+ units</span>
+        </div>
+        <div class="winner-card__metric">
+          <span class="winner-card__metric-label">2025 EV Sales</span>
+          <span class="winner-card__metric-val">1.64M (–8.6%)</span>
+        </div>
+      </div>
+    </div>
+    <div class="winner-card">
+      <div class="winner-card__rank">Winner #3 · Strategic Agility Champion</div>
+      <div class="winner-card__name">Hyundai / Kia</div>
+      <div class="winner-card__body">The clearest winner among traditional automakers. Native E-GMP platform — built from scratch for electric — enables 800V ultra-fast charging, superior range, and competitive production economics. Won World Car of the Year three consecutive years (IONIQ 5, IONIQ 6, Kia EV9). Highest operating margin in the industry. Less ICE dealer infrastructure to protect allowed faster EV-native positioning.</div>
+      <div class="winner-card__metrics">
+        <div class="winner-card__metric">
+          <span class="winner-card__metric-label">Kia Operating Margin</span>
+          <span class="winner-card__metric-val">11.8% (industry high)</span>
+        </div>
+        <div class="winner-card__metric">
+          <span class="winner-card__metric-label">World Car Awards Won</span>
+          <span class="winner-card__metric-val">3 consecutive years</span>
+        </div>
+        <div class="winner-card__metric">
+          <span class="winner-card__metric-label">US Manufacturing Commitment</span>
+          <span class="winner-card__metric-val">$26B by 2028</span>
+        </div>
+      </div>
+    </div>
+    <div class="winner-card" style="border-top-color: var(--navy-light);">
+      <div class="winner-card__rank" style="color: var(--slate-light);">Winner #4 · Supply Chain Ecosystem</div>
+      <div class="winner-card__name">China's EV Ecosystem</div>
+      <div class="winner-card__body">China did not just build good EVs — it built the entire ecosystem. Six of the world's top 10 EV manufacturers are Chinese. China produces 60%+ of all EVs globally and controls the supply chain from mine to motor. CATL alone holds 37.9% of global battery supply. Chinese manufacturers captured 35.6% of global automotive exports in 2025.</div>
+      <div class="winner-card__metrics">
+        <div class="winner-card__metric">
+          <span class="winner-card__metric-label">Lithium refining (China)</span>
+          <span class="winner-card__metric-val">60%+ global share</span>
+        </div>
+        <div class="winner-card__metric">
+          <span class="winner-card__metric-label">Graphite anode production</span>
+          <span class="winner-card__metric-val">85% global share</span>
+        </div>
+        <div class="winner-card__metric">
+          <span class="winner-card__metric-label">Global EV export share</span>
+          <span class="winner-card__metric-val">35.6% (2025)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PART 5: WHAT'S AHEAD ── -->
+  <div class="section-divider" id="ahead">
+    <span class="section-divider__num">Part 05</span>
+    <div class="section-divider__line"></div>
+    <h2 class="section-divider__title">What's Ahead — The Next Disruption Layers</h2>
+  </div>
+
+  <p class="lead">The EV transition was Phase 1. The industry is now entering Phase 2 — where software-defined vehicles, autonomous mobility, and China's supply chain dominance compound to reshape automotive economics even more radically.</p>
+
+  <div class="horizon-cards">
+    <div class="horizon-card">
+      <div class="horizon-card__label">Megatrend 01</div>
+      <div class="horizon-card__title">Software-Defined Vehicles (SDVs)</div>
+      <div class="horizon-card__body">Vehicles become updatable software platforms rather than fixed hardware products. OTA updates improve performance, safety, and features post-sale. AI personalization learns driver preferences. Subscription revenue enables ongoing feature monetization.</div>
+      <div class="horizon-card__stat">28%+ CAGR</div>
+      <div class="horizon-card__stat-label">SDV market growth through 2035 · From $287B in 2025</div>
+    </div>
+    <div class="horizon-card">
+      <div class="horizon-card__label">Megatrend 02</div>
+      <div class="horizon-card__title">Autonomous Mobility at Scale</div>
+      <div class="horizon-card__body">Waymo at Level 4 in geofenced zones. Tesla robotaxi expanded to Dallas and Houston in April 2026. By 2030, one in ten vehicles globally could feature full automation. Autonomous ride-hailing eliminates the largest cost driver — the driver — and transforms vehicle utilization from 4–5% (personal ownership) to 60–70%+ (fleet operations).</div>
+      <div class="horizon-card__stat">1 in 10</div>
+      <div class="horizon-card__stat-label">Vehicles with full automation by 2030 (est.)</div>
+    </div>
+    <div class="horizon-card">
+      <div class="horizon-card__label">Megatrend 03</div>
+      <div class="horizon-card__title">Market Bifurcation</div>
+      <div class="horizon-card__body">The market is splitting into two worlds: China marching toward 60%+ NEV penetration; Europe forced by CO₂ regulations; the USA retreating under policy uncertainty, tariff walls against Chinese EVs, and incentive removal. North America projected to decline 23% in EV sales in 2026.</div>
+      <div class="horizon-card__stat">–23%</div>
+      <div class="horizon-card__stat-label">Projected North America EV growth in 2026</div>
+    </div>
+    <div class="horizon-card">
+      <div class="horizon-card__label">Megatrend 04</div>
+      <div class="horizon-card__title">Predictive Maintenance AI</div>
+      <div class="horizon-card__body">The 2026 SDV Survey (Omdia/Sonatus) found predictive maintenance has emerged as the industry's #1 AI priority and top driver of after-sales revenue. OEMs are pivoting from reactive repair to proactive service, using vehicle data to trigger interventions before failures occur.</div>
+      <div class="horizon-card__stat">#1</div>
+      <div class="horizon-card__stat-label">Top AI priority for OEMs in 2026 (SDV Industry Survey)</div>
+    </div>
+  </div>
+
+  <div class="pull-quote" style="margin-top: 40px;">
+    <p>"The decision is not whether to engage with the value shift, but how to do so successfully."</p>
+    <cite>— EY Global Automotive Sector Analysis, 2024</cite>
+  </div>
+
+  <div class="prose" style="margin-top: 24px;">
+    <p>The EV transition has exposed a fundamental truth about industrial disruption: incumbents who built supremely efficient businesses around an existing technology are the least equipped to cannibalize it. The $65+ billion in write-downs by Ford, GM, Stellantis, VW, and Honda is not merely a financial loss — it is the measurable cost of trying to retrofit legacy structures onto a native-digital paradigm.</p>
+    <p>For every player in the automotive ecosystem — OEMs, dealers, insurers, suppliers, and mobility platforms — the strategic imperative is the same: treat the vehicle as a software platform, control critical supply chains, engage customers directly, and invest in recurring revenue before the old revenue disappears. The road ahead runs through software-defined vehicles, autonomous mobility, and Chinese supply chain dominance. The rules of the road have permanently changed.</p>
+  </div>
+
+  <hr class="rule rule--gold" style="margin: 48px 0;">
+
+  <!-- Objectives / Key Takeaways -->
+  <div class="label" style="margin-bottom: 16px;">Key Strategic Takeaways</div>
+  <div class="objectives">
+    <div class="objective">
+      <div class="objective__marker">1</div>
+      <div class="objective__text">The vehicle is now a platform entry point, not the product. Recurring software, service, and energy revenue are the new profit pools.</div>
+    </div>
+    <div class="objective">
+      <div class="objective__marker">2</div>
+      <div class="objective__text">Legacy OEMs failed not from lack of resources, but from structural inability to cannibalize their own ICE-dependent profit engines.</div>
+    </div>
+    <div class="objective">
+      <div class="objective__marker">3</div>
+      <div class="objective__text">China controls the EV supply chain from mineral to motor. Western nations cannot compete on price without radical supply chain restructuring.</div>
+    </div>
+    <div class="objective">
+      <div class="objective__marker">4</div>
+      <div class="objective__text">Dealerships must pivot from ICE service revenue to AI-driven predictive maintenance, or become irrelevant in the EV era.</div>
+    </div>
+    <div class="objective">
+      <div class="objective__marker">5</div>
+      <div class="objective__text">Autonomy and software-defined vehicles represent Phase 2 disruption — even larger in economic impact than the powertrain shift itself.</div>
+    </div>
+    <div class="objective">
+      <div class="objective__marker">6</div>
+      <div class="objective__text">The insurance industry faces a decade of structural reinvention as liability shifts from drivers to OEMs and software providers.</div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span class="footer__brand">Industry Analysis — EV &amp; Automotive Disruption</span>
+  <span class="footer__note">Research compiled June 2026 · Sources: IEA, Reuters, EY, McKinsey, Bloomberg, Forbes, S&amp;P Global</span>
+</footer>
+
+<script>
+// Smooth scroll for tab-bar buttons
+document.querySelectorAll('.tab-bar__btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const id = this.textContent.match(/#(\w+)/);
+    if (!id) return;
+    const target = document.getElementById(id[1]);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.querySelectorAll('.tab-bar__btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// Topbar nav scroll active state
+const sections = ['overview', 'losers', 'lifecycle', 'winners', 'ahead'];
+const navLinks = document.querySelectorAll('.topbar__nav a');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { threshold: 0.2, rootMargin: '-56px 0px -40% 0px' });
+
+sections.forEach(id => {
+  const el = document.getElementById(id);
+  if (el) observer.observe(el);
+});
+
+// Fade-up animation on scroll
+const fadeEls = document.querySelectorAll('.stat-block, .winner-card, .horizon-card, .lifecycle-step, .root-cause, .objective');
+const fadeObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('fade-up');
+      fadeObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+fadeEls.forEach(el => fadeObserver.observe(el));
+</script>
+
+</body>
+</html>
