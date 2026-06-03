@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 2: Benefits of Data-Driven Decision Making — SMBC L&D</title>
+  <link rel="stylesheet" href="smbc.css">
+  <style>
+    /* ── Back link ── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      padding: 10px 0 10px 0;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--gold-light); }
+    .back-link svg { flex-shrink: 0; }
+    .back-wrap {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 16px var(--page-pad) 0;
+    }
+
+    /* ── Section label ── */
+    .section-label {
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin: var(--space-xl) 0 var(--space-sm);
+    }
+    .section-label:first-child { margin-top: 0; }
+
+    /* ── Segment timeline ── */
+    .segments {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: var(--space-lg) 0;
+      border-left: 3px solid var(--rule);
+      padding-left: var(--space-lg);
+    }
+    .segment {
+      position: relative;
+      padding-bottom: var(--space-lg);
+    }
+    .segment:last-child { padding-bottom: 0; }
+    .segment::before {
+      content: '';
+      position: absolute;
+      left: calc(-1 * var(--space-lg) - 6px);
+      top: 4px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 2px solid var(--cream);
+    }
+    .segment__time {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .segment__title {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .segment__desc {
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+      color: var(--slate);
+      line-height: 1.55;
+    }
+
+    /* ── Contrast table: HIPPO vs data-driven ── */
+    .contrast-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: var(--space-md) 0;
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+    }
+    .contrast-table th {
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .contrast-table th:first-child { background: var(--navy); color: var(--white); }
+    .contrast-table th:nth-child(2) { background: #7b1e1e; color: var(--white); }
+    .contrast-table th:nth-child(3) { background: #375623; color: var(--white); }
+    .contrast-table td {
+      padding: 10px 14px;
+      vertical-align: top;
+      line-height: 1.5;
+      border-bottom: 1px solid var(--rule-light);
+    }
+    .contrast-table tr:last-child td { border-bottom: none; }
+    .contrast-table tr:nth-child(odd) td:first-child  { background: var(--cream); color: var(--slate); }
+    .contrast-table tr:nth-child(even) td:first-child { background: var(--white); color: var(--slate); }
+    .contrast-table tr:nth-child(odd) td:nth-child(2)  { background: #fdecea; color: #7b1e1e; }
+    .contrast-table tr:nth-child(even) td:nth-child(2) { background: #fff5f5; color: #7b1e1e; }
+    .contrast-table tr:nth-child(odd) td:nth-child(3)  { background: #ebf5e3; color: #375623; }
+    .contrast-table tr:nth-child(even) td:nth-child(3) { background: #f5fbf0; color: #375623; }
+
+    /* ── Privilege vs Asset split ── */
+    .split-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+      margin: var(--space-md) 0;
+    }
+    @media (max-width: 640px) { .split-compare { grid-template-columns: 1fr; } }
+    .split-panel {
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .split-panel__head {
+      padding: 12px 16px;
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+    .split-panel--red .split-panel__head  { background: #7b1e1e; }
+    .split-panel--green .split-panel__head { background: #375623; }
+    .split-panel__body {
+      background: var(--white);
+      border: 1px solid var(--rule-light);
+      border-top: none;
+      padding: var(--space-md);
+    }
+    .split-panel__item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--rule-light);
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      color: var(--slate);
+      line-height: 1.5;
+    }
+    .split-panel__item:last-child { border-bottom: none; }
+    .split-panel__dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+    .split-panel--red  .split-panel__dot { background: #7b1e1e; }
+    .split-panel--green .split-panel__dot { background: #375623; }
+
+    /* ── Stewardship practice cards ── */
+    .practices {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      margin: var(--space-md) 0;
+    }
+    .practice {
+      background: var(--white);
+      border: 1px solid var(--rule-light);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .practice__head {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: 14px 18px;
+      background: var(--navy);
+    }
+    .practice__num {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+      flex-shrink: 0;
+      width: 32px;
+    }
+    .practice__head-text { flex: 1; }
+    .practice__title {
+      font-family: var(--font-serif);
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 2px;
+    }
+    .practice__sub {
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      font-style: italic;
+    }
+    .practice__body {
+      padding: 14px 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+    }
+    @media (max-width: 640px) { .practice__body { grid-template-columns: 1fr; } }
+    .practice__desc {
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      color: var(--slate);
+      line-height: 1.55;
+    }
+    .practice__aside { display: flex; flex-direction: column; gap: var(--space-sm); }
+    .practice__example,
+    .practice__test {
+      padding: 10px 12px;
+      border-radius: 3px;
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+    .practice__example {
+      background: #f4f8fc;
+      border-left: 3px solid var(--navy-mid);
+      color: var(--slate);
+      font-style: italic;
+    }
+    .practice__example strong {
+      display: block;
+      font-style: normal;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 3px;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .practice__test {
+      background: #ebf5e3;
+      border-left: 3px solid #375623;
+      color: #375623;
+    }
+    .practice__test strong {
+      display: block;
+      font-weight: 600;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+
+    /* ── Quiz ── */
+    .quiz-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      margin: var(--space-md) 0;
+    }
+    .quiz-item {
+      background: var(--white);
+      border: 1px solid var(--rule-light);
+      border-radius: 4px;
+      padding: var(--space-md);
+    }
+    .quiz-item__q {
+      font-family: var(--font-serif);
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: var(--space-sm);
+      line-height: 1.45;
+    }
+    .quiz-item__options {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .quiz-item__options li {
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      color: var(--slate);
+      padding: 5px 10px;
+      border-radius: 3px;
+    }
+    .quiz-item__options li.correct {
+      background: #ebf5e3;
+      color: #375623;
+      font-weight: 600;
+    }
+    .quiz-item__options li.correct::after {
+      content: ' ✓';
+    }
+
+    /* ── Takeaways ── */
+    .takeaways {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      margin: var(--space-md) 0;
+    }
+    .takeaway {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-md);
+      background: var(--white);
+      border: 1px solid var(--rule-light);
+      border-left: 4px solid var(--gold);
+      border-radius: 4px;
+      padding: var(--space-md);
+    }
+    .takeaway__n {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+    .takeaway__body { flex: 1; }
+    .takeaway__title {
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 3px;
+    }
+    .takeaway__text {
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      color: var(--slate);
+      line-height: 1.5;
+    }
+
+    /* ── Next module strip ── */
+    .next-module {
+      background: var(--navy);
+      border-radius: 4px;
+      padding: var(--space-lg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      margin-top: var(--space-xl);
+    }
+    .next-module__label {
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 4px;
+    }
+    .next-module__title {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .next-module__sub {
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.55);
+      margin-top: 2px;
+    }
+
+    /* ── Drunk driver callout ── */
+    .analogy-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+      margin: var(--space-md) 0;
+    }
+    @media (max-width: 640px) { .analogy-block { grid-template-columns: 1fr; } }
+    .analogy-panel {
+      border-radius: 4px;
+      padding: var(--space-md) var(--space-lg);
+    }
+    .analogy-panel--dark { background: var(--navy); }
+    .analogy-panel--amber { background: #7f4e00; }
+    .analogy-panel__label {
+      font-family: var(--font-sans);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: var(--space-sm);
+    }
+    .analogy-panel__title {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: var(--space-sm);
+    }
+    .analogy-panel__text {
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.72);
+      line-height: 1.6;
+    }
+    .analogy-panel__highlight {
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-top: var(--space-sm);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── TOPBAR ── -->
+  <header class="topbar">
+    <div class="topbar__brand">
+      <svg class="topbar__mark" width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect width="28" height="28" rx="4" fill="#b8902a"/>
+        <text x="14" y="19" font-family="serif" font-size="14" font-weight="700" fill="#071429" text-anchor="middle">S</text>
+      </svg>
+      <div class="topbar__text">
+        <span class="topbar__name">SMBC Group</span>
+        <span class="topbar__sub">Learning &amp; Development · APAC</span>
+      </div>
+    </div>
+    <nav class="topbar__nav">
+      <a href="index.html">Programme Home</a>
+      <a href="module1.html">Module 1</a>
+      <a href="#" class="active">Module 2</a>
+    </nav>
+  </header>
+
+  <!-- ── BACK LINK ── -->
+  <div class="back-wrap">
+    <a href="index.html" class="back-link">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Back to Programme Overview
+    </a>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero__rule"></div>
+    <div class="hero__inner">
+      <div class="hero__eyebrow">
+        <div class="hero__eyebrow-line"></div>
+        <span class="label">Day 1 · Module 2</span>
+      </div>
+      <h1 class="hero__title">Benefits of Data-Driven<br><em>Decision Making</em></h1>
+      <p class="hero__desc">From confirmation bias to data culture — why organisations fail to use the data they have, and the stewardship practices that close the gap.</p>
+      <div class="hero__meta">
+        <div class="hero__meta-item">
+          <span class="hero__meta-label">Duration</span>
+          <span class="hero__meta-value">55 minutes</span>
+        </div>
+        <div class="hero__meta-item">
+          <span class="hero__meta-label">Format</span>
+          <span class="hero__meta-value">Virtual · Webex</span>
+        </div>
+        <div class="hero__meta-item">
+          <span class="hero__meta-label">Engagement</span>
+          <span class="hero__meta-value">Webex chat discussion</span>
+        </div>
+        <div class="hero__meta-item">
+          <span class="hero__meta-label">Assessment</span>
+          <span class="hero__meta-value">5-question quiz</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION HEADER ── -->
+  <div class="section-header">
+    <span class="pill">Day 1</span>
+    <span class="section-header__title">Understanding the Importance of Data Analytics</span>
+  </div>
+
+  <!-- ── MAIN CONTENT ── -->
+  <div class="page-layout">
+    <main>
+
+      <!-- LEARNING OUTCOMES -->
+      <p class="section-label">Learning Outcomes</p>
+      <div class="objectives fade-up">
+        <div class="objective">
+          <div class="objective__marker">1</div>
+          <p class="objective__text">Recognise the gap between data availability and data-driven decision making in their own organisation.</p>
+        </div>
+        <div class="objective">
+          <div class="objective__marker">2</div>
+          <p class="objective__text">Distinguish between HIPPO-driven and evidence-driven decision behaviours at the management level.</p>
+        </div>
+        <div class="objective">
+          <div class="objective__marker">3</div>
+          <p class="objective__text">Articulate why data stewardship is the structural foundation of a data-driven culture — not an IT function.</p>
+        </div>
+        <div class="objective">
+          <div class="objective__marker">4</div>
+          <p class="objective__text">Identify at least three data stewardship practices to assess or initiate within their own team this week.</p>
+        </div>
+      </div>
+
+      <hr class="rule">
+
+      <!-- SESSION FLOW -->
+      <p class="section-label">Session Flow</p>
+      <div class="segments">
+        <div class="segment">
+          <div class="segment__time">0:00 – 0:05</div>
+          <div class="segment__title">The Uncomfortable Truth</div>
+          <div class="segment__desc">No slides. The drunk driver analogy delivered as narrative: most organisations use analytics to confirm decisions already made — not to make them. Confirmation bias named explicitly before any framework is introduced.</div>
+        </div>
+        <div class="segment">
+          <div class="segment__time">0:05 – 0:15</div>
+          <div class="segment__title">HIPPO vs Data-Driven Decisions</div>
+          <div class="segment__desc">Four banking scenarios on screen. Participants read silently for 30 seconds, then respond in Webex chat. HIPPO framed as a rational response to a broken environment — not a character flaw.</div>
+        </div>
+        <div class="segment">
+          <div class="segment__time">0:15 – 0:23</div>
+          <div class="segment__title">Group Reflection</div>
+          <div class="segment__desc">Webex chat: "Without naming your institution — which of the four HIPPO scenarios feels most familiar?" Facilitator reads responses aloud, reflects patterns back to the group without attribution. Two-minute discussion before the Waze bridge.</div>
+        </div>
+        <div class="segment">
+          <div class="segment__time">0:23 – 0:27</div>
+          <div class="segment__title">The Waze Bridge</div>
+          <div class="segment__desc">Return to the Waze story from Module 1. The contrast: data upstream vs downstream of the decision. Most banks use data to report on decisions already made — not to change today's decision.</div>
+        </div>
+        <div class="segment">
+          <div class="segment__time">0:27 – 0:30</div>
+          <div class="segment__title">Data as Privilege vs Data as Asset</div>
+          <div class="segment__desc">The conceptual hinge. When data is treated as a private resource — hoarded, inconsistently defined, unavailable at the moment of decision — experience and seniority will always win. Stewardship is the structural response.</div>
+        </div>
+        <div class="segment">
+          <div class="segment__time">0:30 – 0:50</div>
+          <div class="segment__title">Seven Data Stewardship Practices</div>
+          <div class="segment__desc">Each practice: description, practical example, and one test question participants can apply in their own team. Approx 2.5 min per practice. Facilitator pauses for group reaction after practices 1, 3, and 6.</div>
+        </div>
+        <div class="segment">
+          <div class="segment__time">0:50 – 0:55</div>
+          <div class="segment__title">Module Close &amp; Quiz</div>
+          <div class="segment__desc">The single self-assessment question: what would a new analyst find? 30 seconds of silence. Personal commitment to one practice. Five-question consolidation quiz. Bridge to Module 3.</div>
+        </div>
+      </div>
+
+      <hr class="rule">
+
+      <!-- THE ANALOGY -->
+      <p class="section-label">The Opening Frame</p>
+      <div class="analogy-block">
+        <div class="analogy-panel analogy-panel--dark">
+          <div class="analogy-panel__label">The Pattern</div>
+          <div class="analogy-panel__title">Decision first. Data second.</div>
+          <div class="analogy-panel__text">A senior leader has an instinct or a political commitment. The decision is made — informally, over lunch. The analytics team is then asked to produce numbers that support it. The data's job is not to inform. It is to validate.</div>
+          <div class="analogy-panel__highlight">This is confirmation bias. And it is so common it has become invisible.</div>
+        </div>
+        <div class="analogy-panel analogy-panel--amber">
+          <div class="analogy-panel__label">The Analogy</div>
+          <div class="analogy-panel__title">The Drunk Driver</div>
+          <div class="analogy-panel__text">Makes it home safely. Concludes: the process was sound. Will do it again. The outcome was good because of luck — not because of judgement. And next time, the luck may not hold.</div>
+          <div class="analogy-panel__highlight">A good outcome tells you almost nothing about the quality of the decision that produced it.</div>
+        </div>
+      </div>
+
+      <hr class="rule">
+
+      <!-- HIPPO CONTRAST -->
+      <p class="section-label">HIPPO vs Data-Driven — Four Banking Scenarios</p>
+      <p style="font-family:var(--font-sans);font-size:0.85rem;color:var(--slate);margin-bottom:var(--space-md);line-height:1.55;">Read the table. Think — not about which organisation this describes, but about which response feels more familiar in your own experience. HIPPO = Highest Paid Person's Opinion.</p>
+      <table class="contrast-table">
+        <thead>
+          <tr>
+            <th>Situation</th>
+            <th>HIPPO Response</th>
+            <th>Data-Driven Response</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>NPL ratio rises in one segment</td>
+            <td>I know this book — it is the relationship managers. Tighten the approval criteria.</td>
+            <td>Let us understand what drove it before we change criteria. Is it vintage, product, geography, or something we have not looked at?</td>
+          </tr>
+          <tr>
+            <td>New product proposal lands</td>
+            <td>We tried something like this in 2019. It did not work.</td>
+            <td>What does the data tell us about why 2019 failed? Are those conditions still in place today?</td>
+          </tr>
+          <tr>
+            <td>Dashboard shows declining customer activity</td>
+            <td>The dashboard is wrong. Our relationship managers say the pipeline is strong.</td>
+            <td>Let us reconcile the two sources before the next credit committee. If they disagree, one of them is wrong — we need to know which.</td>
+          </tr>
+          <tr>
+            <td>Model flags elevated risk in a portfolio</td>
+            <td>The model has always been conservative. We have seen this before and nothing happened.</td>
+            <td>When did we last validate this model? Let us stress-test the assumption before we dismiss it.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="info-box" style="margin-top:var(--space-md)">
+        <div class="info-box__label">Key Point</div>
+        <p>HIPPO behaviour is a rational response to an environment where data is not trusted, not timely, or not available at the moment of decision. The HIPPO is not the disease. It is the symptom. The disease is how the organisation treats data.</p>
+      </div>
+
+      <hr class="rule">
+
+      <!-- PRIVILEGE VS ASSET -->
+      <p class="section-label">Data as Privilege vs Data as Asset</p>
+      <div class="split-compare">
+        <div class="split-panel split-panel--red">
+          <div class="split-panel__head">Data as Privilege</div>
+          <div class="split-panel__body">
+            <div class="split-panel__item"><div class="split-panel__dot"></div>Access rationed by seniority or department</div>
+            <div class="split-panel__item"><div class="split-panel__dot"></div>Sharing requires justification and approval</div>
+            <div class="split-panel__item"><div class="split-panel__dot"></div>Different teams maintain their own versions of the same dataset</div>
+            <div class="split-panel__item"><div class="split-panel__dot"></div>Two reports show different numbers for the same metric</div>
+            <div class="split-panel__item"><div class="split-panel__dot"></div>Data requests go through a queue</div>
+            <div class="split-panel__item"><div class="split-panel__dot"></div>Documentation protects the owner — not the user</div>
+          </div>
+        </div>
+        <div class="split-panel split-panel--green">
+          <div class="split-panel__head">Data as Asset</div>
+          <div class="split-panel__body">
+            <div class="split-panel__item"><div class="split-panel__dot"></div>Maintained, documented, governed — like the loan book</div>
+            <div class="split-panel__item"><div class="split-panel__dot"></div>Access governed by decision rights — not politics</div>
+            <div class="split-panel__item"><div class="split-panel__dot"></div>Single agreed definition of every key metric</div>
+            <div class="split-panel__item"><div class="split-panel__dot"></div">"Where does this number come from?" has a clear answer anyone can give</div>
+            <div class="split-panel__item"><div class="split-panel__dot"></div>Quality is measured and reported proactively</div>
+            <div class="split-panel__item"><div class="split-panel__dot"></div>Shared by default unless there is a specific reason to restrict</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula-box">
+        <div class="formula-box__label">The Core Framing</div>
+        <div class="formula-box__text">Data stewardship is not an IT programme. It is a management commitment.</div>
+        <div class="formula-box__example">Organisations that treat data as an asset have not made a larger technology investment than those that do not. They have made a different choice about what data is for. And that choice starts in this room.</div>
+      </div>
+
+      <hr class="rule">
+
+      <!-- SEVEN PRACTICES -->
+      <p class="section-label">Seven Data Stewardship Practices</p>
+      <p style="font-family:var(--font-sans);font-size:0.85rem;color:var(--slate);margin-bottom:var(--space-md);line-height:1.55;">For each practice: does this exist in your organisation? Partly? Not at all? Hold the rating — we will return to it at the close.</p>
+
+      <div class="practices">
+
+        <div class="practice">
+          <div class="practice__head">
+            <div class="practice__num">1</div>
+            <div class="practice__head-text">
+              <div class="practice__title">The Business Glossary</div>
+              <div class="practice__sub">Agree on what your key words mean — before the next meeting where two reports show different numbers</div>
+            </div>
+          </div>
+          <div class="practice__body">
+            <div class="practice__desc">A living document — owned by the business, not IT — recording the agreed definition of every key metric: how it is calculated, who owns the definition, when last reviewed, and which system is the authoritative source. Start with the ten metrics in your most important management report.</div>
+            <div class="practice__aside">
+              <div class="practice__example">
+                <strong>Example</strong>
+                One APAC bank found its retail and wholesale divisions had been calculating cost-to-income ratio differently for three years. Retail included depreciation; wholesale did not. Both were presenting to the same board without anyone noticing.
+              </div>
+              <div class="practice__test">
+                <strong>Test Question</strong>
+                If a new analyst asked for the definitive calculation of your three most important KPIs, could anyone give them a single consistent answer?
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice">
+          <div class="practice__head">
+            <div class="practice__num">2</div>
+            <div class="practice__head-text">
+              <div class="practice__title">Named Data Ownership</div>
+              <div class="practice__sub">Every dataset has a named human owner — a business-side manager, not a system</div>
+            </div>
+          </div>
+          <div class="practice__body">
+            <div class="practice__desc">A named business-side manager — not a technologist — responsible for a dataset's accuracy, documentation, and fitness for use. Their four questions: What does this data represent? How is it collected? How often is it updated? Who is authorised to use it and for what? Add a data owner field to your model risk register and regulatory reporting framework.</div>
+            <div class="practice__aside">
+              <div class="practice__example">
+                <strong>Example</strong>
+                If a dataset feeds a regulatory submission and it has no named owner, that is a material governance gap. MAS and HKMA examiners will ask — and the answer cannot be "IT owns it."
+              </div>
+              <div class="practice__test">
+                <strong>Test Question</strong>
+                For your three most important management reports — who is accountable if the numbers are wrong? Can you name them right now?
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice">
+          <div class="practice__head">
+            <div class="practice__num">3</div>
+            <div class="practice__head-text">
+              <div class="practice__title">Data Lineage</div>
+              <div class="practice__sub">Know where your numbers come from — and be able to show your working to a regulator</div>
+            </div>
+          </div>
+          <div class="practice__body">
+            <div class="practice__desc">The documented trail of how a number was produced: source system, transformations applied, business rules used. Three questions before presenting any significant figure to a committee, board, or regulator: Where did this come from? What assumptions or filters were applied? What would change this number if the assumptions were different?</div>
+            <div class="practice__aside">
+              <div class="practice__example">
+                <strong>Example</strong>
+                During a MAS inspection, a bank was asked to show calculation methodology for a ratio in its ICAAP submission. The number was correct — but lineage documentation could not be produced in the required format. The regulator issued a finding. Not for the number. For the absence of documentation.
+              </div>
+              <div class="practice__test">
+                <strong>Test Question</strong>
+                Pick one number from your last board presentation. Can you trace it back to its source system through every transformation in under five minutes?
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice">
+          <div class="practice__head">
+            <div class="practice__num">4</div>
+            <div class="practice__head-text">
+              <div class="practice__title">Role-Based Access Tiers</div>
+              <div class="practice__sub">Access governed by decision rights and role — not by seniority or relationship</div>
+            </div>
+          </div>
+          <div class="practice__body">
+            <div class="practice__desc">Relationship managers cannot access credit model scores for their own portfolios. Branch managers cannot see their own churn data. Meanwhile the ED has access to everything and uses none of it. Access should be provisioned to anyone who needs it to do their job, with appropriate controls for genuinely sensitive data. The test: take any dataset that requires a special request to access and ask whether the restriction is there for a documented reason.</div>
+            <div class="practice__aside">
+              <div class="practice__example">
+                <strong>Example</strong>
+                A regional bank found its relationship managers spent an average of four hours per week requesting data they needed for client reviews. When access was provisioned by role rather than request, that time was recaptured for client-facing work. The data did not change. The access policy did.
+              </div>
+              <div class="practice__test">
+                <strong>Test Question</strong>
+                Is there a dataset your team regularly requests that should be available by default? What is stopping it?
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice">
+          <div class="practice__head">
+            <div class="practice__num">5</div>
+            <div class="practice__head-text">
+              <div class="practice__title">Data Quality as a Managed Metric</div>
+              <div class="practice__sub">Measure and report data quality proactively — not only when something goes wrong</div>
+            </div>
+          </div>
+          <div class="practice__body">
+            <div class="practice__desc">For each material dataset: completeness rate, error rate, age of the most recent record, known population of missing values. A data quality dashboard alongside the standard management information pack — green, amber, red on completeness, timeliness, and consistency — changes behaviour upstream because source teams know their quality is visible to management.</div>
+            <div class="practice__aside">
+              <div class="practice__example">
+                <strong>Example</strong>
+                Banks that introduced quality dashboards found source data quality improved without a single governance intervention. Teams knew their quality would be visible to management, and the discipline of producing the dashboard changed what people paid attention to.
+              </div>
+              <div class="practice__test">
+                <strong>Test Question</strong>
+                If you opened your most important dashboard right now, could you tell me how fresh the data is and how complete it is? Or do you assume it is fine until a number looks wrong?
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice">
+          <div class="practice__head">
+            <div class="practice__num">6</div>
+            <div class="practice__head-text">
+              <div class="practice__title">The Sharing Default</div>
+              <div class="practice__sub">Data is open unless there is a specific reason to close it — not closed unless someone makes the case to open it</div>
+            </div>
+          </div>
+          <div class="practice__body">
+            <div class="practice__desc">Organisations with strong data cultures invert the restriction default. Data is shared unless there is a specific documented reason not to: regulatory restriction, client confidentiality, commercial sensitivity. The burden of justification falls on restriction, not on access. Most organisations find the genuinely restricted category is significantly smaller than assumed — often less than 20% of the total data estate.</div>
+            <div class="practice__aside">
+              <div class="practice__example">
+                <strong>Example</strong>
+                One bank completing this categorisation exercise found 80% of its restricted data was restricted not for policy reasons, but because nobody had thought to open it. No security review was required. No policy change. Just a deliberate decision to ask whether each restriction was justified.
+              </div>
+              <div class="practice__test">
+                <strong>Test Question</strong>
+                Think of the last time someone in your team could not access data they needed. Was the restriction there for a genuine reason — or because nobody had thought to remove it?
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice card--highlighted">
+          <div class="practice__head">
+            <div class="practice__num">7</div>
+            <div class="practice__head-text">
+              <div class="practice__title">The Decision Post-Mortem</div>
+              <div class="practice__sub">Use data to learn from decisions — not just to justify them</div>
+            </div>
+          </div>
+          <div class="practice__body">
+            <div class="practice__desc">Ninety days after any significant decision: what data was available at the time, what assumptions were made, what the outcome revealed, and what the learning is. The goal is to improve the process — not identify the culprit. The most telling indicator of a data culture is what happens after a decision goes wrong. In low-maturity cultures, bad outcomes trigger blame cycles that teach people to be careful about what data they surface before a decision.</div>
+            <div class="practice__aside">
+              <div class="practice__example">
+                <strong>Example</strong>
+                A credit team running quarterly post-mortems on NPL events identified three systematic predictive patterns within two years — patterns invisible to individual relationship managers but visible across the portfolio. The post-mortem process did not change the data. It changed what the team looked for.
+              </div>
+              <div class="practice__test">
+                <strong>Test Question</strong>
+                Think of the last significant decision in your area that did not go as planned. Was there a structured review of what the data said at the time?
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <hr class="rule">
+
+      <!-- QUIZ -->
+      <p class="section-label">Consolidation Quiz — Microsoft Forms</p>
+      <div class="quiz-list">
+        <div class="quiz-item">
+          <div class="quiz-item__q">Q1 · The HIPPO pattern in organisations is best understood as:</div>
+          <ul class="quiz-item__options">
+            <li>A. A deliberate choice by senior leaders to ignore data.</li>
+            <li class="correct">B. A rational response to environments where data is not trustworthy, accessible, or available at the right moment.</li>
+            <li>C. A sign of poor analytical capability in the analytics team.</li>
+            <li>D. A cultural problem that only affects large organisations.</li>
+          </ul>
+        </div>
+        <div class="quiz-item">
+          <div class="quiz-item__q">Q2 · A data business glossary is primarily owned by:</div>
+          <ul class="quiz-item__options">
+            <li>A. The IT department and system administrators.</li>
+            <li>B. The analytics team responsible for model development.</li>
+            <li class="correct">C. Business-side managers who own the definitions and their accuracy.</li>
+            <li>D. The Chief Risk Officer.</li>
+          </ul>
+        </div>
+        <div class="quiz-item">
+          <div class="quiz-item__q">Q3 · Data lineage refers to:</div>
+          <ul class="quiz-item__options">
+            <li>A. The historical performance of a dataset over time.</li>
+            <li class="correct">B. The documented trail showing how a number was produced — source system, transformations, and business rules.</li>
+            <li>C. The access permissions assigned to a specific dataset.</li>
+            <li>D. The age of data in a reporting system.</li>
+          </ul>
+        </div>
+        <div class="quiz-item">
+          <div class="quiz-item__q">Q4 · The default stance in a strong data culture is:</div>
+          <ul class="quiz-item__options">
+            <li>A. Data is restricted unless a business case is made to share it.</li>
+            <li>B. Data is available only to those at VP level and above.</li>
+            <li class="correct">C. Data is shared unless there is a specific documented reason to restrict it.</li>
+            <li>D. Data sharing requires approval from the data owner and IT security.</li>
+          </ul>
+        </div>
+        <div class="quiz-item">
+          <div class="quiz-item__q">Q5 · A decision post-mortem is most valuable because:</div>
+          <ul class="quiz-item__options">
+            <li>A. It identifies which individual made the wrong decision.</li>
+            <li class="correct">B. It creates institutional learning by examining what data was available, what assumptions were made, and what the outcome revealed.</li>
+            <li>C. It satisfies regulatory requirements for decision documentation.</li>
+            <li>D. It prevents the same decision from being made again.</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="rule">
+
+      <!-- KEY TAKEAWAYS -->
+      <p class="section-label">Key Takeaways</p>
+      <div class="takeaways">
+        <div class="takeaway">
+          <div class="takeaway__n">1</div>
+          <div class="takeaway__body">
+            <div class="takeaway__title">Confirmation bias is structural — not personal</div>
+            <div class="takeaway__text">The drunk driver and the HIPPO are symptoms of an environment where data is not trusted, not accessible, and not consistently defined. Change the environment and the behaviour changes.</div>
+          </div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway__n">2</div>
+          <div class="takeaway__body">
+            <div class="takeaway__title">The gap is upstream vs downstream</div>
+            <div class="takeaway__text">Waze works because data arrives before the decision. Most banks use data to report on decisions already made. The competitive advantage is in closing that sequence gap.</div>
+          </div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway__n">3</div>
+          <div class="takeaway__body">
+            <div class="takeaway__title">Data stewardship is a management commitment — not an IT programme</div>
+            <div class="takeaway__text">Seven practices. Any one of them can be started at the team level this week without a budget approval or an enterprise mandate. Pick the one most absent from your team.</div>
+          </div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway__n">4</div>
+          <div class="takeaway__body">
+            <div class="takeaway__title">Pick one. Start there.</div>
+            <div class="takeaway__text">Not all seven. The one practice most absent from your team and most within your control to change. That is the commitment to leave this module with.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEXT MODULE -->
+      <div class="next-module">
+        <div>
+          <div class="next-module__label">Coming Next</div>
+          <div class="next-module__title">Module 3 — The Analytics Journey</div>
+          <div class="next-module__sub">Expert systems to Gen AI · Microsoft BI stack · Data maturity model · Generative AI as copilot</div>
+        </div>
+        <a href="module3.html" class="btn btn--gold">Go to Module 3 →</a>
+      </div>
+
+    </main>
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Module At a Glance</div>
+          <div class="sidebar-card__title">Benefits of Data-Driven Decision Making</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Duration</span>
+            <span class="sidebar-row__val">55 min</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Day</span>
+            <span class="sidebar-row__val">Day 1</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Delivery</span>
+            <span class="sidebar-row__val">Webex</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Engagement</span>
+            <span class="sidebar-row__val">Webex chat discussion</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Quiz</span>
+            <span class="sidebar-row__val">5Q Microsoft Forms</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Audience</span>
+            <span class="sidebar-row__val">26 VP / ED · APAC</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Opening Frame</div>
+          <div class="sidebar-card__title">The Drunk Driver</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Concept</span>
+            <span class="sidebar-row__val">Confirmation bias</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Delivery</span>
+            <span class="sidebar-row__val">No slides — verbal only</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Tone</span>
+            <span class="sidebar-row__val">Warm, not accusatory</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Timing</span>
+            <span class="sidebar-row__val">0:00 – 0:05</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Thread from Module 1</div>
+          <div class="sidebar-card__title">The Waze Bridge</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Principle</span>
+            <span class="sidebar-row__val">Data upstream vs downstream</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Bridge point</span>
+            <span class="sidebar-row__val">0:23 — pivot to stewardship</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Returns in</span>
+            <span class="sidebar-row__val">Module 3 data maturity</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Seven Practices</div>
+          <div class="sidebar-card__title">Quick Reference</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">1</span><span class="sidebar-row__val">Business Glossary</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">2</span><span class="sidebar-row__val">Named Data Ownership</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">3</span><span class="sidebar-row__val">Data Lineage</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">4</span><span class="sidebar-row__val">Role-Based Access</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">5</span><span class="sidebar-row__val">Quality as a Metric</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">6</span><span class="sidebar-row__val">The Sharing Default</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">7</span><span class="sidebar-row__val">Decision Post-Mortems</span></div>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Facilitator Notes</div>
+          <div class="sidebar-card__title">Key Cautions</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Opening</span>
+            <span class="sidebar-row__val">No slides for drunk driver analogy — deliver standing still, looking into camera</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">HIPPO</span>
+            <span class="sidebar-row__val">Frame as structural — never as a character flaw or personal failing</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Practice 6</span>
+            <span class="sidebar-row__val">Expect pushback on client confidentiality — redirect to the 80% that is not client data</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Close</span>
+            <span class="sidebar-row__val">Give a genuine 30 seconds of silence after the closing reflection question</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Programme Navigation</div>
+          <div class="sidebar-card__title">All Modules</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Module 1</span>
+            <span class="sidebar-row__val"><a href="module1.html" style="color:var(--slate);text-decoration:none">Introduction to Data Analytics</a></span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label" style="color:var(--gold);font-weight:600">→ Module 2</span>
+            <span class="sidebar-row__val">Benefits of DDM</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Module 3</span>
+            <span class="sidebar-row__val">Strategic Importance</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Module 4</span>
+            <span class="sidebar-row__val">Tools &amp; Techniques</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Module 5</span>
+            <span class="sidebar-row__val">Case Studies</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Module 6</span>
+            <span class="sidebar-row__val">Managerial Practice</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row__label">Module 7</span>
+            <span class="sidebar-row__val">AI in Banking</span>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <span class="footer__brand">SMBC Group · Learning &amp; Development · APAC</span>
+    <span class="footer__note">Confidential</span>
+  </footer>
+
+</body>
+</html>
