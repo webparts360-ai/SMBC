@@ -8,7 +8,725 @@
 
 <!-- SMBC shared stylesheet (referenced, not copied) -->
 <link rel="stylesheet" href="smbc.css">
+  <style>
+    /* ── Page-specific overrides & extensions ── */
 
+    .report-body {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: var(--space-xl) var(--page-pad);
+    }
+
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 56px 0 32px;
+    }
+    .section-divider__num {
+      font-family: var(--font-serif);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      white-space: nowrap;
+    }
+    .section-divider__line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--gold), transparent);
+      opacity: 0.35;
+    }
+    .section-divider__title {
+      font-family: var(--font-serif);
+      font-size: clamp(20px, 2.2vw, 28px);
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.2;
+      flex: 3;
+    }
+
+    .lead {
+      font-size: 17px;
+      line-height: 1.8;
+      color: var(--slate);
+      max-width: 72ch;
+      margin-bottom: var(--space-lg);
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 2px;
+      background: var(--rule);
+      margin: var(--space-lg) 0;
+    }
+    .stat-block {
+      background: var(--white);
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .stat-block__num {
+      font-family: var(--font-serif);
+      font-size: clamp(28px, 3vw, 40px);
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1;
+    }
+    .stat-block__num--gold { color: var(--gold); }
+    .stat-block__num--danger { color: #8b1a1a; }
+    .stat-block__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--slate-light);
+    }
+    .stat-block__sub {
+      font-size: 12px;
+      color: var(--slate-light);
+      line-height: 1.5;
+      margin-top: 4px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
+      margin: var(--space-lg) 0;
+      align-items: start;
+    }
+    .two-col--wide-left {
+      grid-template-columns: 3fr 2fr;
+    }
+
+    .prose p {
+      font-size: 15px;
+      color: var(--slate);
+      line-height: 1.75;
+      margin-bottom: 16px;
+      max-width: 72ch;
+    }
+    .prose h3 {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 28px 0 10px;
+    }
+    .prose ul {
+      margin: 0 0 16px 0;
+      padding: 0;
+      list-style: none;
+    }
+    .prose ul li {
+      font-size: 14px;
+      color: var(--slate);
+      padding: 6px 0 6px 22px;
+      position: relative;
+      border-bottom: 1px solid var(--rule-light);
+      line-height: 1.6;
+    }
+    .prose ul li:last-child { border-bottom: none; }
+    .prose ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 14px;
+      width: 8px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .loser-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: var(--space-lg) 0;
+      font-size: 13px;
+    }
+    .loser-table thead tr {
+      background: var(--navy);
+      color: var(--gold-light);
+    }
+    .loser-table thead th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+    .loser-table tbody tr {
+      background: var(--white);
+      border-bottom: 1px solid var(--rule-light);
+      transition: background var(--ease);
+    }
+    .loser-table tbody tr:hover { background: var(--warm-white); }
+    .loser-table td {
+      padding: 13px 16px;
+      color: var(--slate);
+      vertical-align: top;
+    }
+    .loser-table td:first-child {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .loser-table .loss-amount {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-weight: 700;
+      color: #8b1a1a;
+    }
+
+    .lifecycle-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 2px;
+      background: var(--rule);
+      margin: var(--space-lg) 0;
+    }
+    .lifecycle-step {
+      background: var(--white);
+      padding: 24px 20px;
+    }
+    .lifecycle-step__icon {
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+    .lifecycle-step__phase {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .lifecycle-step__title {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+    .lifecycle-step__body {
+      font-size: 12.5px;
+      color: var(--slate);
+      line-height: 1.65;
+    }
+    .lifecycle-step__change {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: var(--cream);
+      font-size: 11px;
+      color: var(--navy);
+      font-weight: 500;
+      border-left: 2px solid var(--gold);
+    }
+
+    .winner-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-sm);
+      margin: var(--space-lg) 0;
+    }
+    .winner-card {
+      background: var(--white);
+      border-top: 3px solid var(--gold);
+      padding: 24px 24px 20px;
+    }
+    .winner-card__rank {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .winner-card__name {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+    .winner-card__body {
+      font-size: 13px;
+      color: var(--slate);
+      line-height: 1.7;
+    }
+    .winner-card__metrics {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .winner-card__metric {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid var(--rule-light);
+      padding: 5px 0;
+      font-size: 12px;
+    }
+    .winner-card__metric:last-child { border-bottom: none; }
+    .winner-card__metric-label { color: var(--slate-light); }
+    .winner-card__metric-val { font-weight: 700; color: var(--navy); }
+
+    .revenue-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: var(--space-lg) 0;
+      font-size: 13px;
+    }
+    .revenue-table thead tr { background: var(--navy-mid); }
+    .revenue-table thead th {
+      padding: 12px 14px;
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+    }
+    .revenue-table tbody tr { border-bottom: 1px solid var(--rule-light); }
+    .revenue-table tbody tr:nth-child(even) { background: var(--warm-white); }
+    .revenue-table td { padding: 12px 14px; color: var(--slate); }
+    .revenue-table td:first-child { font-weight: 600; color: var(--navy); }
+    .revenue-table .old-model { color: #8b1a1a; font-style: italic; }
+    .revenue-table .new-model { color: #1a5c2a; font-weight: 500; }
+
+    .horizon-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: var(--space-sm);
+      margin: var(--space-lg) 0;
+    }
+    .horizon-card {
+      background: var(--navy);
+      padding: 24px 22px;
+      position: relative;
+      overflow: hidden;
+    }
+    .horizon-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle, rgba(184,144,42,0.12), transparent);
+    }
+    .horizon-card__label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .horizon-card__title {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    .horizon-card__body {
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.7;
+    }
+    .horizon-card__stat {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(184,144,42,0.2);
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--gold-pale);
+    }
+    .horizon-card__stat-label {
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      margin-top: 2px;
+      letter-spacing: 0.08em;
+    }
+
+    .pull-quote {
+      border-left: 3px solid var(--gold);
+      padding: 20px 28px;
+      margin: var(--space-lg) 0;
+      background: var(--warm-white);
+    }
+    .pull-quote p {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-style: italic;
+      color: var(--navy);
+      line-height: 1.6;
+      margin: 0 0 8px;
+    }
+    .pull-quote cite {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate-light);
+      font-style: normal;
+    }
+
+    .root-causes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: var(--rule);
+      margin: var(--space-lg) 0;
+    }
+    .root-cause {
+      background: var(--white);
+      padding: 24px 26px;
+    }
+    .root-cause__num {
+      font-family: var(--font-serif);
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--rule);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .root-cause__title {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .root-cause__body {
+      font-size: 13px;
+      color: var(--slate);
+      line-height: 1.7;
+    }
+
+    /* Rare earth timeline */
+    .re-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin: var(--space-lg) 0;
+    }
+    .re-event {
+      background: var(--white);
+      padding: 24px 28px 24px 120px;
+      position: relative;
+      border-left: 3px solid var(--rule);
+      transition: border-color var(--ease);
+    }
+    .re-event:hover { border-left-color: var(--gold); }
+    .re-event--critical {
+      background: var(--navy);
+      border-left-color: var(--gold);
+    }
+    .re-event--critical .re-event__title { color: var(--gold-pale); }
+    .re-event--critical .re-event__body { color: rgba(255,255,255,0.65); }
+    .re-event--critical .re-event__year { color: var(--gold); }
+    .re-event__year {
+      position: absolute;
+      left: 24px;
+      top: 24px;
+      font-family: var(--font-serif);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--slate-light);
+      width: 80px;
+      line-height: 1.4;
+    }
+    .re-event__title {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .re-event__body {
+      font-size: 13.5px;
+      color: var(--slate);
+      line-height: 1.75;
+    }
+
+    /* Deng photo + quote */
+    .deng-block {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: var(--space-lg);
+      margin: var(--space-lg) 0;
+      align-items: start;
+    }
+    .deng-photo {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .deng-photo img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border: 1px solid var(--rule);
+    }
+    .deng-photo figcaption {
+      font-size: 11px;
+      color: var(--slate-light);
+      line-height: 1.5;
+      font-style: italic;
+    }
+    .deng-photo__fallback {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--slate-light);
+      font-size: 12px;
+    }
+    .deng-quote-box { margin: 0 !important; height: 100%; }
+
+    /* BBC BYD testimony */
+    .bbc-testimony {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-top: 4px solid #BB1919;
+      margin: var(--space-xl) 0 var(--space-lg);
+    }
+    .bbc-testimony__header {
+      padding: 20px 28px 16px;
+      border-bottom: 1px solid var(--rule-light);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .bbc-testimony__source {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .bbc-testimony__date {
+      font-size: 11px;
+      color: var(--slate-light);
+      letter-spacing: 0.08em;
+    }
+    .bbc-testimony__headline {
+      font-family: var(--font-serif);
+      font-size: clamp(16px, 1.8vw, 22px);
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.3;
+    }
+    .bbc-testimony__body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
+      padding: 24px 28px;
+    }
+    .bbc-testimony__col p {
+      font-size: 14px;
+      color: var(--slate);
+      line-height: 1.75;
+      margin-bottom: 12px;
+    }
+    .bbc-testimony__col p:last-child { margin-bottom: 0; }
+    .bbc-testimony__col strong { color: var(--navy); }
+    .bbc-testimony__col em { color: var(--slate); font-style: italic; }
+    .bbc-testimony__stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      background: var(--rule);
+      border-top: 1px solid var(--rule);
+    }
+    .bbc-stat {
+      background: var(--cream);
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .bbc-stat__num {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1;
+    }
+    .bbc-stat__label {
+      font-size: 11px;
+      color: var(--slate-light);
+      line-height: 1.4;
+    }
+    .bbc-stat__delta {
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+    .bbc-stat__delta--up { color: #1a5c2a; }
+    .bbc-stat__delta--down { color: #8b1a1a; }
+    .bbc-testimony__link {
+      display: block;
+      padding: 12px 28px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #BB1919;
+      border-top: 1px solid var(--rule-light);
+      text-decoration: none;
+      transition: background var(--ease);
+    }
+    .bbc-testimony__link:hover {
+      background: var(--warm-white);
+      color: #9a0000;
+    }
+
+    /* GEN-AI epilogue framework */
+
+    .genai-quote {
+      background: var(--navy);
+      border-left: 4px solid var(--gold);
+      padding: 22px 26px;
+      margin: var(--space-lg) 0;
+    }
+    .genai-quote__label {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .genai-quote__text {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      color: var(--white);
+      line-height: 1.55;
+    }
+    .genai-quote__meta {
+      margin-top: 10px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      font-style: italic;
+    }
+
+    .genai-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 2px;
+      background: var(--rule);
+      margin: var(--space-lg) 0;
+    }
+    .genai-card {
+      background: var(--white);
+      padding: 22px 22px 20px;
+    }
+    .genai-card__label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .genai-card__title {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .genai-card__body {
+      font-size: 13px;
+      color: var(--slate);
+      line-height: 1.7;
+    }
+
+    .genai-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: var(--space-lg) 0;
+      font-size: 13px;
+    }
+    .genai-table thead tr {
+      background: var(--navy);
+      color: var(--gold-light);
+    }
+    .genai-table thead th {
+      padding: 12px 12px;
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .genai-table tbody tr {
+      border-bottom: 1px solid var(--rule-light);
+      background: var(--white);
+    }
+    .genai-table tbody tr:nth-child(even) { background: var(--warm-white); }
+    .genai-table td {
+      padding: 10px 12px;
+      vertical-align: top;
+      color: var(--slate);
+    }
+    .genai-table td:first-child {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    /* Objectives tweaks */
+    .objective strong {
+      color: var(--navy);
+      font-weight: 600;
+    }
+
+    /* Topbar nav: keep visible on mobile */
+    @media (max-width: 860px) {
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        height: auto;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        gap: 4px;
+      }
+      .topbar__nav {
+        display: flex !important;
+        width: 100%;
+        justify-content: flex-start;
+        overflow-x: auto;
+      }
+      .topbar__nav a {
+        padding: 8px 10px;
+        font-size: 10px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .two-col, .two-col--wide-left { grid-template-columns: 1fr; }
+      .root-causes { grid-template-columns: 1fr; }
+      .re-event { padding: 20px 20px 20px 20px; }
+      .re-event__year { position: static; width: auto; margin-bottom: 6px; }
+      .deng-block { grid-template-columns: 1fr; }
+      .bbc-testimony__body { grid-template-columns: 1fr; }
+      .bbc-testimony__stats { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+<!--  
 <style>
 /* ── Page-specific overrides & extensions ── */
 
@@ -631,11 +1349,34 @@
 }
 
 </style>
+-->  
 </head>
 
 <body>
-
-<!-- ── TOPBAR ── -->
+<header class="topbar">
+  <div class="topbar__brand">
+    <svg class="topbar__mark" viewBox="0 0 34 34" fill="none" aria-label="EV Disruption Report" xmlns="http://www.w3.org/2000/svg">
+      <rect width="34" height="34" fill="#071429"/>
+      <path d="M7 24 L17 10 L27 24" stroke="#b8902a" stroke-width="2" fill="none" stroke-linejoin="round"/>
+      <circle cx="17" cy="24" r="3" fill="#b8902a"/>
+      <line x1="12" y1="19" x2="22" y2="19" stroke="#b8902a" stroke-width="1" opacity="0.5"/>
+    </svg>
+    <div class="topbar__text">
+      <span class="topbar__name">Industry Analysis</span>
+      <span class="topbar__sub">EV, China &amp; Gen AI · June 2026</span>
+    </div>
+  </div>
+  <nav class="topbar__nav" aria-label="Report sections">
+    <a href="#overview" class="active">Overview</a>
+    <a href="#rareearth">Rare Earths</a>
+    <a href="#losers">Losers</a>
+    <a href="#lifecycle">Lifecycle</a>
+    <a href="#winners">Winners</a>
+    <a href="#ahead">What’s Ahead</a>
+    <a href="#genai">Gen AI Epilogue</a>
+  </nav>
+</header>
+<!-- ── TOPBAR ── 
 <header class="topbar">
   <div class="topbar__brand">
     <svg class="topbar__mark" viewBox="0 0 34 34" fill="none" aria-label="EV Disruption Report" xmlns="http://www.w3.org/2000/svg">
@@ -657,8 +1398,8 @@
     <a href="#ahead">What's Ahead</a>
   </nav>
 </header>
-
-<!-- ── HERO ── -->
+-->
+<!-- ── HERO ── 
 <section class="hero" id="overview">
   <div class="hero__rule" aria-hidden="true"></div>
   <div class="hero__inner">
@@ -692,8 +1433,7 @@
     </div>
   </div>
 </section>
-
-<!-- ── TAB BAR / SECTION NAV ── -->
+ 
 <nav class="tab-bar" aria-label="Jump to section">
   <button class="tab-bar__btn active" onclick="scrollTo('#overview')">01 · Paradigm Shift</button>
   <button class="tab-bar__btn" onclick="scrollTo('#losers')">02 · The Losers</button>
@@ -701,8 +1441,51 @@
   <button class="tab-bar__btn" onclick="scrollTo('#winners')">04 · The Winners</button>
   <button class="tab-bar__btn" onclick="scrollTo('#ahead')">05 · What's Ahead</button>
 </nav>
-
+-->
 <!-- ── REPORT BODY ── -->
+<section class="hero" id="overview">
+  <div class="hero__rule" aria-hidden="true"></div>
+  <div class="hero__inner">
+    <div class="hero__eyebrow">
+      <span class="hero__eyebrow-line" aria-hidden="true"></span>
+      <span class="label label--light">Deep-Dive Report</span>
+    </div>
+    <h1 class="hero__title">
+      How EVs, China, and Gen&nbsp;AI <em>Rewrote the Rules</em> of the Automotive Industry
+    </h1>
+    <p class="hero__desc">
+      Electric vehicles turned powertrains into software platforms. China turned rare earths into a geopolitical chokepoint. Generative AI will do the same to intelligence itself — making “being smart” abundant and cheap, and forcing every industry to rebuild its moats around data, distribution, and orchestration.
+    </p>
+    <div class="hero__meta">
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Global EV Share (2025)</span>
+        <span class="hero__meta-value">25% of all new cars</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Legacy EV Write-downs</span>
+        <span class="hero__meta-value">$65+ Billion</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Top EV Seller (2025)</span>
+        <span class="hero__meta-value">BYD — 2.26M units</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">SDV Market CAGR</span>
+        <span class="hero__meta-value">28%+ through 2035</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<nav class="tab-bar" aria-label="Jump to section">
+  <button class="tab-bar__btn active" onclick="scrollToSection('overview')">01 · Paradigm Shift</button>
+  <button class="tab-bar__btn" onclick="scrollToSection('rareearth')">02 · Rare Earths</button>
+  <button class="tab-bar__btn" onclick="scrollToSection('losers')">03 · The Losers</button>
+  <button class="tab-bar__btn" onclick="scrollToSection('lifecycle')">04 · Lifecycle</button>
+  <button class="tab-bar__btn" onclick="scrollToSection('winners')">05 · Winners</button>
+  <button class="tab-bar__btn" onclick="scrollToSection('ahead')">06 · What’s Ahead</button>
+  <button class="tab-bar__btn" onclick="scrollToSection('genai')">07 · Gen AI Epilogue</button>
+</nav>  
 <main class="report-body">
 
   <!-- ── PART 1: PARADIGM SHIFT ── -->
@@ -1281,6 +2064,114 @@
   </div>
 
   <hr class="rule rule--gold" style="margin: 48px 0;">
+ <!-- Part 6: Gen AI Epilogue -->
+  <div class="section-divider" id="genai">
+    <span class="section-divider__num">Part 06</span>
+    <div class="section-divider__line"></div>
+    <h2 class="section-divider__title">Epilogue — When Intelligence Becomes a Commodity</h2>
+  </div>
+
+  <div class="genai-quote">
+    <div class="genai-quote__label">From EVs to Gen AI</div>
+    <div class="genai-quote__text">
+      If EVs turned powertrains into software, Generative AI turns intelligence into infrastructure. When the marginal cost of “being smart” on many tasks approaches zero, advantage moves from knowing things to owning problems, data, distribution, and orchestration.
+    </div>
+    <div class="genai-quote__meta">
+      OECD and McKinsey estimate gen AI could add 0.1–0.6 percentage points to annual labour productivity growth through 2040 — not by sprinkling chatbots onto workflows, but by rewiring how knowledge work is done end‑to‑end.[web:131][web:144]
+    </div>
+  </div>
+
+  <div class="prose">
+    <h3>From Sectoral Tech to Capability Platform</h3>
+    <p>EVs were a sectoral technology: they transformed the automotive value chain, but they did not directly rewrite accounting, HR, or legal. Gen AI is a capability platform: it touches any activity where information is processed, content is created, or decisions are taken.[web:131][web:119] That makes its disruption surface orders of magnitude larger.</p>
+    <p>In automotive alone, generative models are already designing components, generating code for SDVs, creating virtual test environments, and assisting technicians in diagnostics.[web:112][web:116][web:121] But the deeper economic shift is that intelligence itself is becoming abundant. As one strategist put it: “When intelligence becomes a commodity, execution becomes the only true competitive advantage.”[web:134]</p>
+  </div>
+
+  <table class="genai-table" aria-label="EV disruption pattern vs Gen AI questions">
+    <thead>
+      <tr>
+        <th>Lens</th>
+        <th>EV Analogue</th>
+        <th>Gen AI Question</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Architecture</td>
+        <td>ICE retrofit vs native EV platforms</td>
+        <td>Where are we still bolting AI onto legacy processes instead of designing AI‑native architectures (agentic workflows, SDVs, autonomous operations)?[web:114][web:116]</td>
+      </tr>
+      <tr>
+        <td>Value Migration</td>
+        <td>Manufacturing → lifecycle revenue</td>
+        <td>When analysis, code, and content become cheap, where does value migrate in our domain — proprietary data, distribution, trust, systems integration, or outcome guarantees?[web:131][web:134]</td>
+      </tr>
+      <tr>
+        <td>Chokepoints</td>
+        <td>Batteries & rare earth processing</td>
+        <td>Which non‑model bottlenecks will gate AI value: domain data, compute, integration into core systems, regulatory approvals, or scarce human oversight capacity?[web:117][web:143]</td>
+      </tr>
+      <tr>
+        <td>Business Model</td>
+        <td>One‑off sale → subscriptions & energy</td>
+        <td>How does abundant intelligence change pricing — from hours/licences to usage‑ or outcome‑based models (“per decision”, “per resolved incident”, “per optimised kilometre”)?[web:131][web:138]</td>
+      </tr>
+      <tr>
+        <td>Incumbent Failure Modes</td>
+        <td>Platform lock‑in, dealers, subsidy addiction</td>
+        <td>Where are we structurally unable to adopt AI because of incentives (billable hours), compliance fears, channel conflicts, or brand risk — the AI equivalents of ICE factories and dealer networks?[web:118][web:147]</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="section-divider">
+    <span class="section-divider__num">GEN AI</span>
+    <div class="section-divider__line"></div>
+    <h2 class="section-divider__title" style="font-size: 22px;">An EV‑Inspired Gen AI Risk & Strategy Framework</h2>
+  </div>
+
+  <div class="genai-grid">
+    <div class="genai-card">
+      <div class="genai-card__label">Step 1</div>
+      <div class="genai-card__title">Assess Exposure</div>
+      <div class="genai-card__body">
+        Score how automatable your current value is (1–5). High exposure if your core product is information, analysis, code, or content; lower if your moat is regulated physical assets — though AI can still erode margins in surrounding workflows.[web:131][web:119]
+      </div>
+    </div>
+    <div class="genai-card">
+      <div class="genai-card__label">Step 2</div>
+      <div class="genai-card__title">Evaluate Defensibility</div>
+      <div class="genai-card__body">
+        Ask what remains scarce once everyone has good models: proprietary data, customer access, regulatory licences, safety cases, brand trust, and the ability to orchestrate complex systems reliably.[web:149][web:117]
+      </div>
+    </div>
+    <div class="genai-card">
+      <div class="genai-card__label">Step 3</div>
+      <div class="genai-card__title">Gauge Adoption Capacity</div>
+      <div class="genai-card__body">
+        Can you integrate models, data, and orchestration into your stack at speed? Are incentives aligned (e.g. away from billable hours)? Do you have a trusted AI governance framework to move beyond pilots?[web:116][web:146][web:149]
+      </div>
+    </div>
+    <div class="genai-card">
+      <div class="genai-card__label">Step 4</div>
+      <div class="genai-card__title">Run Scenario Planning</div>
+      <div class="genai-card__body">
+        Use AI‑enabled scenario planning to test your model against three futures: conservative AI uptake, AI‑abundant low‑margin world, and a heavily regulated AI world. Build options and hedges for each.[web:124][web:130][web:135]
+      </div>
+    </div>
+    <div class="genai-card">
+      <div class="genai-card__label">Step 5</div>
+      <div class="genai-card__title">Design Native Plays</div>
+      <div class="genai-card__body">
+        Identify at least one AI‑native product or workflow that deliberately cannibalises your legacy profit engine, in the same way Tesla’s direct model and OTA updates cannibalised dealer service economics.[web:112][web:116][web:118]
+      </div>
+    </div>
+  </div>
+
+  <div class="pull-quote" style="margin-top: 32px;">
+    <p>“When intelligence becomes a commodity, your real moat is not what you know — it’s what you own, how fast you learn, and how bravely you’re willing to cannibalise yourself.”</p>
+    <cite>— EV Disruption Lessons for the Gen AI Era</cite>
+  </div>
 
   <!-- Objectives / Key Takeaways -->
   <div class="label" style="margin-bottom: 16px;">Key Strategic Takeaways</div>
@@ -1318,7 +2209,7 @@
   <span class="footer__brand">Industry Analysis — EV &amp; Automotive Disruption</span>
   <span class="footer__note">Research compiled June 2026 · Sources: IEA, Reuters, EY, McKinsey, Bloomberg, Forbes, S&amp;P Global</span>
 </footer>
-
+<!--
 <script>
 // Smooth scroll for tab-bar buttons
 document.querySelectorAll('.tab-bar__btn').forEach(btn => {
@@ -1364,6 +2255,49 @@ const fadeObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.1 });
 fadeEls.forEach(el => fadeObserver.observe(el));
 </script>
+-->
+<script>
+  function scrollToSection(id) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
 
+  const sections = ['overview', 'rareearth', 'losers', 'lifecycle', 'winners', 'ahead', 'genai'];
+  const navLinks = document.querySelectorAll('.topbar__nav a');
+  const tabButtons = document.querySelectorAll('.tab-bar__btn');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+        });
+        tabButtons.forEach(btn => {
+          const text = btn.textContent || '';
+          btn.classList.toggle('active', text.includes(id.charAt(0).toUpperCase() + id.slice(1)) || text.toLowerCase().includes(id));
+        });
+      }
+    });
+  }, { threshold: 0.2, rootMargin: '-56px 0px -40% 0px' });
+
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+
+  const fadeEls = document.querySelectorAll('.stat-block, .winner-card, .horizon-card, .lifecycle-step, .root-cause, .objective, .genai-card, .bbc-testimony, .deng-block');
+  const fadeObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('fade-up');
+        fadeObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  fadeEls.forEach(el => fadeObserver.observe(el));
+</script>  
 </body>
 </html>
