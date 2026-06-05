@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Four Analytics Types — SMBC L&D</title>
+  <link rel="stylesheet" href="smbc.css">
+  <style>
+    /* ── Type identity colours ─────────────────────────────────────────────── */
+    :root {
+      --t-desc:    #163359;
+      --t-diag:    #b8902a;
+      --t-pred:    #0b4a6f;
+      --t-pres:    #4a6a5e;
+      --t-desc-bg: #e8edf4;
+      --t-diag-bg: #faf3e0;
+      --t-pred-bg: #e5eff6;
+      --t-pres-bg: #e8f0ec;
+    }
+
+    /* ── Tab bar override for 4 typed tabs ─────────────────────────────────── */
+    .typed-tabs {
+      display: flex;
+      border-bottom: 2px solid var(--rule);
+      background: var(--white);
+      position: sticky;
+      top: 56px;
+      z-index: 90;
+      overflow-x: auto;
+    }
+    .typed-tab {
+      flex: 1 1 0;
+      min-width: 140px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.18s;
+    }
+    .typed-tab__inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 12px 12px;
+      gap: 4px;
+    }
+    .typed-tab__num {
+      font: 600 11px/1 var(--font-sans);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate-light);
+      transition: color 0.18s;
+    }
+    .typed-tab__label {
+      font: 700 13px/1 var(--font-sans);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate);
+      transition: color 0.18s;
+    }
+    .typed-tab__q {
+      font: 400 11px/1.35 var(--font-sans);
+      color: var(--slate-light);
+      text-align: center;
+      transition: color 0.18s;
+    }
+    .typed-tab::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0; right: 0;
+      height: 3px;
+      background: transparent;
+      transition: background 0.18s;
+    }
+    .typed-tab[data-type="desc"]:hover  { background: var(--t-desc-bg); }
+    .typed-tab[data-type="diag"]:hover  { background: var(--t-diag-bg); }
+    .typed-tab[data-type="pred"]:hover  { background: var(--t-pred-bg); }
+    .typed-tab[data-type="pres"]:hover  { background: var(--t-pres-bg); }
+    .typed-tab.active[data-type="desc"]  { background: var(--t-desc-bg); }
+    .typed-tab.active[data-type="diag"]  { background: var(--t-diag-bg); }
+    .typed-tab.active[data-type="pred"]  { background: var(--t-pred-bg); }
+    .typed-tab.active[data-type="pres"]  { background: var(--t-pres-bg); }
+    .typed-tab.active[data-type="desc"]::after { background: var(--t-desc); }
+    .typed-tab.active[data-type="diag"]::after { background: var(--t-diag); }
+    .typed-tab.active[data-type="pred"]::after { background: var(--t-pred); }
+    .typed-tab.active[data-type="pres"]::after { background: var(--t-pres); }
+    .typed-tab.active .typed-tab__label { color: var(--navy); }
+    .typed-tab.active[data-type="desc"] .typed-tab__num { color: var(--t-desc); }
+    .typed-tab.active[data-type="diag"] .typed-tab__num { color: var(--t-diag); }
+    .typed-tab.active[data-type="pred"] .typed-tab__num { color: var(--t-pred); }
+    .typed-tab.active[data-type="pres"] .typed-tab__num { color: var(--t-pres); }
+    .typed-tab.active .typed-tab__q { color: var(--slate); }
+
+    /* ── Panels ─────────────────────────────────────────────────────────────── */
+    .type-panel { display: none; }
+    .type-panel.active { display: block; }
+
+    /* ── Type header banner ──────────────────────────────────────────────────── */
+    .type-banner {
+      padding: 32px var(--page-pad) 28px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .type-banner[data-type="desc"] { background: var(--t-desc-bg); }
+    .type-banner[data-type="diag"] { background: var(--t-diag-bg); }
+    .type-banner[data-type="pred"] { background: var(--t-pred-bg); }
+    .type-banner[data-type="pres"] { background: var(--t-pres-bg); }
+    .type-banner__eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .type-banner__dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .type-banner__tag {
+      font: 600 10px/1 var(--font-sans);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .type-banner__q {
+      font: 700 26px/1.15 var(--font-serif);
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .type-banner__desc {
+      font: 400 14px/1.6 var(--font-sans);
+      color: var(--slate);
+      max-width: 720px;
+    }
+
+    /* ── Content max-width wrapper ──────────────────────────────────────────── */
+    .content-wrap {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 var(--page-pad);
+    }
+
+    /* ── Scenario section ──────────────────────────────────────────────────── */
+    .scenario-section {
+      padding: 36px 0 12px;
+    }
+    .scenario-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .scenario-label__icon {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .scenario-label__text {
+      font: 700 13px/1 var(--font-sans);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--navy);
+    }
+    .scenario-label__sub {
+      font: 400 12px/1 var(--font-sans);
+      color: var(--slate-light);
+      margin-top: 3px;
+    }
+
+    /* ── Signal cards grid ──────────────────────────────────────────────────── */
+    .signal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .signal-card {
+      background: var(--white);
+      border: 1px solid var(--rule-light);
+      border-radius: 6px;
+      padding: 18px 20px;
+      position: relative;
+    }
+    .signal-card__bar {
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px;
+      height: 100%;
+      border-radius: 6px 0 0 6px;
+    }
+    .signal-card__kicker {
+      font: 600 10px/1 var(--font-sans);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .signal-card__title {
+      font: 600 14px/1.3 var(--font-sans);
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .signal-card__body {
+      font: 400 13px/1.55 var(--font-sans);
+      color: var(--slate);
+    }
+    .signal-card__tag {
+      display: inline-block;
+      margin-top: 10px;
+      font: 600 10px/1 var(--font-sans);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 3px;
+    }
+
+    /* ── Before / After comparison ─────────────────────────────────────────── */
+    .compare-block {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 0;
+      align-items: start;
+      margin-bottom: 28px;
+    }
+    .compare-side {
+      background: var(--white);
+      border: 1px solid var(--rule-light);
+      border-radius: 6px;
+      padding: 20px;
+    }
+    .compare-side--before {
+      border-top: 3px solid var(--slate-light);
+    }
+    .compare-side--after {
+      border-top: 3px solid #3a7d44;
+    }
+    .compare-side__label {
+      font: 600 10px/1 var(--font-sans);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate-light);
+      margin-bottom: 10px;
+    }
+    .compare-side--after .compare-side__label { color: #3a7d44; }
+    .compare-side__heading {
+      font: 700 18px/1.2 var(--font-serif);
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+    .compare-side__body {
+      font: 400 13px/1.6 var(--font-sans);
+      color: var(--slate);
+    }
+    .compare-side__risk {
+      margin-top: 12px;
+      font: 400 12px/1.5 var(--font-sans);
+      color: #b85042;
+      font-style: italic;
+    }
+    .compare-side__outcome {
+      margin-top: 12px;
+      font: 400 12px/1.5 var(--font-sans);
+      color: #3a7d44;
+      font-style: italic;
+    }
+    .compare-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 18px;
+      align-self: center;
+    }
+    .compare-arrow__inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .compare-arrow__svg { color: var(--gold); }
+    .compare-arrow__text {
+      font: 700 9px/1 var(--font-sans);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-align: center;
+    }
+
+    /* ── Segment breakdown table ────────────────────────────────────────────── */
+    .seg-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 28px;
+      font: 400 13px/1.4 var(--font-sans);
+    }
+    .seg-table th {
+      padding: 8px 14px;
+      background: var(--navy);
+      color: var(--gold);
+      font: 600 10px/1 var(--font-sans);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-align: left;
+    }
+    .seg-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--rule-light);
+      color: var(--slate);
+    }
+    .seg-table tr:nth-child(even) td { background: var(--warm-white); }
+    .seg-table .seg-flag {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+    .seg-flag--red   { background: #b85042; }
+    .seg-flag--green { background: #3a7d44; }
+    .seg-flag--amber { background: var(--gold); }
+    .seg-flag--grey  { background: var(--slate-light); }
+
+    /* ── Scenario divider ──────────────────────────────────────────────────── */
+    .scenario-divider {
+      border: none;
+      border-top: 1px solid var(--rule);
+      margin: 8px 0 36px;
+    }
+
+    /* ── Formula box override (type colours) ────────────────────────────────── */
+    .formula-box--desc { border-left-color: var(--t-desc); }
+    .formula-box--diag { border-left-color: var(--t-diag); }
+    .formula-box--pred { border-left-color: var(--t-pred); }
+    .formula-box--pres { border-left-color: var(--t-pres); }
+
+    /* ── Question prompt cards ──────────────────────────────────────────────── */
+    .q-prompt {
+      background: var(--navy);
+      border-radius: 6px;
+      padding: 20px 24px;
+      margin-bottom: 14px;
+    }
+    .q-prompt__label {
+      font: 600 10px/1 var(--font-sans);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .q-prompt__text {
+      font: 600 15px/1.4 var(--font-serif);
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+    .q-prompt__sub {
+      font: 400 12px/1.5 var(--font-sans);
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* ── Scenario nav pills ─────────────────────────────────────────────────── */
+    .scenario-nav {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    .scenario-nav__btn {
+      padding: 6px 16px;
+      border-radius: 20px;
+      font: 600 12px/1 var(--font-sans);
+      letter-spacing: 0.04em;
+      border: 1.5px solid var(--rule);
+      background: transparent;
+      color: var(--slate);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .scenario-nav__btn:hover {
+      border-color: var(--navy);
+      color: var(--navy);
+    }
+
+    /* ── Responsive ─────────────────────────────────────────────────────────── */
+    @media (max-width: 680px) {
+      .compare-block {
+        grid-template-columns: 1fr;
+      }
+      .compare-arrow {
+        padding: 12px 0;
+        transform: rotate(90deg);
+      }
+      .typed-tab__q { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Topbar ──────────────────────────────────────────────────────────────── -->
+<header class="topbar">
+  <div class="topbar__brand">
+    <svg class="topbar__mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" fill="#0B1F3A"/>
+      <rect x="6" y="6" width="8" height="8" fill="#B8902A"/>
+      <rect x="18" y="6" width="8" height="8" fill="#B8902A" opacity="0.5"/>
+      <rect x="6" y="18" width="8" height="8" fill="#B8902A" opacity="0.5"/>
+      <rect x="18" y="18" width="8" height="8" fill="#B8902A"/>
+    </svg>
+    <div class="topbar__text">
+      <span class="topbar__name">SMBC Group</span>
+      <span class="topbar__sub">Learning & Development · APAC</span>
+    </div>
+  </div>
+  <nav class="topbar__nav">
+    <a href="index.html">Programme</a>
+    <a href="#" class="active">Module 1</a>
+  </nav>
+</header>
+
+<!-- ── Hero ───────────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero__rule"></div>
+  <div class="hero__inner">
+    <div class="hero__eyebrow">
+      <div class="hero__eyebrow-line"></div>
+      <span class="label">Module 1 · Analytics Health Check</span>
+    </div>
+    <h1 class="hero__title">Four Types of Analytics<br><em>Applied to Banking</em></h1>
+    <p class="hero__desc">How Descriptive, Diagnostic, Predictive, and Prescriptive analytics work in practice — across SME lending, retail, and digital operations at SMBC.</p>
+    <div class="hero__meta">
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Scenarios</span>
+        <span class="hero__meta-value">3 Business Domains</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Analytics Types</span>
+        <span class="hero__meta-value">4</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Module</span>
+        <span class="hero__meta-value">Day 1 · Session 1</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Typed Tab Bar ───────────────────────────────────────────────────────── -->
+<div class="typed-tabs" role="tablist">
+  <button class="typed-tab active" data-type="desc" onclick="showType('desc')" role="tab" aria-selected="true">
+    <div class="typed-tab__inner">
+      <span class="typed-tab__num">Type 1</span>
+      <span class="typed-tab__label">Descriptive</span>
+      <span class="typed-tab__q">What is true right now?</span>
+    </div>
+  </button>
+  <button class="typed-tab" data-type="diag" onclick="showType('diag')" role="tab">
+    <div class="typed-tab__inner">
+      <span class="typed-tab__num">Type 2</span>
+      <span class="typed-tab__label">Diagnostic</span>
+      <span class="typed-tab__q">Why is it like this?</span>
+    </div>
+  </button>
+  <button class="typed-tab" data-type="pred" onclick="showType('pred')" role="tab">
+    <div class="typed-tab__inner">
+      <span class="typed-tab__num">Type 3</span>
+      <span class="typed-tab__label">Predictive</span>
+      <span class="typed-tab__q">What is likely to happen?</span>
+    </div>
+  </button>
+  <button class="typed-tab" data-type="pres" onclick="showType('pres')" role="tab">
+    <div class="typed-tab__inner">
+      <span class="typed-tab__num">Type 4</span>
+      <span class="typed-tab__label">Prescriptive</span>
+      <span class="typed-tab__q">What should we do?</span>
+    </div>
+  </button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     PANEL 1 — DESCRIPTIVE
+════════════════════════════════════════════════════════════════════════════ -->
+<div id="panel-desc" class="type-panel active">
+
+  <div class="type-banner" data-type="desc">
+    <div class="content-wrap">
+      <div class="type-banner__eyebrow">
+        <div class="type-banner__dot" style="background:var(--t-desc)"></div>
+        <span class="type-banner__tag" style="color:var(--t-desc)">Descriptive Analytics · Type 1</span>
+      </div>
+      <div class="type-banner__q">"What is true right now?"</div>
+      <p class="type-banner__desc">Descriptive analytics answers the most fundamental question: what does the data show? It captures the current state — balances, volumes, ratios, rates — giving managers a reliable snapshot to work from. Without it, everything else fails. With only it, you know what happened, but not why, what comes next, or what to do.</p>
+    </div>
+  </div>
+
+  <div class="content-wrap">
+
+    <!-- SME Lending -->
+    <div class="scenario-section">
+      <div class="scenario-label">
+        <div class="scenario-label__icon" style="background:var(--t-desc-bg);">🏦</div>
+        <div>
+          <div class="scenario-label__text">SME Lending</div>
+          <div class="scenario-label__sub">Portfolio visibility — what does the book look like today?</div>
+        </div>
+      </div>
+
+      <div class="signal-grid">
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-desc)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-desc)">Portfolio Level</div>
+          <div class="signal-card__title">Outstanding loan balances</div>
+          <div class="signal-card__body">Total exposure by segment (SME tier, sector), by geography (SG, MY, PH, HK), and by relationship manager. Updated daily.</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-desc)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-desc)">Credit Quality</div>
+          <div class="signal-card__title">NPL ratio — current and 3-month trend</div>
+          <div class="signal-card__body">Non-performing loan ratio as a percentage of total outstanding. Trend line shows direction but does not yet explain drivers.</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-desc)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-desc)">Operations</div>
+          <div class="signal-card__title">Approval & disbursement TAT</div>
+          <div class="signal-card__body">Average turnaround time from application receipt to disbursement, broken down by channel, product type, and RM tier. Current: [X] days.</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-desc)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-desc)">Pipeline</div>
+          <div class="signal-card__title">New application volumes</div>
+          <div class="signal-card__body">Week-on-week pipeline view: applications received, under review, approved, declined, withdrawn. Baseline for capacity planning.</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-desc)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-desc)">Utilisation</div>
+          <div class="signal-card__title">Facility utilisation rates</div>
+          <div class="signal-card__body">For revolving credit facilities: how much of the approved limit is being drawn. Segment average and per-account distribution.</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-desc)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-desc)">Revenue</div>
+          <div class="signal-card__title">Net interest income by segment</div>
+          <div class="signal-card__body">NII contribution broken down by sector and product type. Compares actual vs plan. Does not explain variance — that is Diagnostic work.</div>
+        </div>
+      </div>
+
+      <div class="formula-box formula-box--desc">
+        <div class="formula-box__label">The descriptive limit</div>
+        <div class="formula-box__text">When the NPL ratio rises 0.4%, descriptive analytics tells you it happened. It does not tell you whether this is concentrated in one sector, one RM, or spread across the portfolio — or whether it is likely to continue.</div>
+        <div class="formula-box__example">Knowing the number is the starting point. It is not the decision.</div>
+      </div>
+    </div>
+
+    <hr class="scenario-divider">
+
+    <!-- Retail Churn -->
+    <div class="scenario-section">
+      <div class="scenario-label">
+        <div class="scenario-label__icon" style="background:var(--t-desc-bg);">👥</div>
+        <div>
+          <div class="scenario-label__text">Retail Banking & CX</div>
+          <div class="scenario-label__sub">Customer base visibility — who do we have, and are they active?</div>
+        </div>
+      </div>
+
+      <div class="signal-grid">
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-desc)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-desc)">Customer Base</div>
+          <div class="signal-card__title">Active customer count — monthly trend</div>
+          <div class="signal-card__body">Number of customers with at least one active product, tracked monthly. Trend line shows whether the base is growing, stable, or shrinking.</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-desc)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-desc)">Product Depth</div>
+          <div class="signal-card__title">Products per customer (breadth)</div>
+          <div class="signal-card__body">Average number of product holdings per active customer, segmented by relationship tier. Single-product customers are flagged as attrition risk.</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-desc)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-desc)">Digital</div>
+          <div class="signal-card__title">Login frequency by channel</div>
+          <div class="signal-card__body">Monthly active users on mobile and internet banking. Feature adoption rates. Drop in login frequency precedes attrition but does not explain it.</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-desc)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-desc)">Acquisition</div>
+          <div class="signal-card__title">Onboarding funnel conversion</div>
+          <div class="signal-card__body">Step-by-step drop-off rates across the digital onboarding flow. Shows where customers are leaving — not yet why.</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-desc)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-desc)">Revenue</div>
+          <div class="signal-card__title">Fee income & NII by segment</div>
+          <div class="signal-card__body">Contribution by product and customer tier. Monthly vs prior year. A fall in fee income per customer is visible here; its cause is not.</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-desc)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-desc)">Dormancy</div>
+          <div class="signal-card__title">Dormant account report</div>
+          <div class="signal-card__body">Accounts with no transaction activity for 90+ days, segmented by product and tenure. Early-stage churn signal — descriptive, not predictive.</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="scenario-divider">
+
+    <!-- Digital / Ops -->
+    <div class="scenario-section">
+      <div class="scenario-label">
+        <div class="scenario-label__icon" style="background:var(--t-desc-bg);">⚙️</div>
+        <div>
+          <div class="scenario-label__text">Digital Journey & Operations</div>
+          <div class="scenario-label__sub">Process visibility — are we meeting service levels today?</div>
+        </div>
+      </div>
+
+      <div class="signal-grid">
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-desc)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-desc)">Funnel</div>
+          <div class="signal-card__title">Step-by-step conversion rates</div>
+          <div class="signal-card__body">Percentage of users completing each stage of a digital journey — application, verification, product selection, submission. Drop-off is visible; cause is not.</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-desc)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-desc)">SLA</div>
+          <div class="signal-card__title">Processing volumes & SLA attainment</div>
+          <div class="signal-card__body">Daily transaction and case volumes. Percentage meeting SLA thresholds. Current backlog size. Tells you whether you are on target — not whether you will breach tomorrow.</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-desc)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-desc)">Quality</div>
+          <div class="signal-card__title">Error & rework rates</div>
+          <div class="signal-card__body">Cases returned for correction or requiring manual intervention, by process step. Volume visible; structural cause requires Diagnostic investigation.</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-desc)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-desc)">Adoption</div>
+          <div class="signal-card__title">Feature adoption by user segment</div>
+          <div class="signal-card__body">Which digital features are used, by which customer segments. Heat-map of engagement. Under-used features visible — reason requires user research or Diagnostic analytics.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content-wrap -->
+</div><!-- /panel-desc -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     PANEL 2 — DIAGNOSTIC
+════════════════════════════════════════════════════════════════════════════ -->
+<div id="panel-diag" class="type-panel">
+
+  <div class="type-banner" data-type="diag">
+    <div class="content-wrap">
+      <div class="type-banner__eyebrow">
+        <div class="type-banner__dot" style="background:var(--t-diag)"></div>
+        <span class="type-banner__tag" style="color:var(--t-diag)">Diagnostic Analytics · Type 2</span>
+      </div>
+      <div class="type-banner__q">"Why is it like this?"</div>
+      <p class="type-banner__desc">When a KPI moves, Diagnostic analytics is the structured process of finding out why. It requires segmentation, attribution, and root-cause analysis — moving beyond a single number to the distribution of causes beneath it. The same headline figure can hide very different problems depending on where you look.</p>
+    </div>
+  </div>
+
+  <div class="content-wrap">
+
+    <!-- SME Lending -->
+    <div class="scenario-section">
+      <div class="scenario-label">
+        <div class="scenario-label__icon" style="background:var(--t-diag-bg);">🏦</div>
+        <div>
+          <div class="scenario-label__text">SME Lending — NPL Increase</div>
+          <div class="scenario-label__sub">Turning a single ratio into an actionable root-cause picture</div>
+        </div>
+      </div>
+
+      <div class="compare-block">
+        <div class="compare-side compare-side--before">
+          <div class="compare-side__label">Surface reading · Descriptive only</div>
+          <div class="compare-side__heading">NPL ratio rose 0.4% this quarter</div>
+          <div class="compare-side__body">Single portfolio-wide number. No segmentation by sector, geography, RM, or vintage. Management response: portfolio-wide credit tightening — reduce limits, raise collateral requirements across all SME clients.</div>
+          <div class="compare-side__risk">Risk: healthy sectors penalised. Good clients in stable industries lose credit access because of a problem concentrated elsewhere. Over-correction damages relationships and future NII.</div>
+        </div>
+        <div class="compare-arrow">
+          <div class="compare-arrow__inner">
+            <svg class="compare-arrow__svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <span class="compare-arrow__text">Diagnostic<br>drill</span>
+          </div>
+        </div>
+        <div class="compare-side compare-side--after">
+          <div class="compare-side__label">Diagnostic segmentation</div>
+          <div class="compare-side__heading">NPL is concentrated — not systemic</div>
+          <div class="compare-side__body">Segmentation reveals the structure beneath the headline number. Three distinct root causes emerge — each requiring a different response.</div>
+          <div class="compare-side__outcome">Response: targeted intervention in two segments only. No blanket tightening. Healthy clients untouched.</div>
+        </div>
+      </div>
+
+      <table class="seg-table">
+        <thead>
+          <tr>
+            <th>Segment</th>
+            <th>Finding</th>
+            <th>NPL Movement</th>
+            <th>Root Cause</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="seg-flag seg-flag--red"></span>Construction (SG)</td>
+            <td>Material stress</td>
+            <td style="color:#b85042;font-weight:600">+1.8%</td>
+            <td>Project delays from contract disputes; cost overruns in two large accounts</td>
+            <td>Sector review; enhanced monitoring; selective new origination pause</td>
+          </tr>
+          <tr>
+            <td><span class="seg-flag seg-flag--green"></span>Manufacturing (MY/PH)</td>
+            <td>Stable</td>
+            <td style="color:#3a7d44;font-weight:600">No change</td>
+            <td>No systemic issue identified</td>
+            <td>No change to credit terms required</td>
+          </tr>
+          <tr>
+            <td><span class="seg-flag seg-flag--red"></span>Single RM — Tier-3 clients</td>
+            <td>Concentration risk</td>
+            <td style="color:#b85042;font-weight:600">+2.3%</td>
+            <td>3 accounts representing 68% of RM's book; inadequate annual review cadence</td>
+            <td>Supervision and account redistribution; immediate review of 3 accounts</td>
+          </tr>
+          <tr>
+            <td><span class="seg-flag seg-flag--green"></span>All other segments</td>
+            <td>Improving</td>
+            <td style="color:#3a7d44;font-weight:600">−0.2% avg</td>
+            <td>Normal portfolio dynamics</td>
+            <td>No intervention needed</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="formula-box formula-box--diag">
+        <div class="formula-box__label">The diagnostic principle</div>
+        <div class="formula-box__text">The same headline number (NPL +0.4%) masks four completely different situations requiring four completely different responses. Diagnostic analytics is what makes that visible.</div>
+        <div class="formula-box__example">A portfolio-wide response to a concentrated problem is almost always the wrong response — and Diagnostic work is what prevents it.</div>
+      </div>
+    </div>
+
+    <hr class="scenario-divider">
+
+    <!-- Retail Churn -->
+    <div class="scenario-section">
+      <div class="scenario-label">
+        <div class="scenario-label__icon" style="background:var(--t-diag-bg);">👥</div>
+        <div>
+          <div class="scenario-label__text">Retail Banking — Customer Attrition</div>
+          <div class="scenario-label__sub">Why are customers leaving — and is it one problem or several?</div>
+        </div>
+      </div>
+
+      <div class="compare-block">
+        <div class="compare-side compare-side--before">
+          <div class="compare-side__label">Surface reading · Descriptive only</div>
+          <div class="compare-side__heading">Active customer count fell 3.2% this quarter</div>
+          <div class="compare-side__body">Retention rate decline noted in the monthly dashboard. Response: blanket retention offer rolled out to all at-risk customers — fee waivers and promotional deposit rates applied broadly.</div>
+          <div class="compare-side__risk">Risk: costly intervention deployed to customers who were leaving for reasons unrelated to price. Fee waivers given to customers who were leaving due to poor service — they take the offer and still leave later.</div>
+        </div>
+        <div class="compare-arrow">
+          <div class="compare-arrow__inner">
+            <svg class="compare-arrow__svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <span class="compare-arrow__text">Diagnostic<br>drill</span>
+          </div>
+        </div>
+        <div class="compare-side compare-side--after">
+          <div class="compare-side__label">Diagnostic segmentation</div>
+          <div class="compare-side__heading">Three distinct attrition patterns — three different fixes</div>
+          <div class="compare-side__body">Exit surveys, complaint data, and journey analysis segment the attrition into causes. Each requires a different intervention type.</div>
+          <div class="compare-side__outcome">Targeted response by cause: rate offer to price-sensitive segment only; service escalation for service failures; digital UX fix for friction.</div>
+        </div>
+      </div>
+
+      <table class="seg-table">
+        <thead>
+          <tr><th>Attrition Segment</th><th>Share of Losses</th><th>Primary Driver</th><th>Targeted Response</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="seg-flag seg-flag--amber"></span>Rate-sensitive savers</td>
+            <td>38%</td>
+            <td>Competitor offering 0.8% higher on fixed deposit; confirmed by exit survey</td>
+            <td>Retention rate offer for this segment specifically — not portfolio-wide</td>
+          </tr>
+          <tr>
+            <td><span class="seg-flag seg-flag--red"></span>Post-complaint lapsers</td>
+            <td>29%</td>
+            <td>Unresolved complaint followed by dormancy within 60 days; NPS score &lt;3</td>
+            <td>Service recovery escalation protocol; contact within 48h of complaint closure</td>
+          </tr>
+          <tr>
+            <td><span class="seg-flag seg-flag--grey"></span>Digital friction lapsers</td>
+            <td>22%</td>
+            <td>Drop-off at account self-service step; not completing transfers without branch visit</td>
+            <td>Digital UX fix for self-service flow; in-app guidance</td>
+          </tr>
+          <tr>
+            <td><span class="seg-flag seg-flag--green"></span>Natural lifecycle exits</td>
+            <td>11%</td>
+            <td>Life event (relocation, death, expat return); not addressable by retention offers</td>
+            <td>No retention action warranted</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr class="scenario-divider">
+
+    <!-- Digital / Ops -->
+    <div class="scenario-section">
+      <div class="scenario-label">
+        <div class="scenario-label__icon" style="background:var(--t-diag-bg);">⚙️</div>
+        <div>
+          <div class="scenario-label__text">Digital Journey — SLA Breach</div>
+          <div class="scenario-label__sub">Why did we breach SLA — and where in the process did it actually break down?</div>
+        </div>
+      </div>
+
+      <table class="seg-table">
+        <thead>
+          <tr><th>Investigation Area</th><th>Finding</th><th>Contribution to Breach</th><th>Implication</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="seg-flag seg-flag--red"></span>Volume spike — Monday AM</td>
+            <td>39% above forecast for the period; driven by weekend digital onboarding completions queuing overnight</td>
+            <td>High</td>
+            <td>Forecasting model needs to account for weekend digital batch</td>
+          </tr>
+          <tr>
+            <td><span class="seg-flag seg-flag--red"></span>Manual verification step</td>
+            <td>Identity document checks still manual for [X]% of applications; bottleneck at one team</td>
+            <td>High</td>
+            <td>Automation candidate; manual queue creates single point of failure</td>
+          </tr>
+          <tr>
+            <td><span class="seg-flag seg-flag--grey"></span>System response time</td>
+            <td>No degradation detected during breach period; system not the cause</td>
+            <td>None</td>
+            <td>IT infrastructure not implicated — focus on process</td>
+          </tr>
+          <tr>
+            <td><span class="seg-flag seg-flag--amber"></span>Staffing pattern</td>
+            <td>Monday shift starts at 9am; queue already 2 hours deep by then</td>
+            <td>Moderate</td>
+            <td>Shift start time or pre-processing automation change worth piloting</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /content-wrap -->
+</div><!-- /panel-diag -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     PANEL 3 — PREDICTIVE
+════════════════════════════════════════════════════════════════════════════ -->
+<div id="panel-pred" class="type-panel">
+
+  <div class="type-banner" data-type="pred">
+    <div class="content-wrap">
+      <div class="type-banner__eyebrow">
+        <div class="type-banner__dot" style="background:var(--t-pred)"></div>
+        <span class="type-banner__tag" style="color:var(--t-pred)">Predictive Analytics · Type 3</span>
+      </div>
+      <div class="type-banner__q">"What is likely to happen next?"</div>
+      <p class="type-banner__desc">Predictive analytics uses historical patterns, statistical models, and contextual signals to produce forward-looking probability estimates. It does not eliminate uncertainty — it quantifies it, so decisions can be made with a clearer understanding of likely outcomes under different scenarios.</p>
+    </div>
+  </div>
+
+  <div class="content-wrap">
+
+    <!-- SME Lending -->
+    <div class="scenario-section">
+      <div class="scenario-label">
+        <div class="scenario-label__icon" style="background:var(--t-pred-bg);">🏦</div>
+        <div>
+          <div class="scenario-label__text">SME Lending — Credit Risk</div>
+          <div class="scenario-label__sub">Looking forward at loss probability, not just backward at NPL ratios</div>
+        </div>
+      </div>
+
+      <div class="signal-grid">
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pred)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pred)">At Origination</div>
+          <div class="signal-card__title">Probability of Default (PD) scoring</div>
+          <div class="signal-card__body">At application, a PD model estimates likelihood of default within 12 months based on financial ratios, sector, account conduct, and bureau data. Informs credit approval decision and pricing.</div>
+          <span class="signal-card__tag" style="background:var(--t-pred-bg);color:var(--t-pred)">Model-driven</span>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pred)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pred)">Portfolio</div>
+          <div class="signal-card__title">Expected Credit Loss (ECL) projection</div>
+          <div class="signal-card__body">Forward-looking loss estimate under IFRS 9. Requires probability-weighted scenarios (base case, downside, severe) with macro overlays. Not a backward-looking average — a model of what loss is likely under defined conditions.</div>
+          <span class="signal-card__tag" style="background:var(--t-pred-bg);color:var(--t-pred)">IFRS 9</span>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pred)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pred)">Stress Testing</div>
+          <div class="signal-card__title">Macro scenario stress tests</div>
+          <div class="signal-card__body">What happens to the SME portfolio if SGD appreciates 15%? If interest rates rise 200bps? Models translate macro assumptions into sector-level impact, allowing capital adequacy forward planning.</div>
+          <span class="signal-card__tag" style="background:var(--t-pred-bg);color:var(--t-pred)">Capital planning</span>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pred)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pred)">Early Warning</div>
+          <div class="signal-card__title">Watch-list trigger scoring</div>
+          <div class="signal-card__body">Behavioural signals (utilisation pattern change, late payments, reduced transaction activity) are modelled into a composite early warning score. Flags accounts for proactive RM outreach before formal default.</div>
+          <span class="signal-card__tag" style="background:var(--t-pred-bg);color:var(--t-pred)">Proactive</span>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-box__label">Where SMBC is typically strongest</div>
+        <p>Credit risk prediction is the most mature Predictive domain in most banks. PD/LGD models, IFRS 9 ECL, and stress testing frameworks are well-established. The gap for many SME teams is at the RM level — converting model scores into day-to-day portfolio management decisions, rather than using them only for origination and regulatory reporting.</p>
+      </div>
+    </div>
+
+    <hr class="scenario-divider">
+
+    <!-- Retail Churn -->
+    <div class="scenario-section">
+      <div class="scenario-label">
+        <div class="scenario-label__icon" style="background:var(--t-pred-bg);">👥</div>
+        <div>
+          <div class="scenario-label__text">Retail Banking — Churn & Growth</div>
+          <div class="scenario-label__sub">Predicting customer behaviour before it becomes a fact in the data</div>
+        </div>
+      </div>
+
+      <div class="signal-grid">
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pred)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pred)">Retention</div>
+          <div class="signal-card__title">Churn propensity model</div>
+          <div class="signal-card__body">Using login frequency decline, transaction volume change, complaint history, and competitor rate movements to score each customer's probability of lapsing in the next 90 days. Enables proactive outreach before exit decision is made.</div>
+          <span class="signal-card__tag" style="background:var(--t-pred-bg);color:var(--t-pred)">90-day horizon</span>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pred)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pred)">Cross-sell</div>
+          <div class="signal-card__title">Next-best-offer propensity scoring</div>
+          <div class="signal-card__body">For each customer, a model estimates receptivity to the next product in their financial journey — mortgage, insurance, investment — based on life stage signals, account behaviour, and cohort patterns.</div>
+          <span class="signal-card__tag" style="background:var(--t-pred-bg);color:var(--t-pred)">Personalised</span>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pred)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pred)">Lifetime Value</div>
+          <div class="signal-card__title">Customer LTV projection by cohort</div>
+          <div class="signal-card__body">Expected revenue contribution over the full customer relationship, projected forward from current tenure, product holdings, and segment characteristics. Informs how much retention spend is economically justified.</div>
+          <span class="signal-card__tag" style="background:var(--t-pred-bg);color:var(--t-pred)">Investment case</span>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pred)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pred)">Triggers</div>
+          <div class="signal-card__title">Salary credit & life event prediction</div>
+          <div class="signal-card__body">Detecting salary credit changes (promotion, job change), address changes, or family event patterns to time product offers to moments of maximum relevance — e.g., home loan at salary upgrade point.</div>
+          <span class="signal-card__tag" style="background:var(--t-pred-bg);color:var(--t-pred)">Event-based</span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="scenario-divider">
+
+    <!-- Digital / Ops -->
+    <div class="scenario-section">
+      <div class="scenario-label">
+        <div class="scenario-label__icon" style="background:var(--t-pred-bg);">⚙️</div>
+        <div>
+          <div class="scenario-label__text">Operations — Capacity & SLA</div>
+          <div class="scenario-label__sub">Predicting where the system will break before it does</div>
+        </div>
+      </div>
+
+      <div class="signal-grid">
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pred)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pred)">Capacity</div>
+          <div class="signal-card__title">Volume & demand forecasting</div>
+          <div class="signal-card__body">Using seasonal patterns, product campaign calendars, and digital completion rates to forecast daily application and transaction volumes — enabling staffing decisions 1–2 weeks ahead of demand spikes.</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pred)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pred)">SLA Risk</div>
+          <div class="signal-card__title">SLA breach probability model</div>
+          <div class="signal-card__body">A real-time model that scores current queue depth, processing rate, and staffing levels against historical SLA patterns. Generates a probability estimate of breach in the next 4 hours — enabling proactive diversion or escalation.</div>
+          <span class="signal-card__tag" style="background:var(--t-pred-bg);color:var(--t-pred)">Real-time</span>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pred)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pred)">Digital</div>
+          <div class="signal-card__title">Abandonment prediction from session signals</div>
+          <div class="signal-card__body">Within a digital application journey, models identify session-level signals (time-on-step, repeated field errors, idle time) that predict abandonment — enabling real-time intervention such as a chat prompt or callback offer.</div>
+        </div>
+      </div>
+
+      <div class="formula-box formula-box--pred">
+        <div class="formula-box__label">The predictive gap in banking operations</div>
+        <div class="formula-box__text">Operations is the domain where predictive capability has the fastest ROI — but remains underdeveloped in most banks. The ability to predict a queue build 4 hours ahead of SLA breach is straightforward to model with existing data. Most teams respond after the breach instead.</div>
+        <div class="formula-box__example">The question is not whether the model can be built. It is whether the team is structured to act on its output in time.</div>
+      </div>
+    </div>
+
+  </div><!-- /content-wrap -->
+</div><!-- /panel-pred -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     PANEL 4 — PRESCRIPTIVE
+════════════════════════════════════════════════════════════════════════════ -->
+<div id="panel-pres" class="type-panel">
+
+  <div class="type-banner" data-type="pres">
+    <div class="content-wrap">
+      <div class="type-banner__eyebrow">
+        <div class="type-banner__dot" style="background:var(--t-pres)"></div>
+        <span class="type-banner__tag" style="color:var(--t-pres)">Prescriptive Analytics · Type 4</span>
+      </div>
+      <div class="type-banner__q">"What should we do — and how do we refine it?"</div>
+      <p class="type-banner__desc">Prescriptive analytics has two layers. The first is evidence-based policy: decisions and strategies grounded in portfolio or population data rather than convention. The second is adaptive experimentation: running controlled tests, measuring outcomes, and refining based on what actually happens — rather than implementing changes all at once and hoping.</p>
+    </div>
+  </div>
+
+  <div class="content-wrap">
+
+    <!-- SME Lending -->
+    <div class="scenario-section">
+      <div class="scenario-label">
+        <div class="scenario-label__icon" style="background:var(--t-pres-bg);">🏦</div>
+        <div>
+          <div class="scenario-label__text">SME Lending — Credit Policy & RM Practice</div>
+          <div class="scenario-label__sub">Moving from convention-based to evidence-based credit decisions</div>
+        </div>
+      </div>
+
+      <div class="signal-grid" style="grid-template-columns: repeat(auto-fill, minmax(320px, 1fr))">
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pres)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pres)">Layer 1 · Policy</div>
+          <div class="signal-card__title">Sector-specific credit criteria</div>
+          <div class="signal-card__body">Rather than applying uniform collateral and coverage ratios across all SME sectors, credit policy is calibrated to actual historical loss data by sector and vintage. Construction sector parameters differ from those for professional services based on observed performance — not convention.</div>
+          <span class="signal-card__tag" style="background:var(--t-pres-bg);color:var(--t-pres)">Evidence-based</span>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pres)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pres)">Layer 1 · Policy</div>
+          <div class="signal-card__title">Concentration limit calibration</div>
+          <div class="signal-card__body">Single-name and sector concentration limits derived from stress test and correlation data — not round-number approximations. Limits are reviewed when new loss correlation data emerges, not on an annual cycle only.</div>
+          <span class="signal-card__tag" style="background:var(--t-pres-bg);color:var(--t-pres)">Data-derived</span>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pres)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pres)">Layer 2 · Experiment</div>
+          <div class="signal-card__title">RM coaching trigger pilot</div>
+          <div class="signal-card__body">Rather than applying coaching to all RMs equally, a pilot tests whether data-triggered coaching (RM score falls below threshold → structured coaching session) outperforms calendar-based coaching. Champion group vs control group; measured on portfolio quality at 12 months.</div>
+          <span class="signal-card__tag" style="background:var(--t-pres-bg);color:var(--t-pres)">Pilot</span>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pres)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pres)">Layer 2 · Experiment</div>
+          <div class="signal-card__title">Sub-segment pricing trial</div>
+          <div class="signal-card__body">Rather than applying a single rate change to all SME revolving facilities, a pilot tests a new pricing structure on a matched sub-segment. Outcome measured on utilisation rate change and facility retention at 6 months before broader rollout.</div>
+          <span class="signal-card__tag" style="background:var(--t-pres-bg);color:var(--t-pres)">Champion-challenger</span>
+        </div>
+      </div>
+
+      <div class="formula-box formula-box--pres">
+        <div class="formula-box__label">The prescriptive question for credit teams</div>
+        <div class="formula-box__text">For each major credit policy in your portfolio: is this parameter set because the data tells us this is right — or because it has always been this way?</div>
+        <div class="formula-box__example">That is not a criticism. It is the diagnostic question that separates evidence-based policy from inherited convention. Both can be correct. Only one is verifiable.</div>
+      </div>
+    </div>
+
+    <hr class="scenario-divider">
+
+    <!-- Retail -->
+    <div class="scenario-section">
+      <div class="scenario-label">
+        <div class="scenario-label__icon" style="background:var(--t-pres-bg);">👥</div>
+        <div>
+          <div class="scenario-label__text">Retail Banking — Retention & Offers</div>
+          <div class="scenario-label__sub">From broadcast retention to adaptive, evidence-based customer management</div>
+        </div>
+      </div>
+
+      <div class="signal-grid" style="grid-template-columns: repeat(auto-fill, minmax(320px, 1fr))">
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pres)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pres)">Layer 1 · Policy</div>
+          <div class="signal-card__title">Tiered retention offer framework</div>
+          <div class="signal-card__body">Retention offer spend is allocated by customer LTV and churn probability score — not applied uniformly. A high-LTV, high-churn-risk customer receives a substantive retention call with a rate offer. A low-LTV account with the same churn score receives a digital nudge only.</div>
+          <span class="signal-card__tag" style="background:var(--t-pres-bg);color:var(--t-pres)">LTV-weighted</span>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pres)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pres)">Layer 2 · Experiment</div>
+          <div class="signal-card__title">Champion-challenger retention offers</div>
+          <div class="signal-card__body">For the high-churn-risk segment, two retention treatments are running simultaneously: a rate offer (champion) vs a service-upgrade offer (challenger). After 90 days, outcomes measured on both retention rate and margin impact. Winner deployed to full segment.</div>
+          <span class="signal-card__tag" style="background:var(--t-pres-bg);color:var(--t-pres)">A/B test</span>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pres)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pres)">Layer 2 · Experiment</div>
+          <div class="signal-card__title">Digital onboarding A/B test</div>
+          <div class="signal-card__body">Two versions of the digital onboarding flow — different field sequencing and identity verification steps — are tested on matched incoming cohorts. Conversion rate at each step is measured. The higher-performing flow becomes the new standard.</div>
+          <span class="signal-card__tag" style="background:var(--t-pres-bg);color:var(--t-pres)">UX experiment</span>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pres)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pres)">Layer 2 · Experiment</div>
+          <div class="signal-card__title">Personalised cross-sell sequencing</div>
+          <div class="signal-card__body">Instead of a single cross-sell campaign rolled out to all eligible customers simultaneously, a structured sequencing model is tested: does offering product A before product B produce higher uptake at step 2? Champion-challenger across four sequence variants.</div>
+          <span class="signal-card__tag" style="background:var(--t-pres-bg);color:var(--t-pres)">Sequence test</span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="scenario-divider">
+
+    <!-- Digital / Ops -->
+    <div class="scenario-section">
+      <div class="scenario-label">
+        <div class="scenario-label__icon" style="background:var(--t-pres-bg);">⚙️</div>
+        <div>
+          <div class="scenario-label__text">Operations — Process & Routing</div>
+          <div class="scenario-label__sub">Using prediction output to drive real-time operational decisions</div>
+        </div>
+      </div>
+
+      <div class="signal-grid" style="grid-template-columns: repeat(auto-fill, minmax(320px, 1fr))">
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pres)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pres)">Layer 1 · Policy</div>
+          <div class="signal-card__title">Dynamic case routing rules</div>
+          <div class="signal-card__body">When the SLA breach probability model exceeds a defined threshold, cases are automatically rerouted to a secondary processing team and an escalation flag is triggered — before the breach happens. The routing rule is derived from historical data on what intervention timing was effective.</div>
+          <span class="signal-card__tag" style="background:var(--t-pres-bg);color:var(--t-pres)">Automated rule</span>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pres)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pres)">Layer 2 · Experiment</div>
+          <div class="signal-card__title">Shift start-time pilot</div>
+          <div class="signal-card__body">Diagnostic analysis found Monday AM queues are 2 hours deep before the team starts. A pilot tests a staggered 7am–9am start on Monday only, with matched weeks as control. Outcome measured: SLA attainment rate and overtime cost at 8 weeks.</div>
+          <span class="signal-card__tag" style="background:var(--t-pres-bg);color:var(--t-pres)">Controlled pilot</span>
+        </div>
+        <div class="signal-card">
+          <div class="signal-card__bar" style="background:var(--t-pres)"></div>
+          <div class="signal-card__kicker" style="color:var(--t-pres)">Layer 2 · Experiment</div>
+          <div class="signal-card__title">In-journey intervention test</div>
+          <div class="signal-card__body">Abandonment prediction model flags high-risk sessions. Pilot tests three interventions: (1) in-app chat prompt, (2) callback offer, (3) simplified field option. Conversion rate by intervention type measured over 6 weeks. The winning intervention is then integrated as standard behaviour.</div>
+          <span class="signal-card__tag" style="background:var(--t-pres-bg);color:var(--t-pres)">3-way test</span>
+        </div>
+      </div>
+
+      <div class="formula-box formula-box--pres">
+        <div class="formula-box__label">The experimentation gap</div>
+        <div class="formula-box__text">The difference between Prescriptive analytics and good intuition is that Prescriptive analytics builds in a mechanism for being wrong and learning from it. A big-bang change applied portfolio-wide cannot tell you what worked and what did not. A pilot can.</div>
+        <div class="formula-box__example">The question for your function: when you make a change, do you know whether it worked — or do you just move to the next initiative?</div>
+      </div>
+    </div>
+
+  </div><!-- /content-wrap -->
+</div><!-- /panel-pres -->
+
+
+<!-- ── Footer ─────────────────────────────────────────────────────────────── -->
+<footer>
+  <span class="footer__brand">SMBC Group · Learning & Development · APAC</span>
+  <span class="footer__note">Confidential — Programme Materials</span>
+</footer>
+
+<script>
+  function showType(type) {
+    // Tabs
+    document.querySelectorAll('.typed-tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.type === type);
+      t.setAttribute('aria-selected', t.dataset.type === type);
+    });
+    // Panels
+    document.querySelectorAll('.type-panel').forEach(p => {
+      p.classList.toggle('active', p.id === 'panel-' + type);
+    });
+    // Animate in
+    const panel = document.getElementById('panel-' + type);
+    panel.style.animation = 'none';
+    panel.offsetHeight;
+    panel.style.animation = '';
+    window.scrollTo({ top: document.querySelector('.typed-tabs').offsetTop - 60, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
