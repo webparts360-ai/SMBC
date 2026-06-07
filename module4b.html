@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 4B — Pivot Table, Chart &amp; Power BI · SMBC L&D</title>
+  <link rel="stylesheet" href="smbc.css">
+  <style>
+    .step-card {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: var(--space-md);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .step-card__head {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-md) var(--space-lg);
+      background: var(--navy);
+    }
+    .step-card__num {
+      font-family: var(--font-serif);
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--gold);
+      min-width: 40px;
+      line-height: 1;
+    }
+    .step-card__meta { flex: 1; }
+    .step-card__tag {
+      font-family: var(--font-sans);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--slate-light);
+      margin-bottom: 2px;
+    }
+    .step-card__title {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .step-card__time {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      color: var(--gold);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    .step-card__body {
+      padding: var(--space-md) var(--space-lg);
+    }
+    .step-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .step-list li {
+      display: flex;
+      gap: var(--space-md);
+      padding: var(--space-sm) 0;
+      border-bottom: 1px solid var(--rule-light);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      color: var(--slate);
+      line-height: 1.55;
+      align-items: flex-start;
+    }
+    .step-list li:last-child { border-bottom: none; }
+    .step-list__n {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      color: var(--gold);
+      min-width: 22px;
+      font-size: 15px;
+      padding-top: 1px;
+    }
+    .step-list strong { color: var(--navy); }
+    .step-list code {
+      background: var(--cream);
+      border: 1px solid var(--rule);
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-family: "Courier New", monospace;
+      color: var(--navy);
+    }
+
+    .tip-box {
+      background: var(--cream);
+      border-left: 3px solid var(--gold);
+      padding: var(--space-sm) var(--space-md);
+      border-radius: 0 4px 4px 0;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--slate);
+      margin-top: var(--space-sm);
+      line-height: 1.55;
+    }
+    .tip-box__label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      margin-bottom: 3px;
+      display: block;
+      font-family: var(--font-sans);
+    }
+
+    .pbi-section {
+      background: var(--navy-deep);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: var(--space-md);
+    }
+    .pbi-section__header {
+      background: var(--navy);
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+    .pbi-section__tag {
+      font-family: var(--font-sans);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+    }
+    .pbi-section__title {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .pbi-section__time {
+      margin-left: auto;
+      font-family: var(--font-sans);
+      font-size: 10px;
+      color: var(--slate-light);
+    }
+    .pbi-section__body {
+      padding: var(--space-md) var(--space-lg);
+      color: rgba(255,255,255,0.75);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+    .pbi-section__body strong { color: var(--gold); }
+    .pbi-section__body ul { margin: var(--space-sm) 0; padding-left: 18px; }
+    .pbi-section__body li { margin-bottom: 6px; }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+    @media (max-width: 700px) { .compare-grid { grid-template-columns: 1fr; } }
+    .compare-card {
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .compare-card__head {
+      padding: var(--space-sm) var(--space-md);
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+    }
+    .compare-card--excel .compare-card__head { background: var(--navy-mid); color: var(--gold); }
+    .compare-card--pbi .compare-card__head { background: var(--gold); color: var(--navy-deep); }
+    .compare-card__body {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-top: none;
+      padding: var(--space-md);
+    }
+    .compare-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--slate);
+      line-height: 1.55;
+      margin-bottom: 8px;
+    }
+    .compare-item:last-child { margin-bottom: 0; }
+    .compare-item__check { color: var(--gold); font-weight: 700; min-width: 14px; }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__brand">
+    <svg class="topbar__mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="4" fill="#b8902a"/>
+      <rect x="8" y="8" width="7" height="7" fill="#071429"/>
+      <rect x="17" y="8" width="7" height="7" fill="#071429"/>
+      <rect x="8" y="17" width="7" height="7" fill="#071429"/>
+      <rect x="17" y="17" width="7" height="7" fill="#b8902a" opacity="0.4"/>
+    </svg>
+    <div class="topbar__text">
+      <span class="topbar__name">SMBC Group</span>
+      <span class="topbar__sub">Learning &amp; Development · APAC</span>
+    </div>
+  </div>
+  <nav class="topbar__nav">
+    <a href="index.html">Programme</a>
+    <a href="module4b.html" class="active">Module 4B</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero__rule"></div>
+  <div class="hero__inner">
+    <div class="hero__eyebrow">
+      <div class="hero__eyebrow-line"></div>
+      <span class="label">Module 4B · Day 2</span>
+    </div>
+    <h1 class="hero__title">Pivot Table, Pivot Chart<br><em>&amp; Power BI</em></h1>
+    <p class="hero__desc">From clean data to interactive insight. Step-by-step reference for today's hands-on session.</p>
+    <div class="hero__meta">
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Duration</span>
+        <span class="hero__meta-value">60 min</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Analysis question</span>
+        <span class="hero__meta-value">Revenue by Product Type and Segment</span>
+      </div>
+      <div class="hero__meta-item">
+        <span class="hero__meta-label">Tools</span>
+        <span class="hero__meta-value">Excel · Power BI</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="tab-bar">
+  <button class="tab-bar__btn active" onclick="showPanel('excel')">Excel Steps</button>
+  <button class="tab-bar__btn" onclick="showPanel('pbi')">Power BI</button>
+  <button class="tab-bar__btn" onclick="showPanel('compare')">Excel vs Power BI</button>
+</div>
+
+<!-- PANEL: EXCEL -->
+<div id="panel-excel" class="panel active">
+  <div class="section-header">
+    <span class="pill">Excel</span>
+    <span class="section-header__title">Hands-on Steps · 35 minutes</span>
+  </div>
+  <div class="page-layout">
+    <main>
+
+      <div class="objectives" style="margin-bottom:var(--space-lg)">
+        <div class="objective">
+          <div class="objective__marker">1</div>
+          <p class="objective__text">Build a PivotTable showing Revenue by Product Type and Segment</p>
+        </div>
+        <div class="objective">
+          <div class="objective__marker">2</div>
+          <p class="objective__text">Create a Clustered Bar PivotChart linked to the table</p>
+        </div>
+        <div class="objective">
+          <div class="objective__marker">3</div>
+          <p class="objective__text">Add Segment and Month slicers to make the view interactive</p>
+        </div>
+      </div>
+
+      <!-- Step 1 -->
+      <div class="step-card">
+        <div class="step-card__head">
+          <div class="step-card__num">1</div>
+          <div class="step-card__meta">
+            <div class="step-card__tag">EXCEL HANDS-ON</div>
+            <div class="step-card__title">Build the PivotTable</div>
+          </div>
+          <div class="step-card__time">12 MIN</div>
+        </div>
+        <div class="step-card__body">
+          <ul class="step-list">
+            <li>
+              <span class="step-list__n">1</span>
+              <span>Click any cell inside the clean data table. Excel detects the full range automatically.</span>
+            </li>
+            <li>
+              <span class="step-list__n">2</span>
+              <span><strong>Insert → PivotTable → New Worksheet.</strong> Click OK. A blank PivotTable opens with the field list on the right.</span>
+            </li>
+            <li>
+              <span class="step-list__n">3</span>
+              <span>Drag <strong>Product Type</strong> to the <code>Rows</code> area. You should see: Deposit, Credit, Investment.</span>
+            </li>
+            <li>
+              <span class="step-list__n">4</span>
+              <span>Drag <strong>Segment</strong> to the <code>Columns</code> area. You should see: Retail, SME, Affluent, Seniors.</span>
+            </li>
+            <li>
+              <span class="step-list__n">5</span>
+              <span>Drag <strong>Revenue</strong> to the <code>Values</code> area. <strong>Check it says "Sum of Revenue" — not "Count of Revenue."</strong> If it shows Count: right-click the field → Value Field Settings → Summarize by: Sum.</span>
+            </li>
+            <li>
+              <span class="step-list__n">6</span>
+              <span>Right-click any value → <strong>Number Format → Number → 0 decimal places → tick "Use 1000 Separator".</strong></span>
+            </li>
+          </ul>
+          <div class="tip-box">
+            <span class="tip-box__label">RESULT</span>
+            You now have a matrix showing revenue for each combination of Product Type (rows) and Customer Segment (columns), with row and column grand totals.
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-card">
+        <div class="step-card__head">
+          <div class="step-card__num">2</div>
+          <div class="step-card__meta">
+            <div class="step-card__tag">EXCEL HANDS-ON</div>
+            <div class="step-card__title">Insert PivotChart</div>
+          </div>
+          <div class="step-card__time">8 MIN</div>
+        </div>
+        <div class="step-card__body">
+          <ul class="step-list">
+            <li>
+              <span class="step-list__n">1</span>
+              <span>Click any cell <strong>inside</strong> the PivotTable. This links the chart to this specific pivot.</span>
+            </li>
+            <li>
+              <span class="step-list__n">2</span>
+              <span><strong>PivotTable Analyze tab → PivotChart.</strong> (Or: Insert → PivotChart → PivotChart.)</span>
+            </li>
+            <li>
+              <span class="step-list__n">3</span>
+              <span>Select <strong>Clustered Bar</strong> from the chart types. Click OK.</span>
+            </li>
+            <li>
+              <span class="step-list__n">4</span>
+              <span>Right-click the field buttons on the chart → <strong>Hide All Field Buttons.</strong></span>
+            </li>
+            <li>
+              <span class="step-list__n">5</span>
+              <span>Click the chart title and rename it: <strong>Revenue by Product Type and Segment.</strong></span>
+            </li>
+          </ul>
+          <div class="tip-box">
+            <span class="tip-box__label">WHY CLUSTERED BAR?</span>
+            A Clustered Bar chart places product types on the vertical axis and groups each segment as a colour-coded bar per row — making cross-segment comparison easy to read at a glance.
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-card">
+        <div class="step-card__head">
+          <div class="step-card__num">3</div>
+          <div class="step-card__meta">
+            <div class="step-card__tag">EXCEL HANDS-ON</div>
+            <div class="step-card__title">Add Slicers</div>
+          </div>
+          <div class="step-card__time">10 MIN</div>
+        </div>
+        <div class="step-card__body">
+          <ul class="step-list">
+            <li>
+              <span class="step-list__n">1</span>
+              <span>Click any cell inside the PivotTable. <strong>PivotTable Analyze → Insert Slicer.</strong> Tick <strong>Segment</strong> and <strong>Month</strong> (or Transaction Date). Click OK.</span>
+            </li>
+            <li>
+              <span class="step-list__n">2</span>
+              <span>Position the two slicers beside your chart. Resize as needed.</span>
+            </li>
+            <li>
+              <span class="step-list__n">3</span>
+              <span><strong>Connect slicers to the chart:</strong> Right-click the Segment slicer → <strong>Report Connections.</strong> Tick both the PivotTable and the PivotChart. Repeat for the Month slicer.</span>
+            </li>
+            <li>
+              <span class="step-list__n">4</span>
+              <span>Test: click <strong>Retail</strong> only. Watch the chart update. Then try <strong>Affluent + SME</strong> together (Ctrl+click for multi-select).</span>
+            </li>
+          </ul>
+          <div class="tip-box">
+            <span class="tip-box__label">IMPORTANT</span>
+            If the slicer only filters the table but not the chart, Report Connections has not been set. Right-click the slicer and complete the connection step.
+          </div>
+        </div>
+      </div>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Field Mapping</div>
+          <div class="sidebar-card__title">PivotTable setup</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">Rows</span><span class="sidebar-row__val">Product Type</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Columns</span><span class="sidebar-row__val">Segment</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Values</span><span class="sidebar-row__val">Sum of Revenue</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Slicer 1</span><span class="sidebar-row__val">Segment</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Slicer 2</span><span class="sidebar-row__val">Month</span></div>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Common fix</div>
+          <div class="sidebar-card__title">Count vs Sum</div>
+        </div>
+        <div class="sidebar-card__body">
+          <p style="font-family:var(--font-sans);font-size:13px;color:var(--slate);margin:0;line-height:1.55">If Values shows "Count of Revenue" — right-click the field in the PivotTable → Value Field Settings → Summarize by: <strong>Sum.</strong></p>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- PANEL: POWER BI -->
+<div id="panel-pbi" class="panel">
+  <div class="section-header">
+    <span class="pill">Power BI</span>
+    <span class="section-header__title">Facilitator Demo · 20 minutes</span>
+  </div>
+  <div class="page-layout">
+    <main>
+
+      <div class="info-box" style="margin-bottom:var(--space-lg)">
+        <div class="info-box__label">This section is a facilitator demo</div>
+        <p>You are watching, not building. Use this page as a reference for what was shown. The key outcome is understanding when Power BI adds value beyond Excel — not learning to build Power BI reports independently.</p>
+      </div>
+
+      <div class="pbi-section">
+        <div class="pbi-section__header">
+          <div>
+            <div class="pbi-section__tag">PHASE A</div>
+            <div class="pbi-section__title">Load the same dataset</div>
+          </div>
+          <div class="pbi-section__time">5 min</div>
+        </div>
+        <div class="pbi-section__body">
+          <strong>Home → Get Data → Excel Workbook.</strong> Select the clean orders sheet. Click <strong>Load</strong> (not Transform — the data is already clean from Module 4A). The same five columns appear in the Fields pane: Transaction Date, Product Type, Segment, Region, Revenue.
+        </div>
+      </div>
+
+      <div class="pbi-section">
+        <div class="pbi-section__header">
+          <div>
+            <div class="pbi-section__tag">PHASE B</div>
+            <div class="pbi-section__title">Build the equivalent visual</div>
+          </div>
+          <div class="pbi-section__time">10 min</div>
+        </div>
+        <div class="pbi-section__body">
+          <ul>
+            <li>Select <strong>Clustered Bar Chart</strong> from the Visualizations pane.</li>
+            <li>Drag <strong>Product Type</strong> to Y-axis, <strong>Revenue</strong> to X-axis, <strong>Segment</strong> to Legend. Power BI creates the same grouped view as the PivotChart.</li>
+            <li>Add a <strong>Slicer</strong> visual → drag <strong>Segment</strong> to the field. Four buttons appear automatically.</li>
+            <li>Add a second <strong>Slicer</strong> → drag <strong>Transaction Date</strong>. Set it to show by Month.</li>
+            <li>Note: no Report Connections step required — all visuals on the page filter together automatically.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pbi-section">
+        <div class="pbi-section__header">
+          <div>
+            <div class="pbi-section__tag">PHASE C</div>
+            <div class="pbi-section__title">The interactivity difference</div>
+          </div>
+          <div class="pbi-section__time">5 min</div>
+        </div>
+        <div class="pbi-section__body">
+          <strong>What was demonstrated:</strong>
+          <ul>
+            <li><strong>Cross-filter:</strong> clicking a bar in the chart cross-highlights all other visuals on the page automatically — no setup required.</li>
+            <li><strong>Slicer auto-filter:</strong> clicking a slicer button filters every visual simultaneously.</li>
+            <li><strong>Drill-through:</strong> right-click a bar → Drill through → see transaction-level detail behind that segment/product combination.</li>
+            <li><strong>Tooltip:</strong> hovering a bar shows multiple configured metrics (revenue, count, average) in one tooltip.</li>
+          </ul>
+        </div>
+      </div>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">PBI Field Mapping</div>
+          <div class="sidebar-card__title">Equivalent setup</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">Y-axis</span><span class="sidebar-row__val">Product Type</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">X-axis</span><span class="sidebar-row__val">Sum of Revenue</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Legend</span><span class="sidebar-row__val">Segment</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Slicer 1</span><span class="sidebar-row__val">Segment</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">Slicer 2</span><span class="sidebar-row__val">Transaction Date (Month)</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- PANEL: COMPARE -->
+<div id="panel-compare" class="panel">
+  <div class="section-header">
+    <span class="pill">Decision Guide</span>
+    <span class="section-header__title">Excel vs Power BI — When to Reach for Each</span>
+  </div>
+  <div class="page-layout">
+    <main>
+
+      <p style="font-family:var(--font-sans);font-size:15px;color:var(--slate);line-height:1.65;margin-bottom:var(--space-lg)">
+        Both tools answered the same question today. The difference is in what happens <em>after</em> you answer it — and who needs to interact with the result.
+      </p>
+
+      <div class="compare-grid">
+        <div class="compare-card compare-card--excel">
+          <div class="compare-card__head">USE EXCEL WHEN</div>
+          <div class="compare-card__body">
+            <div class="compare-item">
+              <span class="compare-item__check">✓</span>
+              <span>You need a quick one-off answer and you're already in Excel</span>
+            </div>
+            <div class="compare-item">
+              <span class="compare-item__check">✓</span>
+              <span>The output is a file attachment — one recipient, one use</span>
+            </div>
+            <div class="compare-item">
+              <span class="compare-item__check">✓</span>
+              <span>Dataset is small (&lt;100k rows) and self-contained</span>
+            </div>
+            <div class="compare-item">
+              <span class="compare-item__check">✓</span>
+              <span>No Power BI licence or IT approval required</span>
+            </div>
+            <div class="compare-item">
+              <span class="compare-item__check">✓</span>
+              <span>Slicers and a single chart are sufficient interactivity</span>
+            </div>
+          </div>
+        </div>
+        <div class="compare-card compare-card--pbi">
+          <div class="compare-card__head">USE POWER BI WHEN</div>
+          <div class="compare-card__body">
+            <div class="compare-item">
+              <span class="compare-item__check">✓</span>
+              <span>Multiple stakeholders need to view and interact with the same data</span>
+            </div>
+            <div class="compare-item">
+              <span class="compare-item__check">✓</span>
+              <span>Data refreshes on a schedule — connected to live source systems</span>
+            </div>
+            <div class="compare-item">
+              <span class="compare-item__check">✓</span>
+              <span>Cross-filter, drill-through, and multi-visual dashboards are needed</span>
+            </div>
+            <div class="compare-item">
+              <span class="compare-item__check">✓</span>
+              <span>The report is published to a shared workspace — not emailed as a file</span>
+            </div>
+            <div class="compare-item">
+              <span class="compare-item__check">✓</span>
+              <span>Multiple datasets from different sources need to be combined</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula-box">
+        <div class="formula-box__label">The Decision Frame</div>
+        <div class="formula-box__text">Who is the audience? How often does the analysis run? How many different cuts of the data will you need?</div>
+        <div class="formula-box__example">One person, once, flexible format → Excel. Multiple people, recurring, standardised view → Power BI.</div>
+      </div>
+
+      <h3 style="font-family:var(--font-serif);font-size:18px;color:var(--navy);margin:var(--space-lg) 0 var(--space-md)">Feature comparison</h3>
+
+      <table style="width:100%;border-collapse:collapse">
+        <thead>
+          <tr>
+            <th style="background:var(--navy);color:var(--gold);font-family:var(--font-sans);font-size:10px;font-weight:700;letter-spacing:0.1em;padding:10px 14px;text-align:left;width:22%">Feature</th>
+            <th style="background:var(--navy);color:var(--gold);font-family:var(--font-sans);font-size:10px;font-weight:700;letter-spacing:0.1em;padding:10px 14px;text-align:left;width:39%">Excel</th>
+            <th style="background:var(--gold);color:var(--navy-deep);font-family:var(--font-sans);font-size:10px;font-weight:700;letter-spacing:0.1em;padding:10px 14px;text-align:left;width:39%">Power BI</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--rule)">
+            <td style="padding:10px 14px;font-family:var(--font-sans);font-size:13px;font-weight:600;color:var(--navy)">Slicer interaction</td>
+            <td style="padding:10px 14px;font-family:var(--font-sans);font-size:13px;color:var(--slate)">Filters table and chart after manual Report Connections setup</td>
+            <td style="padding:10px 14px;font-family:var(--font-sans);font-size:13px;color:var(--navy);font-weight:600;background:var(--warm-white)">All visuals on the page filter automatically — no setup required</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--rule);background:var(--cream)">
+            <td style="padding:10px 14px;font-family:var(--font-sans);font-size:13px;font-weight:600;color:var(--navy)">Cross-filtering</td>
+            <td style="padding:10px 14px;font-family:var(--font-sans);font-size:13px;color:var(--slate)">Not available</td>
+            <td style="padding:10px 14px;font-family:var(--font-sans);font-size:13px;color:var(--navy);font-weight:600;background:var(--warm-white)">Click any element — all visuals respond instantly</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--rule)">
+            <td style="padding:10px 14px;font-family:var(--font-sans);font-size:13px;font-weight:600;color:var(--navy)">Drill-through</td>
+            <td style="padding:10px 14px;font-family:var(--font-sans);font-size:13px;color:var(--slate)">Not available natively</td>
+            <td style="padding:10px 14px;font-family:var(--font-sans);font-size:13px;color:var(--navy);font-weight:600;background:var(--warm-white)">Right-click → see transaction-level detail behind any bar</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--rule);background:var(--cream)">
+            <td style="padding:10px 14px;font-family:var(--font-sans);font-size:13px;font-weight:600;color:var(--navy)">Data refresh</td>
+            <td style="padding:10px 14px;font-family:var(--font-sans);font-size:13px;color:var(--slate)">Manual — re-open and refresh the file</td>
+            <td style="padding:10px 14px;font-family:var(--font-sans);font-size:13px;color:var(--navy);font-weight:600;background:var(--warm-white)">Scheduled automatic refresh from source</td>
+          </tr>
+          <tr>
+            <td style="padding:10px 14px;font-family:var(--font-sans);font-size:13px;font-weight:600;color:var(--navy)">Distribution</td>
+            <td style="padding:10px 14px;font-family:var(--font-sans);font-size:13px;color:var(--slate)">File attachment sent by email</td>
+            <td style="padding:10px 14px;font-family:var(--font-sans);font-size:13px;color:var(--navy);font-weight:600;background:var(--warm-white)">Published link — always current, no file management</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </main>
+    <aside class="sidebar">
+      <div class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Module 4B</div>
+          <div class="sidebar-card__title">What you built today</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row"><span class="sidebar-row__label">✓</span><span class="sidebar-row__val">PivotTable: Product × Segment</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">✓</span><span class="sidebar-row__val">Clustered Bar PivotChart</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">✓</span><span class="sidebar-row__val">Segment + Month slicers</span></div>
+          <div class="sidebar-row"><span class="sidebar-row__label">✓</span><span class="sidebar-row__val">Observed PBI cross-filter demo</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<footer>
+  <span class="footer__brand">SMBC Group · Learning &amp; Development · APAC</span>
+  <span class="footer__note">Confidential · Programme Materials</span>
+</footer>
+
+<script>
+  function showPanel(id) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-bar__btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
+</body>
+</html>
