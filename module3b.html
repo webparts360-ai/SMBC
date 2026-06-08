@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Module 3B – SpaceX / Starlink IPO Exercise</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Link to your shared stylesheet -->
+  <link rel="stylesheet" href="smbc.css" />
+</head>
+<body>
+
+  <!-- Top navigation bar -->
+  <header class="topbar">
+    <div class="topbar__brand">
+      <div class="topbar__mark" style="background: var(--gold); border-radius: 50%;"></div>
+      <div class="topbar__text">
+        <div class="topbar__name">SMBC LEARNING LAB</div>
+        <div class="topbar__sub">AI, CAPITAL MARKETS & RISK</div>
+      </div>
+    </div>
+    <nav class="topbar__nav">
+      <a href="#" class="active">Module 3B</a>
+      <a href="#facts">Facts</a>
+      <a href="#assignment">Assignment</a>
+      <a href="#tools">Tools</a>
+    </nav>
+  </header>
+
+  <!-- Hero section -->
+  <section class="hero">
+    <div class="hero__rule"></div>
+    <div class="hero__inner">
+      <div class="hero__eyebrow">
+        <div class="hero__eyebrow-line"></div>
+        <span class="label label--light">Module 3B · Case Exercise</span>
+      </div>
+      <h1 class="hero__title">
+        SpaceX / Starlink IPO:<br />
+        <em>Valuation & Risk Analysis</em>
+      </h1>
+      <p class="hero__desc">
+        In this exercise you will use real S‑1 data and recent Nasdaq rule changes
+        to form a view on the SpaceX / Starlink IPO. Your job is to decide whether
+        the proposed valuation and deal structure are acceptable for a long‑term
+        institutional investor.
+      </p>
+      <div class="hero__meta">
+        <div class="hero__meta-item">
+          <div class="hero__meta-label">Duration</div>
+          <div class="hero__meta-value">30 minutes (team exercise)</div>
+        </div>
+        <div class="hero__meta-item">
+          <div class="hero__meta-label">Focus</div>
+          <div class="hero__meta-value">DCF, governance, market structure risk</div>
+        </div>
+        <div class="hero__meta-item">
+          <div class="hero__meta-label">Deliverable</div>
+          <div class="hero__meta-value">GO / CAUTION / NO‑GO + 3 data points</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Optional tab bar (single tab highlighted) -->
+  <div class="tab-bar">
+    <button class="tab-bar__btn active">Case Brief</button>
+    <button class="tab-bar__btn" disabled style="opacity:0.35; cursor:default;">
+      Reveal (facilitator only)
+    </button>
+  </div>
+
+  <!-- Section header -->
+  <div class="section-header" id="facts">
+    <span class="pill pill--navy">Module 3B</span>
+    <div class="section-header__title">
+      SpaceX / Starlink IPO – Case Brief & Exercise Instructions
+    </div>
+  </div>
+
+  <!-- Main page layout -->
+  <main class="page-layout">
+
+    <!-- Left: main content cards -->
+    <div class="page-layout__main">
+
+      <!-- Card 1: Case snapshot -->
+      <article class="card card--highlighted">
+        <div class="card__header">
+          <div class="card__num">01</div>
+          <div class="card__meta">
+            <div class="card__tag">Case snapshot</div>
+            <h2 class="card__title">What are we looking at?</h2>
+            <div class="card__topics">
+              <div class="card__topic">
+                SpaceX is seeking to raise approximately USD 75B at a
+                ~USD 1.75T valuation, in what could be the largest IPO in history
+                (ticker: SPCX, Nasdaq).<!-- facts from IPO reports [web:113][web:115] -->
+              </div>
+              <div class="card__topic">
+                Starlink (satellite internet) is the primary economic engine,
+                contributing the majority of 2025 revenue; launch and AI/xAI/X
+                make up the rest.<!-- based on S‑1 coverage [web:65][web:68] -->
+              </div>
+              <div class="card__topic">
+                CEO Elon Musk will retain ~85% of voting power through a dual‑class
+                share structure (Class B super‑voting shares), leaving public
+                investors as minority holders in a controlled company.<!-- governance notes [web:57][web:60] -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card__footer">
+          <span class="pill pill--outline">Context</span>
+          <span class="pill pill--outline">Largest IPO</span>
+          <span class="pill pill--outline">Controlled company</span>
+        </div>
+      </article>
+
+      <!-- Card 2: Facts & figures -->
+      <article class="card" id="assignment">
+        <div class="card__header">
+          <div class="card__num">02</div>
+          <div class="card__meta">
+            <div class="card__tag">Facts & figures</div>
+            <h2 class="card__title">Key numbers you will use</h2>
+            <div class="card__topics">
+              <div class="card__topic">
+                <strong>Business performance (FY2025):</strong>
+                Revenue ≈ USD 18.7B, with ~30%+ growth vs 2024; adjusted EBITDA
+                ≈ USD 6.6B (mid‑30s % margin).<!-- S‑1 summary [file:92][web:65][web:68] -->
+              </div>
+              <div class="card__topic">
+                <strong>Investment intensity:</strong>
+                Capex around USD 14B in 2025, implying very high capex/revenue and
+                negative free cash flow in the near term.<!-- heavy capex [file:92][web:65] -->
+              </div>
+              <div class="card__topic">
+                <strong>IPO pricing:</strong>
+                Offer price USD 135/share; fully diluted shares ≈ 12.5B;
+                implied market cap ~USD 1.7–1.8T and EV/Sales ≈ 90x, EV/EBITDA
+                ≈ 250x versus much lower multiples for peers like Nvidia and Tesla.<!-- multiples [file:92][web:73][web:81] -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card__footer">
+          <span class="pill pill--outline">Growth & margins</span>
+          <span class="pill pill--outline">Capex & FCF</span>
+          <span class="pill pill--outline">Multiples vs peers</span>
+        </div>
+      </article>
+
+      <!-- Card 3: IPO structure & Nasdaq rules -->
+      <article class="card">
+        <div class="card__header">
+          <div class="card__num">03</div>
+          <div class="card__meta">
+            <div class="card__tag">Structure & market design</div>
+            <h2 class="card__title">What’s different about this IPO?</h2>
+            <div class="card__topics">
+              <div class="card__topic">
+                <strong>Fast index entry:</strong>
+                Nasdaq’s new “Fast Entry” rule allows mega‑cap IPOs like SpaceX
+                to join the Nasdaq‑100 after just 15 trading days, rather than
+                waiting months. This means index funds and ETFs tracking the
+                Nasdaq‑100 will be forced buyers very quickly.<!-- [web:93][web:108][web:111] -->
+              </div>
+              <div class="card__topic">
+                <strong>Float & passive flows:</strong>
+                For qualifying large IPOs, free‑float constraints are relaxed
+                and weight is controlled via investable‑weight factors rather
+                than strict float thresholds, allowing low‑float mega‑caps into
+                benchmarks while still triggering large passive flows.<!-- [web:107][web:116] -->
+              </div>
+              <div class="card__topic">
+                <strong>Dual‑class governance:</strong>
+                Public investors receive 1‑vote Class A shares, while Musk holds
+                10‑vote Class B shares and remains firmly in control; corporate
+                governance and pension funds have flagged this as an
+                investor‑unfriendly structure.<!-- [web:57][web:60][web:97] -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card__footer">
+          <span class="pill pill--outline">Fast‑track Nasdaq‑100</span>
+          <span class="pill pill--outline">Passive ETF demand</span>
+          <span class="pill pill--outline">Dual‑class control</span>
+        </div>
+      </article>
+
+      <!-- Objectives / assignment card -->
+      <article class="card card--active">
+        <div class="card__header">
+          <div class="card__num">04</div>
+          <div class="card__meta">
+            <div class="card__tag">Your assignment</div>
+            <h2 class="card__title">What you need to deliver</h2>
+          </div>
+        </div>
+        <div class="card__footer" style="flex-direction:column; align-items:flex-start; padding-left:32px;">
+          <div class="objectives">
+            <div class="objective">
+              <div class="objective__marker">1</div>
+              <div class="objective__text">
+                <strong>Valuation view.</strong>
+                Using the facts above and the Excel data pack, form an initial view:
+                at USD 135/share, is SPCX <em>cheap, fair, or expensive</em> relative to
+                its growth, margins and peers? You may sketch a simple DCF or rely on
+                multiples, but your answer must be anchored in numbers.
+              </div>
+            </div>
+            <div class="objective">
+              <div class="objective__marker">2</div>
+              <div class="objective__text">
+                <strong>Risk mapping.</strong>
+                Identify at least three material risks across:
+                (a) business/financial (growth, capex, FCF),
+                (b) governance (dual‑class, Musk control),
+                and (c) market structure (fast index entry, float, ETF flows).
+              </div>
+            </div>
+            <div class="objective">
+              <div class="objective__marker">3</div>
+              <div class="objective__text">
+                <strong>Recommendation.</strong>
+                Decide: <strong>GO / CAUTION / NO‑GO</strong> for a long‑term
+                institutional investor at the IPO price. Support your view with three
+                concrete data points: at least one from the financials, one from the
+                IPO structure/rules, and one from your valuation work.
+              </div>
+            </div>
+          </div>
+
+          <p id="tools" style="margin-top: 18px; font-size:13px; color:var(--slate);">
+            You will work in small groups. Allocate ~10 minutes to crunch numbers in Excel,
+            ~10 minutes to debate risks and structure, and ~5 minutes to agree your
+            one‑line recommendation.
+          </p>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Right: sidebar with quick reference and tools -->
+    <aside class="sidebar">
+
+      <!-- Sidebar card: Key IPO terms -->
+      <section class="sidebar-card sidebar-card--gold">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Quick reference</div>
+          <div class="sidebar-card__title">IPO headline terms</div>
+        </div>
+        <div class="sidebar-card__body">
+          <div class="sidebar-row">
+            <div class="sidebar-row__label">Exchange / Ticker</div>
+            <div class="sidebar-row__val">Nasdaq · SPCX</div>
+          </div>
+          <div class="sidebar-row">
+            <div class="sidebar-row__label">Offer price</div>
+            <div class="sidebar-row__val">USD 135 / share</div>
+          </div>
+          <div class="sidebar-row">
+            <div class="sidebar-row__label">Implied valuation</div>
+            <div class="sidebar-row__val">~USD 1.75T</div>
+          </div>
+          <div class="sidebar-row">
+            <div class="sidebar-row__label">Gross proceeds</div>
+            <div class="sidebar-row__val">~USD 75B</div>
+          </div>
+          <div class="sidebar-row">
+            <div class="sidebar-row__label">Voting control</div>
+            <div class="sidebar-row__val">~85% (Musk)</div>
+          </div>
+          <div class="sidebar-row">
+            <div class="sidebar-row__label">Index rule</div>
+            <div class="sidebar-row__val">Fast entry (15 days)</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sidebar card: Suggested tools -->
+      <section class="sidebar-card">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Suggested tools</div>
+          <div class="sidebar-card__title">How you might analyze it</div>
+        </div>
+        <div class="tool-chips">
+          <div class="tool-chip">
+            <div class="tool-chip__icon">
+              <span style="color:var(--gold-light); font-size:14px;">Σ</span>
+            </div>
+            <div>
+              <strong>Ratio check.</strong><br />
+              Compute growth %, EBITDA margin, capex/revenue,
+              EV/Sales and EV/EBITDA vs peers.
+            </div>
+          </div>
+          <div class="tool-chip">
+            <div class="tool-chip__icon">
+              <span style="color:var(--gold-light); font-size:14px;">⇄</span>
+            </div>
+            <div>
+              <strong>Scenario thinking.</strong><br />
+              Ask “what would need to be true” about growth, margins
+              or WACC to justify USD 135/share.
+            </div>
+          </div>
+          <div class="tool-chip">
+            <div class="tool-chip__icon">
+              <span style="color:var(--gold-light); font-size:14px;">ƒ</span>
+            </div>
+            <div>
+              <strong>DCF (optional).</strong><br />
+              Use the provided Excel template to project 10 years of free cash flow
+              and compute an implied per‑share value.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sidebar note: Reveal (for you) -->
+      <section class="sidebar-card">
+        <div class="sidebar-card__head">
+          <div class="sidebar-card__label">Facilitator</div>
+          <div class="sidebar-card__title">Reveal (do not show upfront)</div>
+        </div>
+        <div class="sidebar-card__body" style="font-size:12px; color:var(--slate);">
+          <p>
+            After teams present, you may reveal your full DCF:
+            a base‑case 10‑year unlevered DCF implies equity value
+            in the tens of billions and an intrinsic value of only
+            a few dollars per share — far below the USD 135 IPO price.
+          </p>
+          <p style="margin-top:10px;">
+            Use this to illustrate the gap between “DCF‑supported value”
+            and the market’s pricing of long‑dated optionality in AI,
+            launch and Starlink scale‑up.
+          </p>
+        </div>
+      </section>
+
+    </aside>
+
+  </main>
+
+</body>
+</html>
