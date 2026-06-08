@@ -11,18 +11,21 @@
 
   <!-- Top navigation bar -->
   <header class="topbar">
-    <div class="topbar__brand">
-      <div class="topbar__mark" style="background: var(--gold); border-radius: 50%;"></div>
-      <div class="topbar__text">
-        <div class="topbar__name">SMBC LEARNING LAB</div>
-        <div class="topbar__sub">AI, CAPITAL MARKETS & RISK</div>
-      </div>
+  <div class="topbar__brand">
+    <svg class="topbar__mark" viewBox="0 0 28 28" fill="none">
+      <rect width="28" height="28" rx="3" fill="#1f4278"/>
+      <text x="14" y="20" text-anchor="middle" font-family="Georgia,serif" font-size="14" font-weight="700" fill="#b8902a">S</text>
+    </svg>
+    <div class="topbar__text">
+      <span class="topbar__name">SMBC Group</span>
+      <span class="topbar__sub">Learning &amp; Development · APAC</span>
     </div>
+  </div>
     <nav class="topbar__nav">
       <a href="#" class="active">Module 3B</a>
       <a href="#facts">Facts</a>
       <a href="#assignment">Assignment</a>
-      <a href="#tools">Tools</a>
+      <a href="#ff-tab">Facts &amp; Figures Tab</a>
     </nav>
   </header>
 
@@ -61,11 +64,11 @@
     </div>
   </section>
 
-  <!-- Optional tab bar (single tab highlighted) -->
+  <!-- Tab bar: Case vs Facts & Figures -->
   <div class="tab-bar">
     <button class="tab-bar__btn active">Case Brief</button>
-    <button class="tab-bar__btn" disabled style="opacity:0.35; cursor:default;">
-      Reveal (facilitator only)
+    <button class="tab-bar__btn" onclick="document.getElementById('ff-tab').scrollIntoView({behavior:'smooth'});">
+      Facts &amp; Figures
     </button>
   </div>
 
@@ -94,17 +97,17 @@
               <div class="card__topic">
                 SpaceX is seeking to raise approximately USD 75B at a
                 ~USD 1.75T valuation, in what could be the largest IPO in history
-                (ticker: SPCX, Nasdaq).<!-- facts from IPO reports [web:113][web:115] -->
+                (ticker: SPCX, Nasdaq).<!-- [web:113][web:115] -->
               </div>
               <div class="card__topic">
                 Starlink (satellite internet) is the primary economic engine,
                 contributing the majority of 2025 revenue; launch and AI/xAI/X
-                make up the rest.<!-- based on S‑1 coverage [web:65][web:68] -->
+                make up the rest.<!-- [file:92][web:65] -->
               </div>
               <div class="card__topic">
                 CEO Elon Musk will retain ~85% of voting power through a dual‑class
                 share structure (Class B super‑voting shares), leaving public
-                investors as minority holders in a controlled company.<!-- governance notes [web:57][web:60] -->
+                investors as minority holders in a controlled company.<!-- [web:57][web:60] -->
               </div>
             </div>
           </div>
@@ -116,7 +119,7 @@
         </div>
       </article>
 
-      <!-- Card 2: Facts & figures -->
+      <!-- Card 2: Facts & figures (overview) -->
       <article class="card" id="assignment">
         <div class="card__header">
           <div class="card__num">02</div>
@@ -127,18 +130,18 @@
               <div class="card__topic">
                 <strong>Business performance (FY2025):</strong>
                 Revenue ≈ USD 18.7B, with ~30%+ growth vs 2024; adjusted EBITDA
-                ≈ USD 6.6B (mid‑30s % margin).<!-- S‑1 summary [file:92][web:65][web:68] -->
+                ≈ USD 6.6B (mid‑30s % margin).<!-- [file:92][web:65][web:68] -->
               </div>
               <div class="card__topic">
                 <strong>Investment intensity:</strong>
                 Capex around USD 14B in 2025, implying very high capex/revenue and
-                negative free cash flow in the near term.<!-- heavy capex [file:92][web:65] -->
+                negative free cash flow in the near term.<!-- [file:92][web:65] -->
               </div>
               <div class="card__topic">
                 <strong>IPO pricing:</strong>
                 Offer price USD 135/share; fully diluted shares ≈ 12.5B;
                 implied market cap ~USD 1.7–1.8T and EV/Sales ≈ 90x, EV/EBITDA
-                ≈ 250x versus much lower multiples for peers like Nvidia and Tesla.<!-- multiples [file:92][web:73][web:81] -->
+                ≈ 250x versus much lower multiples for peers like Nvidia and Tesla.<!-- [file:92][web:73][web:81] -->
               </div>
             </div>
           </div>
@@ -162,14 +165,14 @@
                 <strong>Fast index entry:</strong>
                 Nasdaq’s new “Fast Entry” rule allows mega‑cap IPOs like SpaceX
                 to join the Nasdaq‑100 after just 15 trading days, rather than
-                waiting months. This means index funds and ETFs tracking the
-                Nasdaq‑100 will be forced buyers very quickly.<!-- [web:93][web:108][web:111] -->
+                waiting months. Index funds and ETFs tracking the Nasdaq‑100 will
+                therefore be forced buyers very quickly.<!-- [web:93][web:108][web:111] -->
               </div>
               <div class="card__topic">
                 <strong>Float & passive flows:</strong>
-                For qualifying large IPOs, free‑float constraints are relaxed
-                and weight is controlled via investable‑weight factors rather
-                than strict float thresholds, allowing low‑float mega‑caps into
+                For qualifying large IPOs, free‑float constraints are relaxed and
+                weight is controlled via investable‑weight factors rather than
+                strict float thresholds, allowing low‑float mega‑caps into
                 benchmarks while still triggering large passive flows.<!-- [web:107][web:116] -->
               </div>
               <div class="card__topic">
@@ -189,7 +192,7 @@
         </div>
       </article>
 
-      <!-- Objectives / assignment card -->
+      <!-- Card 4: Assignment -->
       <article class="card card--active">
         <div class="card__header">
           <div class="card__num">04</div>
@@ -232,10 +235,191 @@
             </div>
           </div>
 
-          <p id="tools" style="margin-top: 18px; font-size:13px; color:var(--slate);">
-            You will work in small groups. Allocate ~10 minutes to crunch numbers in Excel,
+          <p style="margin-top: 18px; font-size:13px; color:var(--slate);">
+            Work in small groups. Allocate ~10 minutes to crunch numbers in Excel,
             ~10 minutes to debate risks and structure, and ~5 minutes to agree your
             one‑line recommendation.
+          </p>
+        </div>
+      </article>
+
+      <!-- NEW: Facts & Figures Tab (copy/paste friendly) -->
+      <article class="card" id="ff-tab">
+        <div class="card__header">
+          <div class="card__num">05</div>
+          <div class="card__meta">
+            <div class="card__tag">Facts & figures tab</div>
+            <h2 class="card__title">Copy/paste data for your analysis</h2>
+            <div class="card__topics">
+              <div class="card__topic">
+                Use the tables below as your “facts &amp; figures” tab. You may
+                copy/paste directly into Excel or another tool. All numbers are
+                drawn from the workshop data pack and public S‑1 reporting.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card__footer" style="flex-direction:column; align-items:flex-start; padding: 0 32px 24px 32px;">
+          
+          <!-- Income statement snapshot -->
+          <h3 style="margin:16px 0 6px; font-size:15px;">A. Historical financials (USD millions)</h3>
+          <table style="width:100%; border-collapse:collapse; font-size:13px;">
+            <thead>
+              <tr>
+                <th style="text-align:left; border-bottom:1px solid var(--rule); padding:4px 0;">Metric</th>
+                <th style="text-align:right; border-bottom:1px solid var(--rule); padding:4px 0;">FY 2023</th>
+                <th style="text-align:right; border-bottom:1px solid var(--rule); padding:4px 0;">FY 2024</th>
+                <th style="text-align:right; border-bottom:1px solid var(--rule); padding:4px 0;">FY 2025</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Total revenue</td>
+                <td style="text-align:right;">10,600</td>
+                <td style="text-align:right;">14,100</td>
+                <td style="text-align:right;">18,674</td>
+              </tr>
+              <tr>
+                <td>Starlink revenue</td>
+                <td style="text-align:right;">3,900</td>
+                <td style="text-align:right;">7,600</td>
+                <td style="text-align:right;">11,387</td>
+              </tr>
+              <tr>
+                <td>Launch/space revenue</td>
+                <td style="text-align:right;">4,400</td>
+                <td style="text-align:right;">3,800</td>
+                <td style="text-align:right;">4,086</td>
+              </tr>
+              <tr>
+                <td>Adjusted EBITDA</td>
+                <td style="text-align:right;">3,500</td>
+                <td style="text-align:right;">6,584</td>
+                <td style="text-align:right;">6,584</td>
+              </tr>
+              <tr>
+                <td>Capex</td>
+                <td style="text-align:right;">–</td>
+                <td style="text-align:right;">–</td>
+                <td style="text-align:right;">14,000</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Starlink metrics -->
+          <h3 style="margin:18px 0 6px; font-size:15px;">B. Starlink unit economics</h3>
+          <table style="width:100%; border-collapse:collapse; font-size:13px;">
+            <thead>
+              <tr>
+                <th style="text-align:left; border-bottom:1px solid var(--rule); padding:4px 0;">Metric</th>
+                <th style="text-align:right; border-bottom:1px solid var(--rule); padding:4px 0;">2023</th>
+                <th style="text-align:right; border-bottom:1px solid var(--rule); padding:4px 0;">2024</th>
+                <th style="text-align:right; border-bottom:1px solid var(--rule); padding:4px 0;">2025</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Subscribers (millions)</td>
+                <td style="text-align:right;">2.3</td>
+                <td style="text-align:right;">4.4</td>
+                <td style="text-align:right;">8.9</td>
+              </tr>
+              <tr>
+                <td>ARPU (USD / month)</td>
+                <td style="text-align:right;">99</td>
+                <td style="text-align:right;">90</td>
+                <td style="text-align:right;">81</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Balance sheet & capex -->
+          <h3 style="margin:18px 0 6px; font-size:15px;">C. Balance sheet snapshot (Q1 2026)</h3>
+          <table style="width:100%; border-collapse:collapse; font-size:13px;">
+            <tbody>
+              <tr>
+                <td>Cash &amp; equivalents</td>
+                <td style="text-align:right;">24,700</td>
+              </tr>
+              <tr>
+                <td>Total debt (incl. leases)</td>
+                <td style="text-align:right;">29,100</td>
+              </tr>
+              <tr>
+                <td>Net debt (pre‑IPO)</td>
+                <td style="text-align:right;">4,400</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- IPO terms -->
+          <h3 style="margin:18px 0 6px; font-size:15px;">D. IPO deal terms</h3>
+          <table style="width:100%; border-collapse:collapse; font-size:13px;">
+            <tbody>
+              <tr>
+                <td>Offer price (USD)</td>
+                <td style="text-align:right;">135</td>
+              </tr>
+              <tr>
+                <td>Fully diluted shares (millions)</td>
+                <td style="text-align:right;">12,535</td>
+              </tr>
+              <tr>
+                <td>Implied equity value (USD billions)</td>
+                <td style="text-align:right;">~1,750</td>
+              </tr>
+              <tr>
+                <td>Gross proceeds (USD billions)</td>
+                <td style="text-align:right;">~75</td>
+              </tr>
+              <tr>
+                <td>Voting control (Musk)</td>
+                <td style="text-align:right;">~85%</td>
+              </tr>
+              <tr>
+                <td>Fast‑entry index rule</td>
+                <td style="text-align:right;">Nasdaq‑100 in ~15 trading days (if eligible)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Peer multiples (from your peer table) -->
+          <h3 style="margin:18px 0 6px; font-size:15px;">E. Valuation multiples vs peers</h3>
+          <table style="width:100%; border-collapse:collapse; font-size:13px;">
+            <thead>
+              <tr>
+                <th style="text-align:left; border-bottom:1px solid var(--rule); padding:4px 0;">Company</th>
+                <th style="text-align:right; border-bottom:1px solid var(--rule); padding:4px 0;">EV/Sales (x)</th>
+                <th style="text-align:right; border-bottom:1px solid var(--rule); padding:4px 0;">EV/EBITDA (x)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>SpaceX (IPO target)</td>
+                <td style="text-align:right;">93.6</td>
+                <td style="text-align:right;">265.2</td>
+              </tr>
+              <tr>
+                <td>Nvidia</td>
+                <td style="text-align:right;">21.3</td>
+                <td style="text-align:right;">35.4</td>
+              </tr>
+              <tr>
+                <td>Tesla</td>
+                <td style="text-align:right;">15.8</td>
+                <td style="text-align:right;">125.0</td>
+              </tr>
+              <tr>
+                <td>Iridium</td>
+                <td style="text-align:right;">4.0</td>
+                <td style="text-align:right;">8.0</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p style="margin-top:16px; font-size:12px; color:var(--slate-light);">
+            Tip: copy any of the tables above directly into Excel or Sheets to accelerate
+            your ratio analysis or DCF assumptions.
           </p>
         </div>
       </article>
@@ -274,7 +458,7 @@
           </div>
           <div class="sidebar-row">
             <div class="sidebar-row__label">Index rule</div>
-            <div class="sidebar-row__val">Fast entry (15 days)</div>
+            <div class="sidebar-row__val">Fast entry (~15 days)</div>
           </div>
         </div>
       </section>
@@ -316,27 +500,6 @@
               and compute an implied per‑share value.
             </div>
           </div>
-        </div>
-      </section>
-
-      <!-- Sidebar note: Reveal (for you) -->
-      <section class="sidebar-card">
-        <div class="sidebar-card__head">
-          <div class="sidebar-card__label">Facilitator</div>
-          <div class="sidebar-card__title">Reveal (do not show upfront)</div>
-        </div>
-        <div class="sidebar-card__body" style="font-size:12px; color:var(--slate);">
-          <p>
-            After teams present, you may reveal your full DCF:
-            a base‑case 10‑year unlevered DCF implies equity value
-            in the tens of billions and an intrinsic value of only
-            a few dollars per share — far below the USD 135 IPO price.
-          </p>
-          <p style="margin-top:10px;">
-            Use this to illustrate the gap between “DCF‑supported value”
-            and the market’s pricing of long‑dated optionality in AI,
-            launch and Starlink scale‑up.
-          </p>
         </div>
       </section>
 
