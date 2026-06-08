@@ -234,9 +234,15 @@
 
 <!-- ══════ TOPBAR ══════ -->
 <header class="topbar">
-  <div class="topbar__brand">
-    <img src="https://www.smbc.co.jp/asia/SMBC/media/SMBC/SMBC-logo.png"
-         alt="SMBC" height="28" style="display:block;height:28px;width:auto;">
+    <div class="topbar__brand">
+    <svg class="topbar__mark" viewBox="0 0 28 28" fill="none">
+      <rect width="28" height="28" rx="3" fill="#1f4278"/>
+      <text x="14" y="20" text-anchor="middle" font-family="Georgia,serif" font-size="14" font-weight="700" fill="#b8902a">S</text>
+    </svg>
+    <div class="topbar__text">
+      <span class="topbar__name">SMBC Group</span>
+      <span class="topbar__sub">Learning &amp; Development · APAC</span>
+    </div>
   </div>
   <nav class="topbar__nav">
     <a href="#" onclick="showTab('day1'); return false;" id="nav-day1" class="active">Day 1</a>
