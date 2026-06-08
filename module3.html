@@ -788,6 +788,36 @@
   .back-nav__sep { color: rgba(255,255,255,0.2); font-size: 12px; }
   .back-nav__current { font-size: 12px; color: var(--gold); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
 
+  /* Exercise tab typography tweaks */
+  .exercise-heading {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--white);
+    margin: 12px 0 10px;
+  }
+
+  #panel-exercise .formula-box {
+    max-width: 640px;
+    padding: 16px 18px;
+    border-radius: 4px;
+    background: var(--navy-deep, #071429);
+  }
+
+  #panel-exercise .formula-box__label {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  #panel-exercise .formula-box__text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.9);
+  }
+
   @media (max-width: 860px) {
     .stat-row, .maturity-grid { grid-template-columns: 1fr 1fr; }
     .lenses-grid, .trap-grid, .qr-grid { grid-template-columns: 1fr; }
@@ -1352,7 +1382,7 @@
   <div class="exercise-section">
     <div class="exercise-inner">
       <span class="label">Module 3 · Practical Exercise · 20 minutes</span>
-      <h2 style="font-family:var(--font-serif);font-size:32px;font-weight:700;color:var(--white);margin:12px 0 10px;">The DataPOV Exercise</h2>
+      <h2 class="exercise-heading">The DataPOV Exercise</h2>
       <p style="font-size:16px;color:rgba(255,255,255,0.65);max-width:600px;line-height:1.7;margin-bottom:28px;">Choose the scenario closest to your function. Read the situation and data points, then write one DataPOV sentence using the formula below.</p>
 
       <div class="formula-box" style="margin-bottom:28px;">
