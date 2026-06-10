@@ -1,0 +1,295 @@
+
+<style>
+:root { --gap: 12px; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.wrap { padding: 1rem 0; }
+.section-label { font-size: 12px; font-weight: 500; letter-spacing: 0.05em; color: var(--color-text-tertiary); text-transform: uppercase; margin-bottom: 10px; margin-top: 1.75rem; }
+.section-label:first-child { margin-top: 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--gap); }
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; cursor: pointer; transition: border-color 0.15s; }
+.card:hover { border-color: var(--color-border-secondary); }
+.card.active { border: 1.5px solid var(--color-border-info); }
+.card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.badge { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: var(--border-radius-md); white-space: nowrap; }
+.badge-success { background: var(--color-background-success); color: var(--color-text-success); }
+.badge-warning { background: var(--color-background-warning); color: var(--color-text-warning); }
+.badge-danger { background: var(--color-background-danger); color: var(--color-text-danger); }
+.card-icon { font-size: 20px; color: var(--color-text-secondary); }
+.card-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+.card-sub { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; }
+.card-metric { font-size: 22px; font-weight: 500; color: var(--color-text-primary); margin: 10px 0 2px; }
+.card-metric-label { font-size: 12px; color: var(--color-text-secondary); }
+.detail-panel { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1.25rem 1.5rem; margin-top: var(--gap); display: none; }
+.detail-panel.visible { display: block; }
+.detail-title { font-size: 16px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+.detail-org { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1rem; }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
+.detail-section { }
+.detail-section-title { font-size: 12px; font-weight: 500; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+.detail-list { list-style: none; padding: 0; }
+.detail-list li { font-size: 13px; color: var(--color-text-primary); padding: 4px 0; border-bottom: 0.5px solid var(--color-border-tertiary); line-height: 1.5; }
+.detail-list li:last-child { border-bottom: none; }
+.detail-list li::before { content: "—"; color: var(--color-text-tertiary); margin-right: 6px; }
+.lesson-row { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; margin-bottom: 8px; }
+.lesson-row:last-child { margin-bottom: 0; }
+.lesson-tag { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: var(--border-radius-md); margin-bottom: 6px; display: inline-block; }
+.lesson-success { background: var(--color-background-success); color: var(--color-text-success); }
+.lesson-fail { background: var(--color-background-danger); color: var(--color-text-danger); }
+.lesson-text { font-size: 13px; color: var(--color-text-primary); line-height: 1.5; }
+.close-btn { float: right; background: none; border: none; cursor: pointer; color: var(--color-text-secondary); font-size: 18px; padding: 0; margin-top: -2px; }
+</style>
+
+<div class="wrap">
+  <h2 class="sr-only">AI in banking: real-world case studies and lessons learned</h2>
+
+  <div class="section-label">Successful deployments — click a card for details</div>
+  <div class="grid" id="success-grid">
+
+    <div class="card" onclick="showDetail('coin')">
+      <div class="card-header">
+        <i class="ti ti-file-text card-icon" aria-hidden="true"></i>
+        <div><div class="card-title">COiN</div><div class="card-sub">JPMorgan Chase</div></div>
+      </div>
+      <span class="badge badge-success">Contract analysis</span>
+      <div class="card-metric">360k</div>
+      <div class="card-metric-label">hours of legal work per year, automated</div>
+    </div>
+
+    <div class="card" onclick="showDetail('erica')">
+      <div class="card-header">
+        <i class="ti ti-message-circle card-icon" aria-hidden="true"></i>
+        <div><div class="card-title">Erica</div><div class="card-sub">Bank of America</div></div>
+      </div>
+      <span class="badge badge-success">Virtual assistant</span>
+      <div class="card-metric">1B+</div>
+      <div class="card-metric-label">customer interactions since 2018 launch</div>
+    </div>
+
+    <div class="card" onclick="showDetail('fraud')">
+      <div class="card-header">
+        <i class="ti ti-shield-check card-icon" aria-hidden="true"></i>
+        <div><div class="card-title">AI fraud detection</div><div class="card-sub">Mastercard / Visa</div></div>
+      </div>
+      <span class="badge badge-success">Risk management</span>
+      <div class="card-metric">~30%</div>
+      <div class="card-metric-label">reduction in false positive fraud alerts</div>
+    </div>
+
+    <div class="card" onclick="showDetail('eno')">
+      <div class="card-header">
+        <i class="ti ti-robot card-icon" aria-hidden="true"></i>
+        <div><div class="card-title">Eno</div><div class="card-sub">Capital One</div></div>
+      </div>
+      <span class="badge badge-success">Proactive insights</span>
+      <div class="card-metric">13M+</div>
+      <div class="card-metric-label">customers actively using Eno</div>
+    </div>
+
+    <div class="card" onclick="showDetail('kabbage')">
+      <div class="card-header">
+        <i class="ti ti-credit-card card-icon" aria-hidden="true"></i>
+        <div><div class="card-title">Automated lending</div><div class="card-sub">Kabbage / Zest AI</div></div>
+      </div>
+      <span class="badge badge-success">Credit decisioning</span>
+      <div class="card-metric">&lt;10 min</div>
+      <div class="card-metric-label">SMB loan decisions vs. weeks traditionally</div>
+    </div>
+
+    <div class="card" onclick="showDetail('hsbc')">
+      <div class="card-header">
+        <i class="ti ti-eye card-icon" aria-hidden="true"></i>
+        <div><div class="card-title">AML AI</div><div class="card-sub">HSBC + Google Cloud</div></div>
+      </div>
+      <span class="badge badge-success">AML / compliance</span>
+      <div class="card-metric">20x</div>
+      <div class="card-metric-label">more suspicious activity detected vs. rules</div>
+    </div>
+
+  </div>
+
+  <div class="detail-panel" id="detail-panel">
+    <button class="close-btn" onclick="closeDetail()" aria-label="Close detail"><i class="ti ti-x"></i></button>
+    <div class="detail-title" id="dp-title"></div>
+    <div class="detail-org" id="dp-org"></div>
+    <div class="detail-grid">
+      <div class="detail-section">
+        <div class="detail-section-title">What it does</div>
+        <ul class="detail-list" id="dp-what"></ul>
+      </div>
+      <div class="detail-section">
+        <div class="detail-section-title">Key outcomes</div>
+        <ul class="detail-list" id="dp-outcomes"></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-top:2rem;">Failed or troubled projects</div>
+  <div class="grid">
+
+    <div class="card" onclick="showDetail('ibm-fail')">
+      <div class="card-header">
+        <i class="ti ti-alert-triangle card-icon" aria-hidden="true"></i>
+        <div><div class="card-title">Watson for financial services</div><div class="card-sub">IBM</div></div>
+      </div>
+      <span class="badge badge-danger">Overpromised</span>
+      <div class="card-metric-label" style="margin-top:10px; font-size:13px;">Struggled with domain-specific data; banks quietly wound down deployments by 2020</div>
+    </div>
+
+    <div class="card" onclick="showDetail('bias-fail')">
+      <div class="card-header">
+        <i class="ti ti-user-x card-icon" aria-hidden="true"></i>
+        <div><div class="card-title">Apple Card bias</div><div class="card-sub">Goldman Sachs / Apple</div></div>
+      </div>
+      <span class="badge badge-danger">Regulatory action</span>
+      <div class="card-metric-label" style="margin-top:10px; font-size:13px;">NY DFS investigation after users reported gender-biased credit limits (2019)</div>
+    </div>
+
+    <div class="card" onclick="showDetail('chatbot-fail')">
+      <div class="card-header">
+        <i class="ti ti-message-off card-icon" aria-hidden="true"></i>
+        <div><div class="card-title">Generic chatbot rollouts</div><div class="card-sub">Multiple banks</div></div>
+      </div>
+      <span class="badge badge-warning">Poor adoption</span>
+      <div class="card-metric-label" style="margin-top:10px; font-size:13px;">Scripted, FAQ-only bots with no NLU abandoned after customer satisfaction dropped</div>
+    </div>
+
+  </div>
+
+  <div class="detail-panel" id="detail-panel-fail">
+    <button class="close-btn" onclick="closeDetailFail()" aria-label="Close detail"><i class="ti ti-x"></i></button>
+    <div class="detail-title" id="dp-fail-title"></div>
+    <div class="detail-org" id="dp-fail-org"></div>
+    <div class="detail-grid">
+      <div class="detail-section">
+        <div class="detail-section-title">What went wrong</div>
+        <ul class="detail-list" id="dp-fail-what"></ul>
+      </div>
+      <div class="detail-section">
+        <div class="detail-section-title">Lessons</div>
+        <ul class="detail-list" id="dp-fail-lessons"></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-top:2rem;">Cross-cutting lessons learned</div>
+
+  <div class="lesson-row">
+    <span class="lesson-tag lesson-success">What works</span>
+    <div class="lesson-text">Narrow, well-defined use cases (document parsing, anomaly detection) consistently outperform broad "general AI" deployments. Start with a specific task with measurable output.</div>
+  </div>
+  <div class="lesson-row">
+    <span class="lesson-tag lesson-success">What works</span>
+    <div class="lesson-text">Human-in-the-loop design matters. JPMorgan's COiN flags clauses for lawyers to review — it doesn't replace them. This framing accelerated regulatory approval and user trust.</div>
+  </div>
+  <div class="lesson-row">
+    <span class="lesson-tag lesson-success">What works</span>
+    <div class="lesson-text">Data quality is the primary success driver. Fraud detection improvements at Mastercard came after years of clean, labeled transaction data — not after model improvements alone.</div>
+  </div>
+  <div class="lesson-row">
+    <span class="lesson-tag lesson-fail">What fails</span>
+    <div class="lesson-text">Algorithmic bias in credit models carries serious legal and reputational risk. Models trained on historical data embed historical discrimination. Ongoing auditing and explainability are not optional in regulated environments.</div>
+  </div>
+  <div class="lesson-row">
+    <span class="lesson-tag lesson-fail">What fails</span>
+    <div class="lesson-text">Overpromising AI capabilities to leadership before production validation leads to over-investment and credibility loss when results underwhelm (Watson, early roboadvisor pilots).</div>
+  </div>
+  <div class="lesson-row">
+    <span class="lesson-tag lesson-fail">What fails</span>
+    <div class="lesson-text">Chatbots without genuine NLU degrade CX. Customers quickly learn to ask for a human agent, making the bot a friction layer rather than a resolution layer.</div>
+  </div>
+
+</div>
+
+<script>
+const details = {
+  coin: {
+    title: "COiN (Contract Intelligence)",
+    org: "JPMorgan Chase — launched 2017",
+    what: ["Uses NLP to review commercial loan agreements", "Extracts 150+ data attributes per document automatically", "Processes in seconds what took paralegals hours", "Trained on JPMorgan's own legal corpus"],
+    outcomes: ["360,000 hours of annual legal review automated", "Error rate lower than manual review", "Freed attorneys to focus on judgment-intensive work", "Became template for broader legal AI at JPMC"]
+  },
+  erica: {
+    title: "Erica virtual financial assistant",
+    org: "Bank of America — launched 2018",
+    what: ["Conversational AI in the BofA mobile app", "Proactive spend insights, bill reminders, credit score monitoring", "Natural language transaction search", "Connects users to specialists for complex needs"],
+    outcomes: ["Over 1 billion interactions by 2023", "Handles millions of queries without human escalation", "CSAT scores higher than IVR phone channel", "Reduced routine call center volume materially"]
+  },
+  fraud: {
+    title: "Decision Intelligence (AI fraud detection)",
+    org: "Mastercard — live network-wide",
+    what: ["Graph neural network analyzes transaction sequences in real time", "Scores each transaction at point of authorization (milliseconds)", "Learns from confirmed fraud and confirmed legitimate patterns", "Global scale: billions of transactions/year"],
+    outcomes: ["~30% reduction in false positive declines", "Improved genuine fraud catch rate", "Fewer frustrated legitimate cardholders", "Net issuer revenue improvement via fewer declined sales"]
+  },
+  eno: {
+    title: "Eno intelligent assistant",
+    org: "Capital One — launched 2017",
+    what: ["Monitors accounts for unusual charges and fee alerts", "Generates virtual card numbers for online shopping", "Proactive notifications (subscription price changes, etc.)", "Text-based and in-app interface"],
+    outcomes: ["13M+ active users", "Proactive alerts prevent fraud before customer notices", "Virtual card feature significantly adopted for e-commerce", "Model for 'proactive AI' vs. reactive chatbot design"]
+  },
+  kabbage: {
+    title: "Automated SMB lending / ML underwriting",
+    org: "Kabbage (American Express) and Zest AI",
+    what: ["ML models assess cashflow data, not just credit scores", "Pulls real-time business data (accounting, payments, bank feeds)", "Decisioning entirely automated for loans under thresholds", "Zest AI used by 100+ credit unions for underwriting"],
+    outcomes: ["Sub-10 minute approvals vs. weeks for bank loans", "Kabbage approved $9B+ in SMB loans pre-acquisition", "Zest AI clients report 15–25% reduction in default rates", "Expanded credit access to thin-file borrowers"]
+  },
+  hsbc: {
+    title: "AI-powered AML transaction monitoring",
+    org: "HSBC + Google Cloud — deployed ~2022",
+    what: ["Deep learning model replaces rigid rules-based AML filters", "Analyses transaction networks and entity relationships", "Trained on HSBC's decades of SAR (suspicious activity report) data", "Runs in near real-time across global transaction flows"],
+    outcomes: ["Detected 2–4x more true suspicious activity vs. rule engine", "Dramatically reduced false positive SAR filings", "Compliance team focuses on genuine risk, not noise", "Cited by regulators as a model for AI in AML"]
+  },
+  "ibm-fail": {
+    title: "Watson for financial services",
+    org: "IBM — 2016–2020 (largely discontinued)",
+    what: ["Marketed as AI that could automate complex financial analysis", "Banks paid high licensing fees for Watson integrations", "Required enormous manual data labeling and curation", "Demos did not match production performance"],
+    lessons: ["General-purpose AI marketed as domain expert is a red flag", "Vendor demos rarely reflect production data quality realities", "Banks lacked ML engineering talent to operationalize effectively", "Relationship-driven enterprise sales obscured technical limitations"]
+  },
+  "bias-fail": {
+    title: "Apple Card credit limit disparities",
+    org: "Goldman Sachs / Apple — 2019 controversy",
+    what: ["Credit limits algorithmically set at card issuance", "Married couples reported husbands receiving much higher limits", "Occurred even when wives had equal or better credit scores", "NY DFS launched formal investigation"],
+    lessons: ["Proxy discrimination can emerge without protected class data", "Regulatory scrutiny of black-box models is not hypothetical", "Post-launch bias auditing is insufficient — must be pre-deployment", "Explainability to regulators is now a baseline requirement"]
+  },
+  "chatbot-fail": {
+    title: "First-gen scripted banking chatbots",
+    org: "Multiple mid-tier banks — 2016–2020",
+    what: ["Rule-based chatbots deployed to reduce call center costs", "Covered only FAQ scenarios, failed on any deviation", "No intent recognition — keyword matching only", "Escalation paths to human agents were buried or broken"],
+    lessons: ["Chatbots that can't handle real queries create worse CX than no chatbot", "Cost-reduction framing (not customer-value framing) leads to underinvestment", "Customers learn system limitations and lose trust quickly", "Erica's success came from solving real tasks, not replacing humans"]
+  }
+};
+
+let activeCard = null;
+
+function showDetail(id) {
+  const d = details[id];
+  const isFail = ["ibm-fail","bias-fail","chatbot-fail"].includes(id);
+  
+  if (isFail) {
+    document.getElementById('dp-fail-title').textContent = d.title;
+    document.getElementById('dp-fail-org').textContent = d.org;
+    document.getElementById('dp-fail-what').innerHTML = d.what.map(i=>`<li>${i}</li>`).join('');
+    document.getElementById('dp-fail-lessons').innerHTML = d.lessons.map(i=>`<li>${i}</li>`).join('');
+    document.getElementById('detail-panel-fail').classList.add('visible');
+  } else {
+    document.getElementById('dp-title').textContent = d.title;
+    document.getElementById('dp-org').textContent = d.org;
+    document.getElementById('dp-what').innerHTML = d.what.map(i=>`<li>${i}</li>`).join('');
+    document.getElementById('dp-outcomes').innerHTML = d.outcomes.map(i=>`<li>${i}</li>`).join('');
+    document.getElementById('detail-panel').classList.add('visible');
+  }
+  
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+}
+
+function closeDetail() {
+  document.getElementById('detail-panel').classList.remove('visible');
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+}
+
+function closeDetailFail() {
+  document.getElementById('detail-panel-fail').classList.remove('visible');
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+}
+</script>
